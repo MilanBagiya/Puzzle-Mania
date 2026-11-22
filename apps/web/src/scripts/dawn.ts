@@ -15,6 +15,8 @@ loadPuzzle<DawnPublic>(`/puzzles/dawn/${date}.json`).then((g) => {
   let result: 'win' | 'wrong' | null = already ? 'win' : null;
   let hints = 0, wrongIdx: number[] = [];
   const t0 = Date.now();
+  const timerEl = document.getElementById('dc-timer');
+  const tick = window.setInterval(() => { if (timerEl && result !== 'win') timerEl.textContent = formatTime(Math.round((Date.now() - t0) / 1000)); }, 1000);
   function render(): void {
     const win = result === 'win', full = slots.every(Boolean);
     let msg = 'Tap the birds to put them on the branch in the order they sang. Tap a bird on the branch to take it off.', kind = '';
@@ -44,6 +46,7 @@ ${win ? '' : `<div class="dc-tray">${g.birds.filter((b) => !used.has(b)).map((b)
       if (orderFits(g, order)) {
         result = 'win';
         const time = Math.round((Date.now() - t0) / 1000);
+        window.clearInterval(tick); if (timerEl) timerEl.textContent = formatTime(time);
         const rec = recordFinish({ game: 'dawn', date, time, hints });
         render();
         window.setTimeout(() => showResult({

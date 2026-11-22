@@ -7,11 +7,11 @@ const rules = [['Start at the edge', 'Each animal walked in from the edge of the
 <Base title="How to play Fresh Snow" description="Learn the rules of Fresh Snow in two minutes: how the fox, rabbit and deer move, the six rules, and tips for solving." active="howto">
   <PageHead title="How to play Fresh Snow" />
   <main class="wrap body">
-    <section class="card" id="hx" style="display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr); gap:28px; align-items:start"><p class="coach">Loading the move explorer…</p></section>
+    <section class="card" id="hx" style="display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr); gap:var(--s5); align-items:start"><p class="coach">Loading the move explorer…</p></section>
     <style>@media (max-width:720px){#hx{grid-template-columns:1fr !important}}</style>
     <section class="section grid2" style="align-items:start">
       <div class="card stack"><h2 class="h-m">The six rules</h2><ol style="margin:0; padding-left:22px; display:flex; flex-direction:column; gap:10px; line-height:1.45">{rules.map(([t, d]) => <li><b>{t}.</b> <span class="muted">{d}</span></li>)}</ol></div>
-      <div class="stack" style="gap:22px">
+      <div class="stack gap-s4">
         <div class="card row" style="background:var(--good); flex-wrap:nowrap"><Fragment set:html={drift(90)} /><div><h3 class="h-s">Start with the clearest trail</h3><p style="margin:4px 0 0">Pick the animal with the most visible prints first. Its trail often leaves only one burrow for the others.</p></div></div>
         <div class="card row" style="background:var(--fox-t); flex-wrap:nowrap"><Fragment set:html={character('fox', 'oops', 84, 'shake')} /><div><h3 class="h-s">Stuck? Use a hint</h3><p style="margin:4px 0 0">Hint shows the next correct step. Tap any earlier step to go back to it.</p></div></div>
         <a class="btn btn-c big" href="/fresh-snow/tutorial">Take the 1-minute tutorial</a>

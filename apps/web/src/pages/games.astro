@@ -17,25 +17,30 @@ const games = [
 <Base title="All games" description="26 daily puzzles from one forest: Fresh Snow, Trail Trek, Nests, Dawn Chorus, Frog Pond, Owl Watch, Snow Picture, Track Word and more." active="games">
   <PageHead title="All games" lead="26 games from one forest, with new puzzles every day." />
   <main class="wrap body">
+    <nav class="jump" aria-label="Jump to">
+      <a href="#daily">Daily and Trek</a>{Object.entries(KIND).map(([k, label]) => <a href={`#${k}`}>{label}</a>)}
+    </nav>
+    <section id="daily" class="stack">
     <div class="grid3">
       {games.map((g) => (
-        <article class="card stack">
-          <span class="stage" style="height:130px" set:html={g.art} />
-          <div class="row" style="justify-content:space-between"><h2 class="h-m">{g.name}</h2><span class:list={['pill', g.live ? 'p-g' : 'p-y']}>{g.status}</span></div>
-          <p style="margin:0" class="muted">{g.blurb}</p>
-          <div class="row" style="justify-content:space-between; margin-top:auto"><span style="font-weight:800; font-size:14px">{g.time}</span>{g.live && <a class="btn btn-p" href={g.href}>{g.cta}</a>}</div>
+        <article class="card stack gamecard">
+          <span class="stage" set:html={g.art} />
+          <div class="row gap-s2" style="justify-content:space-between"><h2 class="h-m">{g.name}</h2><span class:list={['pill', g.live ? 'p-g' : 'p-y']}>{g.status}</span></div>
+          <p class="muted mb-s2">{g.blurb}</p>
+          <div class="row gap-s2" style="justify-content:space-between"><span style="font-weight:800; font-size:14px">{g.time}</span>{g.live && <a class="btn btn-p" href={g.href}>{g.cta}</a>}</div>
         </article>
       ))}
     </div>
+    </section>
     {Object.entries(KIND).map(([k, label]) => (
-      <section class="section stack">
+      <section class="section stack" id={k}>
         <h2 class="h-l">{label}</h2>
         <div class="grid3">
           {PACK.filter((x) => x.kind === k).map((x) => (
             <a class="card stack" href={`/play/${x.id}`} style="text-decoration:none">
-              <div class="row" style="justify-content:space-between"><h3 class="h-m">{x.name}</h3><span class="pill p-g">Daily</span></div>
-              <p style="margin:0" class="muted">{x.blurb}</p>
-              <div class="row" style="justify-content:space-between; margin-top:auto"><span style="font-weight:800; font-size:14px">{x.time}</span><span class="btn btn-p">Play</span></div>
+              <div class="row gap-s2" style="justify-content:space-between"><h3 class="h-m">{x.name}</h3><span class="pill p-g">Daily</span></div>
+              <p class="muted mb-s2">{x.blurb}</p>
+              <div class="row gap-s2" style="justify-content:space-between"><span style="font-weight:800; font-size:14px">{x.time}</span><span class="btn btn-p">Play</span></div>
             </a>
           ))}
         </div>

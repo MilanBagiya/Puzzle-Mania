@@ -6,7 +6,7 @@ import { nest, tree } from '@wild-daily/ui';
 const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Nests', applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL('/nests', Astro.site).href, description: 'A daily logic puzzle: find the hidden bird nests using the numbers on the trees.', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 ---
 <Base title="Nests: daily logic puzzle" description="Find the hidden bird nests. Each tree's number is how many nests it can see along its row and column. A new puzzle every day." active="games" jsonLd={ld}>
-  <main class="wrap" style="padding-top:18px">
+  <main class="wrap body">
     <GameHead title="Nests" prefix="nb" />
     <div class="game">
       <div class="stack"><div id="nb-result" hidden></div><div id="nb-game" class="stack"><p class="coach">Loading the meadow…</p></div></div>

@@ -1,16 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import { svgUse } from '@wild-daily/ui';
+import GameHead from '../components/GameHead.astro';
+import HelpDialog from '../components/HelpDialog.astro';
 ---
 <Base title="Dawn Chorus: daily bird puzzle" description="Five birds sang at sunrise. Read the clues and work out the order. A new puzzle every day." active="games">
-  <section class="scene" style="min-height:250px; background:var(--sky)">
-    <svg class="hills" viewBox="0 0 1280 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><circle cx="980" cy="120" r="54" fill="#FFC86B"></circle><path d="M0 120 Q300 70 640 110 T1280 100 V200 H0 Z" fill="#B7E39A"></path><path d="M0 155 Q360 125 720 150 T1280 145 V200 H0 Z" fill="#8FD46A"></path><path d="M0 182 Q380 168 760 180 T1280 178 V200 H0 Z" fill="#6BBE55"></path></svg>
-    <div class="wrap page-head" style="padding-top:32px; padding-bottom:96px">
-      <div class="flutter" style="position:absolute; right:12%; top:30px" set:html={svgUse('n-butterfly', '0 0 30 24', 34)} />
-      <h1 class="h-xl">Dawn Chorus</h1><span class="pill p-w" style="margin-top:10px" id="dc-date">Today</span>
-    </div>
-  </section>
   <main class="wrap body">
+    <GameHead title="Dawn Chorus" prefix="dc" />
     <div class="game">
       <div class="stack">
         <div class="card stack"><h2 class="h-s">Five birds sang at sunrise. In what order?</h2><ul id="dc-clues" style="margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px; line-height:1.4"></ul></div>
@@ -20,5 +15,6 @@ import { svgUse } from '@wild-daily/ui';
       <aside class="side"><div class="card stack"><h2 class="h-s">How to play</h2><p style="margin:0" class="muted">Every clue is true. Only one order fits them all. Place the birds you’re sure of first.</p></div></aside>
     </div>
   </main>
+  <HelpDialog title="How to play Dawn Chorus"><ol class="steps"><li>Read the clues: each one is true.</li><li>Tap birds to place them on the branch in the order they sang; tap a bird on the branch to remove it.</li><li>When all five are placed, tap <b>Listen</b>. Only one order fits every clue.</li></ol></HelpDialog>
   <script>import '../scripts/dawn.ts';</script>
 </Base>

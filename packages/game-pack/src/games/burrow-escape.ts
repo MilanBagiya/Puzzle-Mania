@@ -55,7 +55,7 @@ export function generate(seed: string): BurrowPuzzle {
   }
   throw new Error('burrow-escape: generation failed for ' + seed);
 }
-const LOGS = ['#B07A51', '#9A6A42', '#C9915E', '#8A5A3B', '#A86E43', '#7E5132'];
+const LOGS = ['#C9915E', '#B07A51', '#D9AE7E', '#A86E43', '#C08A5A', '#9A6A42'];
 const def: GameDef<BurrowPuzzle> = {
   id: 'burrow-escape', generate,
   mount(root, p, ctx) {
@@ -64,14 +64,23 @@ const def: GameDef<BurrowPuzzle> = {
     const t = clock(ctx);
     const render = (): void => {
       const g = occupancy(n, ps), targets = new Set(movesOf(n, ps).filter((m) => m.k === sel).map((m) => { const q = m.to; return q.horiz ? q.r * n + (q.c < ps[sel]!.c ? q.c : q.c + q.len - 1) : (q.r < ps[sel]!.r ? q.r : q.r + q.len - 1) * n + q.c; }));
+      const exitCell = 2 * n + n - 1;
       const cells = range(n * n).map((i) => {
-        const k = g[i]!;
-        const style = k === 0 ? 'background:var(--rabbit-t)' : k > 0 ? `background:${LOGS[k % LOGS.length]}` : '';
-        const isHead = k >= 0 && ((ps[k]!.horiz && i % n === ps[k]!.c) || (!ps[k]!.horiz && Math.floor(i / n) === ps[k]!.r));
-        return `<button type="button" class="gcell burrow${k === sel ? ' hinted' : ''}${targets.has(i) ? ' target' : ''}" style="${style}" data-g="cell:${i}" aria-label="${k === 0 ? 'Rabbit' : k > 0 ? 'Log' : 'Empty'}${targets.has(i) ? ', can slide here' : ''}">${k === 0 && isHead ? character('rabbit', done ? 'happy' : 'idle', undefined, done ? 'cheer' : '') : ''}</button>`;
+        const k = g[i]!, pc = k >= 0 ? ps[k]! : null;
+        const r = Math.floor(i / n), c = i % n;
+        let style = k === 0 ? 'background:#DCEBFA' : k > 0 ? `background:${LOGS[k % LOGS.length]}` : '';
+        if (pc) {
+          const top = pc.horiz ? true : r === pc.r, bottom = pc.horiz ? true : r === pc.r + pc.len - 1;
+          const left = pc.horiz ? c === pc.c : true, right = pc.horiz ? c === pc.c + pc.len - 1 : true;
+          const edge = k === 0 ? '#2F6FC0' : '#5A3A26';
+          style += `; box-shadow:inset ${left ? 3 : 0}px 0 0 ${edge}, inset ${right ? -3 : 0}px 0 0 ${edge}, inset 0 ${top ? 3 : 0}px 0 ${edge}, inset 0 ${bottom ? -3 : 0}px 0 ${edge}`;
+          style += `; border-radius:${pc.horiz ? `${left ? 8 : 0}px ${right ? 8 : 0}px ${right ? 8 : 0}px ${left ? 8 : 0}px` : `${top ? 8 : 0}px ${top ? 8 : 0}px ${bottom ? 8 : 0}px ${bottom ? 8 : 0}px`}`;
+        }
+        const isHead = k >= 0 && ((ps[k]!.horiz && c === ps[k]!.c) || (!ps[k]!.horiz && r === ps[k]!.r));
+        return `<button type="button" class="gcell burrow${k === sel ? ' hinted' : ''}${targets.has(i) ? ' target' : ''}${i === exitCell && k !== 0 ? ' exitcell' : ''}" style="${style}" data-g="cell:${i}" aria-label="${k === 0 ? 'Rabbit' : k > 0 ? 'Log' : 'Empty'}${i === exitCell ? ', next to the exit' : ''}${targets.has(i) ? ', can slide here' : ''}">${k === 0 && isHead ? character('rabbit', done ? 'happy' : 'idle', undefined, done ? 'cheer' : '') : ''}</button>`;
       }).join('');
       const text = done ? `The rabbit hopped out in ${moves} moves! Best possible: ${p.best}.` : msg ?? 'Tap the rabbit or a log, then tap a glowing square to slide it. Clear a path to the exit on the right of the rabbit’s row.';
-      root.innerHTML = `${pills(`Moves: ${moves}`, `Best possible: ${p.best}`)}${coach(text, done ? 'good' : kind)}<div class="boardwrap" style="position:relative"><div class="board" role="grid" aria-label="Burrow" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 70}px; gap:3px">${cells}</div><span class="exit" aria-hidden="true">Exit ▶</span></div>${tools(btn('undo', 'Undo', 'btn-w', done || !hist.length), btn('restart', 'Restart', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done))}`;
+      root.innerHTML = `${pills(`Moves: ${moves} (best ${p.best})`, 'Exit: green edge, row 3')}${coach(text, done ? 'good' : kind)}<div class="boardwrap"><div class="board" role="grid" aria-label="Burrow" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 70}px; gap:3px">${cells}</div></div>${tools(btn('undo', 'Undo', 'btn-w', done || !hist.length), btn('restart', 'Restart', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done))}`;
     };
     const apply = (k: number, to: Piece): boolean => {
       hist.push(ps.map((x) => ({ ...x }))); ps = ps.map((x, i) => (i === k ? to : x)); moves++;

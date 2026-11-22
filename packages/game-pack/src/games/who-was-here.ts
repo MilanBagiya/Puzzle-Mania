@@ -15,7 +15,7 @@ export function generate(seed: string): ZoomPuzzle {
   return { seed, code: scramble(seed, String(Math.floor(rng() * CAST.length))), fx: 30 + Math.floor(rng() * 40), fy: 25 + Math.floor(rng() * 40) };
 }
 export const answerOf = (p: ZoomPuzzle): number => Number(unscramble(p.seed, p.code));
-const ZOOM = [6, 4.2, 3, 2.2, 1.6, 1.15, 1];
+const ZOOM = [3.6, 2.9, 2.3, 1.8, 1.4, 1.1, 1];
 const def: GameDef<ZoomPuzzle> = {
   id: 'who-was-here', generate,
   mount(root, p, ctx) {
@@ -26,7 +26,7 @@ const def: GameDef<ZoomPuzzle> = {
       const z = done || lost ? 1 : ZOOM[wrong.length]!;
       const text = done ? `It was the ${CAST[ans]!.name.toLowerCase()}! Found in ${wrong.length + 1} ${wrong.length ? 'guesses' : 'guess'}.` : lost ? `It was the ${CAST[ans]!.name.toLowerCase()}. A new close-up tomorrow.` : wrong.length ? `Not the ${CAST[wrong[wrong.length - 1]!]!.name.toLowerCase()}. Zooming out…` : 'Who is this? Each wrong guess zooms out a little.';
       root.innerHTML = `${coach(text, done ? 'good' : lost || wrong.length ? 'bad' : '')}<div class="card" style="display:grid; place-items:center"><div class="zoombox"><div style="transform:scale(${z}); transform-origin:${p.fx}% ${p.fy}%; transition:transform .5s ease">${CAST[ans]!.art()}</div></div><span class="pill p-w" style="margin-top:10px">Guesses left: ${6 - wrong.length - (done ? 1 : 0)}</span></div>
-${done || lost ? '' : `<div class="grid2" style="gap:10px">${range(CAST.length).map((k) => btn(`guess:${k}`, CAST[k]!.name, 'btn-w', wrong.includes(k))).join('')}</div>`}`;
+${done || lost ? '' : `<div class="answers">${range(CAST.length).map((k) => btn(`guess:${k}`, CAST[k]!.name, 'btn-w', wrong.includes(k))).join('')}</div>`}`;
     };
     const off = onAct(root, (act, arg) => {
       if (done || lost || act !== 'guess') return;

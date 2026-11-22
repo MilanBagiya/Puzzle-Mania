@@ -45,7 +45,7 @@ h1,h2,h3,.display{font-family:"Baloo 2", Nunito, system-ui, sans-serif; font-wei
 a{color:var(--ink)} a:hover{color:var(--coral-e1)}
 button{font:inherit; color:inherit}
 :focus-visible{outline:3px solid var(--coral); outline-offset:2px}
-.wrap{max-width:1080px; margin:0 auto; padding:0 18px}
+.wrap{max-width:1080px; margin:0 auto; padding:0 var(--s4)}
 .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
 
 /* header */
@@ -63,7 +63,7 @@ button{font:inherit; color:inherit}
 .scene .wrap{position:relative}
 
 /* paper surfaces */
-.card{background:var(--paper); border-radius:4px; box-shadow:0 4px 0 var(--edge1),0 8px 0 var(--edge2),0 14px 22px rgba(20,30,50,.14); padding:18px}
+.card{background:var(--paper); border-radius:4px; box-shadow:0 4px 0 var(--edge1),0 8px 0 var(--edge2),0 14px 16px rgba(20,30,50,.14); padding:18px}
 .sheet{background:var(--paper); border-radius:3px; box-shadow:0 3px 0 var(--edge1),0 6px 0 var(--edge2)}
 .tilt-l{transform:rotate(-1.2deg)} .tilt-r{transform:rotate(1deg)}
 
@@ -400,3 +400,70 @@ button.gcell:hover{transform:translateY(-2px)}
 .zoombox{width:min(300px,80vw); height:min(300px,80vw); overflow:hidden; border-radius:50%; background:var(--soft); box-shadow:0 0 0 6px var(--paper),0 8px 0 6px var(--edge1); display:grid; place-items:center}
 .zoombox svg{width:100%; height:100%}
 @media (max-width:420px){ .wrow{grid-template-columns:repeat(5,40px)} .wtile{width:40px; height:40px} }
+
+/* ======================================================================
+   Layout v3: easier phone navigation, tighter headers, consistent rhythm
+   ====================================================================== */
+.tabbar{display:none}
+.logo span{white-space:nowrap}
+.gamehead{flex-wrap:nowrap}
+.gamehead > .row:first-child{flex:1 1 auto; min-width:0; flex-wrap:nowrap}
+.gamehead > .row:first-child > div{min-width:0}
+.gamehead h1{font-size:clamp(24px,5.4vw,42px); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.gamehead .muted{display:block; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.gamehead > .row:last-child{flex:none; flex-wrap:nowrap}
+.scene.hub + main{margin-top:-56px; position:relative}
+.statrow{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px}
+.statrow .card{align-items:center; text-align:center}
+.statrow .big{font-family:"Baloo 2",sans-serif; font-weight:800; font-size:clamp(30px,7vw,52px); line-height:1}
+.jump{display:flex; gap:8px; overflow-x:auto; padding:2px 2px 10px; scrollbar-width:none} .jump::-webkit-scrollbar{display:none}
+.jump a{flex:none; padding:8px 14px; border-radius:3px; background:var(--paper); box-shadow:0 3px 0 var(--edge1); text-decoration:none; font-weight:800; font-size:14px}
+.gamecard .stage{height:120px}
+.guidecard{display:flex; flex-direction:column; gap:10px}
+.answers{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px}
+.answers .btn{padding:0 8px; font-size:15px}
+section[id]{scroll-margin-top:90px}
+@media (max-width:720px){
+  /* top bar: logo + options only; navigation moves to the bottom tab bar */
+  .top .nav{display:none}
+  .logo{font-size:20px !important; gap:6px !important}
+  .top .wrap{padding-top:6px; padding-bottom:6px}
+  .tabbar{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); position:fixed; left:0; right:0; bottom:0; z-index:25; background:var(--paper); box-shadow:0 -3px 0 var(--edge1),0 -10px 24px rgba(20,30,50,.12); padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+  .tabbar a{display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 0 4px; border-radius:3px; text-decoration:none; color:var(--ink-soft); font-size:11px; font-weight:800}
+  .tabbar a[aria-current="page"]{color:var(--ink); background:var(--fox-t)}
+  body{padding-bottom:calc(74px + env(safe-area-inset-bottom,0px))}
+  /* shorter page headers */
+  .scene{min-height:0 !important}
+  .scene .page-head{padding-top:22px !important; padding-bottom:70px !important}
+  .scene svg.hills{height:96px}
+  .scene.hub .page-head{padding-bottom:76px !important}
+  .scene.hub + main{margin-top:-40px}
+  .body{margin-top:-30px}
+  .h-l{font-size:clamp(26px,7vw,34px)}
+  .lead{font-size:16px}
+  /* game header on one line */
+  .gamehead{gap:8px}
+  .gamehead .btn.iconbtn,.gamehead > .row:first-child > .btn{min-height:40px; width:40px; padding:0}
+  .gamehead .timer{padding:4px 8px}
+  /* denser cards */
+  .lvrow{padding:10px 12px}
+  .lvrow b{font-size:17px}
+  .lvrow small{font-size:12px}
+  .lvrow svg{width:36px; height:auto}
+  .statrow{gap:8px} .statrow .card{padding:12px 6px}
+  .statrow .small{font-size:15px !important}
+  .hide-sm{display:none}
+  .gamecard .stage{height:84px}
+  .gamecard .stage svg{max-height:76px; width:auto}
+  .guidecard{display:grid; grid-template-columns:88px minmax(0,1fr); gap:4px 12px; align-items:center; padding:12px !important}
+  .guidecard .stage{grid-row:span 2; height:88px !important}
+  .guidecard .stage svg{max-width:80px; max-height:70px; width:auto}
+  .card{padding:16px}
+  footer .wrap{padding-bottom:24px}
+}
+/* game-pack board fixes */
+.gcell.lodge{background:#DCEFF8; box-shadow:inset 0 0 0 1px #BFDDEB}
+.gcell.ice > svg[viewBox="0 0 80 80"],.gcell.burrow > svg[viewBox="0 0 80 80"],.gcell > svg[viewBox="0 0 80 80"]{width:100%}
+.gcell.burrow{box-shadow:none; border-radius:4px}
+.exitcell{box-shadow:inset -5px 0 0 #2F7D5B !important}
+.day.plain small{visibility:hidden}

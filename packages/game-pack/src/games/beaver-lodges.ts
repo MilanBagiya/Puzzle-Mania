@@ -74,7 +74,7 @@ const def: GameDef<LodgePuzzle> = {
       const o = ownerOf();
       const cells = range(n * n).map((i) => {
         const k = o[i]!, r = k >= 0 ? rects[k]! : null, v = clueAt.get(i);
-        const bg = r ? (valid(r) ? TINTS[k % TINTS.length] : 'var(--wrong)') : 'var(--tile)';
+        const bg = r ? (valid(r) ? TINTS[k % TINTS.length] : 'var(--wrong)') : '#DCEFF8';
         const edges = r ? `border-top:${Math.floor(i / n) === r[0] ? 3 : 0}px solid #8A5A3B; border-bottom:${Math.floor(i / n) === r[2] ? 3 : 0}px solid #8A5A3B; border-left:${i % n === r[1] ? 3 : 0}px solid #8A5A3B; border-right:${i % n === r[3] ? 3 : 0}px solid #8A5A3B;` : '';
         return `<button type="button" class="gcell lodge${first === i ? ' hinted' : ''}" style="background:${bg}; ${edges}" data-g="cell:${i}" aria-label="${cellLabel(n, i)}${v ? `: lodge ${v}` : ''}${r ? ', inside a dam' : ''}">${v ? `<span class="lodgenum">${v}</span>` : ''}</button>`;
       }).join('');

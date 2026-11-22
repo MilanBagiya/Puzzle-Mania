@@ -15,7 +15,7 @@ function render(): void {
   const cells: string[] = Array(lead).fill('<span></span>');
   for (let d = 1; d <= days; d++) {
     const s = toIso(new Date(y, m, d)), fut = s > today, n = setCount(p, s);
-    const cls = fut ? 'future' : s === today ? 'today' : n ? 'done' : '';
+    const cls = fut ? 'future' : s === today ? 'today' : n ? 'done' : 'plain';
     cells.push(fut ? `<span class="day future" aria-label="${formatDate(s)}, not yet">${d}<small>Soon</small></span>`
       : `<button class="day ${cls}" data-day="${s}" aria-label="${formatDate(s)}, ${n} of 5 solved"${sel === s ? ' style="outline:3px solid var(--coral)"' : ''}>${d}<small>${s === today ? 'Today' : n ? `${n} of 5` : 'Play'}</small></button>`);
   }

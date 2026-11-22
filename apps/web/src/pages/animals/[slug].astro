@@ -23,7 +23,7 @@ const more = GUIDES.filter((x) => x.slug !== g.slug).slice(0, 6);
   </Scenery>
   <main class="wrap body">
     <div class="game">
-      <article class="stack" style="gap:22px">
+      <article class="stack gap-s4">
         <div class="card row" style="justify-content:center; gap:30px"><div class="row" style="flex-wrap:nowrap" set:html={art} /><div class="stack" style="max-width:320px; gap:6px"><b class="display" style="font-size:24px">{g.clue}</b><span>Print size: {g.size}</span></div></div>
         <section class="card stack"><h2 class="h-m">What to look for</h2>{g.body.map((para) => <p style="margin:0; line-height:1.6">{para}</p>)}</section>
         <section class="card stack" style="background:var(--note)"><h2 class="h-s">Look-alike</h2><p style="margin:0; line-height:1.6">{g.lookAlike}</p></section>
@@ -31,7 +31,7 @@ const more = GUIDES.filter((x) => x.slug !== g.slug).slice(0, 6);
       </article>
       <aside class="side">
         <div class="card stack"><h2 class="h-s">More guides</h2>{more.map((x) => <a class="btn btn-w" href={`/animals/${x.slug}`} style="justify-content:flex-start">{x.name}</a>)}</div>
-        <p class="muted" style="font-size:13px; margin-top:14px">Facts are drawn from US state wildlife agencies and the National Park Service; full source lists are in the guide documents.</p>
+        <p class="muted mt-s3" style="font-size:13px">Facts are drawn from US state wildlife agencies and the National Park Service; full source lists are in the guide documents.</p>
       </aside>
     </div>
   </main>

@@ -13,7 +13,7 @@ const filters = [['all', 'All animals'], ['paws', 'Paws'], ['hooves', 'Hooves'],
     <p style="font-weight:800" id="gd-count">{GUIDES.length} guides</p>
     <div class="grid3">
       {GUIDES.map((g) => (
-        <a class="card stack" data-group={g.group} href={`/animals/${g.slug}`} style="text-decoration:none; padding:16px">
+        <a class="card guidecard p-s3" data-group={g.group} href={`/animals/${g.slug}`} style="text-decoration:none">
           <span class="stage" style="height:100px" set:html={art(g)} />
           <span class="row" style="justify-content:space-between"><b class="display" style="font-size:22px">{g.name}</b><span class="pill p-w">{g.size}</span></span>
           <span class="muted">{g.clue}</span>
