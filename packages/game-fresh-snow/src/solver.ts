@@ -255,8 +255,10 @@ function solve(
 
 // Check if current state is a valid complete solution
 function isCompleteSolution(ctx: SolverContext, puzzle: any): boolean {
+  const animals = puzzle.animals as AnimalId[];
+
   // All animals must have paths
-  for (const animal of puzzle.animals as AnimalId[]) {
+  for (const animal of animals) {
     if (!animal) continue;
     const path = ctx.paths[animal];
     if (!path || path.length === 0) return false;
@@ -274,24 +276,56 @@ function isCompleteSolution(ctx: SolverContext, puzzle: any): boolean {
     hideoutOccupants.add(posStr);
   }
 
-  // All prints must be explained
+  // Rule 5: A path never stands on a visible cell that does not show that animal's print
+  // This means: every non-home, non-entry cell on a path must have that animal's print
+  for (const animal of animals) {
+    if (!animal) continue;
+    const path = ctx.paths[animal];
+    if (!path) continue;
+
+    for (const pos of path) {
+      const cell = puzzle.terrain?.[pos.r]?.[pos.c];
+      if (!cell) continue;
+
+      // Skip home cells and entry cells - these don't need prints
+      if (cell.type === 'hideout' || cell.type === 'entry') continue;
+
+      // For snow cells, check that if there's a print, it matches this animal
+      if (cell.type === 'snow' && cell.print) {
+        if (cell.print.animal !== animal) {
+          // This cell has a print for a different animal - invalid
+          return false;
+        }
+      }
+    }
+  }
+
+  // All prints must be explained by the specific animal shown in the print
+  // Rule 4: Every visible (uncovered) print of an animal lies on that animal's path
   for (const row of puzzle.terrain) {
     for (const cell of row) {
       if (cell.type === 'snow' && cell.print) {
         const posStr = posKey(cell.r, cell.c);
-        const animalWithPrint = ctx.placedPrints.get(posStr);
-        if (!animalWithPrint) {
-          // This print needs to be covered by a path
-          let found = false;
-          for (const animal of puzzle.animals as AnimalId[]) {
-            if (!animal) continue;
-            const path = ctx.paths[animal];
-            if (path && path.some(p => posKey(p.r, p.c) === posStr)) {
-              found = true;
-              break;
-            }
-          }
-          if (!found) return false;
+        const expectedAnimal = cell.print.animal;
+        const path = ctx.paths[expectedAnimal];
+
+        if (!path) return false;
+
+        // Check that the expected animal's path covers this print
+        const hasPrint = path.some(p => posKey(p.r, p.c) === posStr);
+        if (!hasPrint) return false;
+      }
+      if (cell.type === 'covered' && cell.prints) {
+        // Handle covered cells with prints (can have multiple prints from different animals)
+        for (const print of cell.prints) {
+          const posStr = posKey(cell.r, cell.c);
+          const expectedAnimal = print.animal;
+          const path = ctx.paths[expectedAnimal];
+
+          if (!path) return false;
+
+          const hasPrint = path.some(p => posKey(p.r, p.c) === posStr);
+          if (!hasPrint) return false;
         }
       }
     }
