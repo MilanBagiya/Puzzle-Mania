@@ -1,0 +1,24 @@
+---
+// One page template for every game in the pack: /play/<id>.
+import Base from '../../layouts/Base.astro';
+import GameHead from '../../components/GameHead.astro';
+import HelpDialog from '../../components/HelpDialog.astro';
+import { PACK, type PackGame } from '@wild-daily/game-pack';
+export function getStaticPaths() { return PACK.map((g) => ({ params: { game: g.id }, props: { g } })); }
+const { g } = Astro.props as { g: PackGame };
+const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: g.name, applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL(`/play/${g.id}`, Astro.site).href, description: g.blurb, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
+---
+<Base title={`${g.name}: daily puzzle`} description={`${g.blurb} A new ${g.name} puzzle every day, free.`} active="games" jsonLd={ld}>
+  <main class="wrap" style="padding-top:18px">
+    <GameHead title={g.name} prefix="pk" back="/games" />
+    <div class="game">
+      <div class="stack"><div id="pk-result" hidden></div><div id="pk-game" class="stack" data-game={g.id}><p class="coach">Loading today’s puzzle…</p><noscript><p class="coach bad">This game needs JavaScript to play.</p></noscript></div></div>
+      <aside class="side">
+        <div class="card stack"><h2 class="h-s">How to play</h2><ol class="steps">{g.rules.map((r) => <li>{r}</li>)}</ol></div>
+        <div class="card stack" style="background:var(--good)"><h2 class="h-s">{g.time}</h2><p style="margin:0">{g.blurb}</p><a class="btn btn-w" href="/games">More games</a></div>
+      </aside>
+    </div>
+  </main>
+  <HelpDialog title={`How to play ${g.name}`}><ol class="steps">{g.rules.map((r) => <li>{r}</li>)}</ol></HelpDialog>
+  <script>import '../../scripts/pack.ts';</script>
+</Base>

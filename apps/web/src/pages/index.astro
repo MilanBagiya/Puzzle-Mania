@@ -9,14 +9,14 @@ const label = (k: string): string => GAMES[k as keyof typeof GAMES].name.replace
 ---
 <Base title="Wild Daily · Daily animal puzzles" description="Fresh Snow, Nests, Dawn Chorus and more: short daily puzzles about real animals. A new set every morning, free to play." active="today" jsonLd={ld}>
   <Scenery height={320} pad={30} class="hub">
-    <div class="row gap-s5" style="justify-content:space-between; align-items:center; flex-wrap:wrap">
+    <div class="row" style="justify-content:space-between; align-items:center; gap:26px">
       <div class="stack" style="max-width:600px">
-        <span class="pill p-w tilt-l mt-s2" style="align-self:flex-start" id="hub-date">Today's puzzles</span>
+        <span class="pill p-w tilt-l" style="align-self:flex-start" id="hub-date">Today’s puzzles</span>
         <h1 class="h-xl">Fresh snow fell overnight.</h1>
         <p class="lead" style="color:var(--ink)">Five short puzzles are waiting in the forest. Solve one to keep your streak; solve all five to complete the Daily Set.</p>
-        <div class="row gap-s2"><a class="btn btn-p big" id="hub-play" href="/fresh-snow?level=morning">Play Morning</a><a class="btn btn-w" href="/fresh-snow/tutorial" id="hub-tut">Start the tutorial</a></div>
+        <div class="row"><a class="btn btn-p big" id="hub-play" href="/fresh-snow?level=morning">Play Morning</a><a class="btn btn-w" href="/fresh-snow/tutorial" id="hub-tut">Start the tutorial</a></div>
       </div>
-      <div class="card tilt-r hero-art" style="width:240px; padding:var(--s3)" aria-hidden="true">
+      <div class="card tilt-r hero-art" style="width:240px; padding:12px" aria-hidden="true">
         <div class="board" style="grid-template-columns:repeat(3,1fr)">
           <span class="cell blocked" set:html={tree()} /><span class="cell blocked"><span class="prints" set:html={print('fox')} /></span><span class="cell blocked" set:html={drift()} />
           <span class="cell blocked"><span class="prints" set:html={print('rabbit')} /></span><span class="cell next blocked"><span class="prints" set:html={print('fox')} /></span><span class="cell blocked" set:html={rock()} />
@@ -25,34 +25,39 @@ const label = (k: string): string => GAMES[k as keyof typeof GAMES].name.replace
       </div>
     </div>
   </Scenery>
-  <main class="wrap body">
+  <main class="wrap">
     <div class="game" style="margin-top:0">
-      <div class="stack gap-s5">
+      <div class="stack" style="gap:26px">
         <section class="card stack">
-          <div class="row gap-s2" style="justify-content:space-between"><h2 class="h-m">Today's Daily Set</h2><span class="muted" style="font-weight:800" id="hub-set">0 of 5 solved</span></div>
+          <div class="row" style="justify-content:space-between"><h2 class="h-m">Today’s Daily Set</h2><span class="muted" style="font-weight:800" id="hub-set">0 of 5 solved</span></div>
           <div style="height:12px; border-radius:2px; background:var(--soft); box-shadow:inset 0 2px 0 var(--soft-e); overflow:hidden"><div id="hub-setbar" style="width:0; height:100%; background:var(--pine); transition:width .4s ease"></div></div>
           <div class="levels">
-            {DAILY_SET.map((g) => <div class="lvrow" data-game={g}><div class="row gap-s2 flex-nowrap"><Fragment set:html={icon[g]} /><div><b>{label(g)}</b><small>{GAMES[g].note}</small></div></div><a class="btn btn-p" href={GAMES[g].href}>Play</a></div>)}
+            {DAILY_SET.map((g) => <div class="lvrow" data-game={g}><div class="row" style="flex-wrap:nowrap; gap:10px"><Fragment set:html={icon[g]} /><div><b>{label(g)}</b><small>{GAMES[g].note}</small></div></div><a class="btn btn-p" href={GAMES[g].href}>Play</a></div>)}
           </div>
-          <div class="banner" id="hub-setdone" hidden style="background:var(--good)"><Fragment set:html={character('deer', 'happy', 64, 'cheer')} /><div class="grow"><b class="display h-s">Daily Set complete!</b><div class="muted">Fresh snow falls in <b class="countdown" data-countdown>soon</b>.</div></div></div>
+          <div class="banner" id="hub-setdone" hidden style="background:var(--good)"><Fragment set:html={character('deer', 'happy', 64, 'cheer')} /><div class="grow"><b class="display" style="font-size:19px">Daily Set complete!</b><div class="muted">Fresh snow falls in <b class="countdown" data-countdown>soon</b>.</div></div></div>
         </section>
         <section class="card stack" style="background:var(--rabbit-t)">
-          <div class="row gap-s2" style="justify-content:space-between"><div class="row gap-s2"><h2 class="h-m">Trail Trek</h2><span class="muted" style="font-weight:800" id="hub-trek">60 stages</span></div><Fragment set:html={character('fox', 'happy', 70, 'cheer')} /></div>
+          <div class="row" style="justify-content:space-between"><div><h2 class="h-m">Trail Trek</h2><span class="muted" style="font-weight:800" id="hub-trek">60 stages</span></div><Fragment set:html={character('fox', 'happy', 70, 'cheer')} /></div>
           <p style="margin:0">A Fresh Snow campaign you can play any time: 60 stages, four chapters, three paws each.</p>
-          <div class="row gap-s2"><a class="btn btn-p" id="hub-trek-btn" href="/trek/play?stage=1">Start the trek</a><a class="btn btn-w" href="/trek">See the map</a></div>
+          <div class="row"><a class="btn btn-p" id="hub-trek-btn" href="/trek/play?stage=1">Start the trek</a><a class="btn btn-w" href="/trek">See the map</a></div>
+        </section>
+        <section class="card stack" style="background:var(--note)">
+          <div class="row" style="justify-content:space-between"><h2 class="h-m">Today’s picks</h2><a href="/games" style="font-weight:800">All 26 games</a></div>
+          <p class="muted" style="margin:0">Three games from the pack, chosen fresh every day. Solve all three for a badge.</p>
+          <div class="levels" id="hub-picks"></div>
         </section>
         <section class="stack">
           <h2 class="h-m">Bonus games</h2>
           <div class="levels card">
-            {BONUS.map((g) => <div class="lvrow" data-game={g}><div class="row gap-s2 flex-nowrap"><Fragment set:html={icon[g]} /><div><b>{label(g)}</b><small>{GAMES[g].note}</small></div></div><a class="btn btn-p" href={GAMES[g].href}>Play</a></div>)}
+            {BONUS.map((g) => <div class="lvrow" data-game={g}><div class="row" style="flex-wrap:nowrap; gap:10px"><Fragment set:html={icon[g]} /><div><b>{label(g)}</b><small>{GAMES[g].note}</small></div></div><a class="btn btn-p" href={GAMES[g].href}>Play</a></div>)}
           </div>
         </section>
       </div>
       <aside class="side">
-        <div class="card stack"><div class="row gap-s2" style="justify-content:space-between"><h2 class="h-s">Your week</h2><span class="pill p-y" id="hub-streak">Start a streak today</span></div><div class="cal" id="hub-week" style="grid-template-columns:repeat(7,1fr)"></div><p class="muted" style="margin:0; font-size:14px" id="hub-best">One missed day a week is forgiven.</p></div>
+        <div class="card stack"><div class="row" style="justify-content:space-between"><h2 class="h-s">Your week</h2><span class="pill p-y" id="hub-streak">Start a streak today</span></div><div class="cal" id="hub-week" style="grid-template-columns:repeat(7,1fr)"></div><p class="muted" style="margin:0; font-size:14px" id="hub-best">One missed day a week is forgiven.</p></div>
         <div class="card stack"><h2 class="h-s">Next fresh snow</h2><p style="margin:0">New puzzles in <b class="countdown" data-countdown>soon</b>.</p></div>
         <div class="card stack" style="background:var(--good)"><h2 class="h-s">Forest Journal</h2><p style="margin:0" id="hub-journal">Each day you play adds an animal card.</p><a class="btn btn-w" href="/journal">Open journal</a></div>
-        <div class="card stack"><h2 class="h-s">Badges</h2><p style="margin:0" id="hub-badges">19 badges to earn</p><a class="btn btn-w" href="/stats">See your stats</a></div>
+        <div class="card stack"><h2 class="h-s">Badges</h2><p style="margin:0" id="hub-badges">22 badges to earn</p><a class="btn btn-w" href="/stats">See your stats</a></div>
       </aside>
     </div>
   </main>

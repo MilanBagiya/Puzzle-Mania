@@ -11,6 +11,7 @@ import { generateNests, solveNests } from '@wild-daily/game-nests';
 import { generateDawn, solveDawn, toPublic } from '@wild-daily/game-dawn-chorus';
 import { generateStones } from '@wild-daily/game-stepping-stones';
 import { candidates, generateRings } from '@wild-daily/game-mushroom-rings';
+import { ALL_GAMES } from '@wild-daily/game-pack/all';
 
 function arg(name: string, fallback: string): string {
   const i = process.argv.indexOf('--' + name);
@@ -43,6 +44,8 @@ for (let k = 0; k < back + days; k++) {
   const rings = generateRings(date).puzzle;
   if (candidates(rings).length !== 1) fail(`Mushroom Rings ${date} is not unique`);
   write(`rings/${date}.json`, rings); files++;
+  // Game pack: each generator already checks fairness (one answer, or solvable) before returning.
+  for (const [id, game] of Object.entries(ALL_GAMES)) { write(`pack/${id}/${date}.json`, game.generate(date)); files++; }
 }
 for (let s = 1; s <= TREK_STAGE_COUNT; s++) {
   const { puzzle } = generateTrekStage(s);

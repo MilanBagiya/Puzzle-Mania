@@ -7,15 +7,15 @@ const art = (g: Guide): string => (g.art.kind === 'character' ? character(g.art.
 const filters = [['all', 'All animals'], ['paws', 'Paws'], ['hooves', 'Hooves'], ['birds', 'Birds']] as const;
 ---
 <Base title="Animal tracks in snow: identification guides" description="Simple, sourced guides to animal tracks in snow: fox, rabbit, deer, coyote, wolf and more, with sizes and look-alikes." active="guides">
-  <PageHead title="Animal tracks in snow" lead="Simple guides to the tracks you're most likely to find, with sizes and look-alikes." />
+  <PageHead title="Animal tracks in snow" lead="Simple guides to the tracks you’re most likely to find, with sizes and look-alikes." />
   <main class="wrap body">
-    <div class="chips gap-s2" role="tablist" aria-label="Filter">{filters.map(([id, label]) => <button class="tab" role="tab" style="flex:0 0 auto" aria-selected={String(id === 'all')} data-filter={id}>{label}</button>)}</div>
+    <div class="chips" role="tablist" aria-label="Filter">{filters.map(([id, label]) => <button class="tab" role="tab" style="flex:0 0 auto" aria-selected={String(id === 'all')} data-filter={id}>{label}</button>)}</div>
     <p style="font-weight:800" id="gd-count">{GUIDES.length} guides</p>
-    <div class="grid3 gap-s4">
+    <div class="grid3">
       {GUIDES.map((g) => (
-        <a class="card stack p-s3" data-group={g.group} href={`/animals/${g.slug}`} style="text-decoration:none">
+        <a class="card stack" data-group={g.group} href={`/animals/${g.slug}`} style="text-decoration:none; padding:16px">
           <span class="stage" style="height:100px" set:html={art(g)} />
-          <span class="row gap-s2" style="justify-content:space-between"><b class="display" style="font-size:22px">{g.name}</b><span class="pill p-w">{g.size}</span></span>
+          <span class="row" style="justify-content:space-between"><b class="display" style="font-size:22px">{g.name}</b><span class="pill p-w">{g.size}</span></span>
           <span class="muted">{g.clue}</span>
         </a>
       ))}

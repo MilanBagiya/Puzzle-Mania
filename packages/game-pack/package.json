@@ -1,0 +1,27 @@
+{
+  "name": "@wild-daily/game-pack",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./all": "./src/all.ts",
+    "./games/*": "./src/games/*.ts",
+    "./shared": "./src/shared.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@wild-daily/ui": "workspace:*",
+    "@wild-daily/game-fresh-snow": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "5.6.3",
+    "vitest": "2.1.9",
+    "@types/node": "22.10.2",
+    "@wild-daily/core": "workspace:*"
+  }
+}

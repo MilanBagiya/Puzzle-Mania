@@ -1,5 +1,5 @@
 // Today page: Daily Set progress, streak with Snow Days, countdown, Trek, bonus games, badges, journal.
-import { addDays, BADGES, BONUS, DAILY_SET, GAMES, JOURNAL, daysPlayed, earnedBadges, formatDate, formatTime, loadProgress, nextInSet, playedDay, setCount, streakInfo, trekStars, trekUnlocked, type GameKey } from '@wild-daily/core';
+import { addDays, BADGES, BONUS, DAILY_SET, GAMES, todaysPicks, JOURNAL, daysPlayed, earnedBadges, formatDate, formatTime, loadProgress, nextInSet, playedDay, setCount, streakInfo, trekStars, trekUnlocked, type GameKey } from '@wild-daily/core';
 import { TREK_STAGE_COUNT } from '@wild-daily/game-fresh-snow/engine';
 import { paws, print } from '@wild-daily/ui';
 import { startCountdowns, today } from './daily';
@@ -23,6 +23,8 @@ const row = (g: GameKey): void => {
   if (r && small) small.innerHTML = `${paws(r.stars, 14)} Solved in ${formatTime(r.time)}`;
   if (btn) { btn.textContent = r ? 'Replay' : 'Play'; btn.classList.toggle('btn-w', !!r); btn.classList.toggle('btn-p', !r); }
 };
+const picksEl = $('hub-picks');
+if (picksEl) picksEl.innerHTML = todaysPicks(today).map((g) => { const r = p.days[today]?.[g]; return `<div class="lvrow${r ? ' done' : ''}" data-game="${g}"><div><b>${GAMES[g].name}</b><small>${r ? `${paws(r.stars, 14)} Solved in ${formatTime(r.time)}` : 'Daily puzzle'}</small></div><a class="btn ${r ? 'btn-w' : 'btn-p'}" href="${GAMES[g].href}">${r ? 'Replay' : 'Play'}</a></div>`; }).join('');
 [...DAILY_SET, ...BONUS].forEach(row);
 const s = streakInfo(p, today);
 set('hub-streak', s.current ? `${s.current}-day streak` : 'Start a streak today');

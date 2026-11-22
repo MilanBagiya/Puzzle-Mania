@@ -15,7 +15,8 @@
     "@wild-daily/game-nests": "workspace:*",
     "@wild-daily/game-dawn-chorus": "workspace:*",
     "@wild-daily/game-stepping-stones": "workspace:*",
-    "@wild-daily/game-mushroom-rings": "workspace:*"
+    "@wild-daily/game-mushroom-rings": "workspace:*",
+    "@wild-daily/game-pack": "workspace:*"
   },
   "devDependencies": {
     "tsx": "4.23.15",

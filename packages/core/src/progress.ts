@@ -10,8 +10,18 @@ export const LEVEL_NOTE: Record<LevelId, string> = {
   night: 'The hardest, about 8–12 minutes',
 };
 
-/** Every daily game. The Daily Set is the first five; the rest are bonus games. */
-export type GameKey = LevelId | 'nests' | 'dawn' | 'stones' | 'rings';
+/** The 20 games in the game pack (/play/<id>). */
+export const PACK_META = [
+  ['frog-pond', 'Frog Pond', 240], ['firefly-night', 'Firefly Night', 300], ['owl-watch', 'Owl Watch', 240], ['acorn-stash', 'Acorn Stash', 240],
+  ['beehive', 'Beehive', 300], ['beaver-lodges', 'Beaver Lodges', 300], ['snow-picture', 'Snow Picture', 420], ['otter-slide', 'Otter Slide', 150],
+  ['moose-crossing', 'Moose Crossing', 120], ['burrow-escape', 'Burrow Escape', 240], ['salmon-run', 'Salmon Run', 120], ['bears-last-snack', 'Bear’s Last Snack', 240],
+  ['who-ate', 'Who Ate the Berries?', 300], ['freshest-track', 'Freshest Track', 150], ['egg-match', 'Egg Match', 180], ['track-word', 'Track Word', 180],
+  ['whose-print', 'Whose Print?', 90], ['feather-pairs', 'Feather Pairs', 120], ['leaf-pile', 'Leaf Pile', 150], ['who-was-here', 'Who Was Here?', 90],
+] as const;
+export type PackKey = (typeof PACK_META)[number][0];
+export const PACK_KEYS: readonly PackKey[] = PACK_META.map((m) => m[0]);
+/** Every daily game. The Daily Set is the first five; stones and rings are bonus games; the pack adds 20 more. */
+export type GameKey = LevelId | 'nests' | 'dawn' | 'stones' | 'rings' | PackKey;
 export const DAILY_SET: readonly GameKey[] = ['morning', 'noon', 'night', 'nests', 'dawn'];
 export const BONUS: readonly GameKey[] = ['stones', 'rings'];
 export interface GameInfo { name: string; href: string; note: string; par: number }
@@ -23,7 +33,16 @@ export const GAMES: Record<GameKey, GameInfo> = {
   dawn: { name: 'Dawn Chorus', href: '/dawn-chorus', note: 'Order the birds, about 1–3 minutes', par: 120 },
   stones: { name: 'Stepping Stones', href: '/stepping-stones', note: 'Get the frog across, about 1–4 minutes', par: 150 },
   rings: { name: 'Mushroom Rings', href: '/mushroom-rings', note: 'Find the spore, about 1 minute', par: 60 },
+  ...(Object.fromEntries(PACK_META.map(([id, name, par]) => [id, { name, href: `/play/${id}`, note: 'Daily puzzle', par }])) as Record<PackKey, GameInfo>),
 };
+/** Three pack games featured each day (the same for everyone), to keep variety fresh. */
+export function todaysPicks(date: string, count = 3): PackKey[] {
+  let h = 2166136261;
+  for (const ch of date) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
+  const keys = PACK_KEYS.slice();
+  for (let i = keys.length - 1; i > 0; i--) { h = Math.imul(h ^ (h >>> 13), 1274126177) >>> 0; const j = h % (i + 1); [keys[i], keys[j]] = [keys[j]!, keys[i]!]; }
+  return keys.slice(0, count);
+}
 
 /** live = played on its own day (only live results count toward streaks; archive play doesn't). */
 export interface GameResult { time: number; hints: number; stars: number; moves?: number; live?: boolean }

@@ -6,21 +6,21 @@ import { leaf, mushroom, stump } from '@wild-daily/ui';
 const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Mushroom Rings', applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL('/mushroom-rings', Astro.site).href, description: 'A one-minute daily deduction puzzle: find where the spore landed from its ring of mushrooms.', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 ---
 <Base title="Mushroom Rings: one-minute daily puzzle" description="A ring of mushrooms spread out from one spore. Read the ring and find where the spore landed, in three guesses." active="games" jsonLd={ld}>
-  <main class="wrap">
+  <main class="wrap" style="padding-top:18px">
     <GameHead title="Mushroom Rings" prefix="mr" />
     <div class="game">
-      <div class="stack"><div id="mr-result" hidden></div><div id="mr-game" class="stack"><p class="coach">Raking the leaves...</p></div></div>
+      <div class="stack"><div id="mr-result" hidden></div><div id="mr-game" class="stack"><p class="coach">Raking the leaves…</p></div></div>
       <aside class="side">
         <div class="card stack"><h2 class="h-s">The rules</h2>
-          <div class="row gap-s2 flex-nowrap"><Fragment set:html={mushroom(46)} /><p style="margin:0" class="muted">Each night the ring moved one square outward, and old mushrooms faded. You see tonight's ring.</p></div>
-          <div class="row gap-s2 flex-nowrap"><Fragment set:html={stump(46)} /><p style="margin:0" class="muted">The ring walks around stumps, never through them.</p></div>
-          <div class="row gap-s2 flex-nowrap"><Fragment set:html={leaf(40)} /><p style="margin:0" class="muted">Leaves may hide a mushroom. A hint lifts one.</p></div>
+          <div class="row" style="flex-wrap:nowrap"><Fragment set:html={mushroom(46)} /><p style="margin:0" class="muted">Each night the ring moved one square outward, and old mushrooms faded. You see tonight’s ring.</p></div>
+          <div class="row" style="flex-wrap:nowrap"><Fragment set:html={stump(46)} /><p style="margin:0" class="muted">The ring walks around stumps, never through them.</p></div>
+          <div class="row" style="flex-wrap:nowrap"><Fragment set:html={leaf(40)} /><p style="margin:0" class="muted">Leaves may hide a mushroom. A hint lifts one.</p></div>
         </div>
       </aside>
     </div>
   </main>
   <HelpDialog title="How to play Mushroom Rings">
-    <ol class="steps"><li>One spore landed on the moss. Every night its ring of mushrooms spread <b>one square outward</b>, walking up, down, left and right.</li><li>You see <b>tonight's ring</b>. Stumps block the ring; leaves may hide mushrooms.</li><li><b>Tap where the spore landed.</b> You have three guesses; a wrong guess shows the ring it would have made.</li></ol>
+    <ol class="steps"><li>One spore landed on the moss. Every night its ring of mushrooms spread <b>one square outward</b>, walking up, down, left and right.</li><li>You see <b>tonight’s ring</b>. Stumps block the ring; leaves may hide mushrooms.</li><li><b>Tap where the spore landed.</b> You have three guesses; a wrong guess shows the ring it would have made.</li></ol>
   </HelpDialog>
   <script>import '../scripts/rings.ts';</script>
 </Base>

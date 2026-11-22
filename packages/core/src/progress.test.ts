@@ -73,7 +73,7 @@ describe('results, stars, trek, badges', () => {
     expect(first).toContain('first-tracks');
     expect(first).toContain('speedy');
     expect(takeNewBadges(p, T)).toEqual([]);
-    expect(BADGES.length).toBe(19);
+    expect(BADGES.length).toBe(22);
   });
   it('round-trips storage, upgrades old data and survives junk', () => {
     const store: Record<string, string> = {};
@@ -91,6 +91,15 @@ describe('results, stars, trek, badges', () => {
     expect(msUntilMidnight(new Date(2027, 0, 1, 23, 0))).toBe(3600000);
     expect(formatCountdown(3 * 3600000 + 5 * 60000)).toBe('3h 5m');
     expect(formatTime(65)).toBe('1:05');
+  });
+});
+describe('game pack', () => {
+  it('has 20 pack games with names and par times, and 3 distinct daily picks', async () => {
+    const { GAMES, PACK_KEYS, todaysPicks } = await import('./progress.js');
+    expect(PACK_KEYS).toHaveLength(20);
+    for (const k of PACK_KEYS) { expect(GAMES[k].href).toBe(`/play/${k}`); expect(GAMES[k].par).toBeGreaterThan(0); }
+    const a = todaysPicks('2027-01-18'), b = todaysPicks('2027-01-19');
+    expect(new Set(a).size).toBe(3); expect(a).toEqual(todaysPicks('2027-01-18')); expect(a).not.toEqual(b);
   });
 });
 describe('content', () => {

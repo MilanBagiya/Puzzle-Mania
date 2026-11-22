@@ -1,3 +1,21 @@
-{ "extends": "../../tsconfig.base.json",
-  "compilerOptions": { "noEmit": true, "module": "ESNext", "moduleResolution": "Bundler", "lib": ["ES2022", "DOM", "DOM.Iterable"], "strict": true, "noUncheckedIndexedAccess": true, "noPropertyAccessFromIndexSignature": false, "skipLibCheck": true },
-  "include": ["src"] }
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "exactOptionalPropertyTypes": false,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src"
+  ]
+}
