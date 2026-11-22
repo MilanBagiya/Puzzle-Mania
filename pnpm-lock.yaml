@@ -69,6 +69,9 @@ importers:
       '@wild-daily/game-nests':
         specifier: workspace:*
         version: link:../../packages/game-nests
+      '@wild-daily/game-pack':
+        specifier: workspace:*
+        version: link:../../packages/game-pack
       '@wild-daily/game-stepping-stones':
         specifier: workspace:*
         version: link:../../packages/game-stepping-stones
@@ -106,6 +109,9 @@ importers:
       '@wild-daily/game-nests':
         specifier: workspace:*
         version: link:../../packages/game-nests
+      '@wild-daily/game-pack':
+        specifier: workspace:*
+        version: link:../../packages/game-pack
       '@wild-daily/game-stepping-stones':
         specifier: workspace:*
         version: link:../../packages/game-stepping-stones
@@ -183,6 +189,28 @@ importers:
         specifier: workspace:*
         version: link:../ui
     devDependencies:
+      typescript:
+        specifier: 5.6.3
+        version: 5.6.3
+      vitest:
+        specifier: 2.1.9
+        version: 2.1.9(@types/node@22.10.2)(lightningcss@1.33.0)
+
+  packages/game-pack:
+    dependencies:
+      '@wild-daily/game-fresh-snow':
+        specifier: workspace:*
+        version: link:../game-fresh-snow
+      '@wild-daily/ui':
+        specifier: workspace:*
+        version: link:../ui
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.2
+        version: 22.10.2
+      '@wild-daily/core':
+        specifier: workspace:*
+        version: link:../core
       typescript:
         specifier: 5.6.3
         version: 5.6.3
