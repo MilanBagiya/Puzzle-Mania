@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import GameHead from '../../components/GameHead.astro';
+import HelpDialog from '../../components/HelpDialog.astro';
+import { ANIMAL_NAME, ANIMAL_RULE, character, type AnimalId } from '@wild-daily/ui';
+const animals: AnimalId[] = ['fox', 'rabbit', 'deer'];
+---
+<Base title="Trail Trek stage" description="Play a Trail Trek stage of Fresh Snow." active="trek" noindex>
+  <main class="wrap">
+    <GameHead title="Stage" prefix="tk" back="/trek" sub="Trail Trek" />
+    <span id="tk-chapter" class="pill p-w mb-s2" style="display:inline-block">Trail Trek</span>
+    <div class="game">
+      <div class="stack"><div id="tk-result" hidden></div><div id="tk-game" class="stack"><p class="coach">Loading the stage...</p></div></div>
+      <aside class="side"><div class="card stack"><h2 class="h-s">How they move</h2>
+        {animals.map((a) => <div class="row gap-s2 flex-nowrap"><Fragment set:html={character(a, 'idle', 50, a === 'rabbit' ? 'boing' : '')} /><div><b class="display" style="font-size:18px">{ANIMAL_NAME[a]}</b><div class="muted" style="font-size:14px">{ANIMAL_RULE[a]}.</div></div></div>)}
+      </div></aside>
+    </div>
+  </main>
+  <HelpDialog title="How to play">
+    <ol class="steps"><li><b>Pick an animal</b>, then tap where its trail starts on the edge.</li><li><b>Follow its prints</b> one step at a time to a burrow. Glowing squares are the options.</li><li>Every visible print must be on its trail. Drifts hide prints. One animal per burrow.</li></ol>
+    <a class="btn btn-w" href="/fresh-snow/tutorial">Take the tutorial</a>
+  </HelpDialog>
+  <script>import '../../scripts/trek-play.ts';</script>
+</Base>

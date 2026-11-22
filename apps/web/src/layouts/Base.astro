@@ -1,0 +1,33 @@
+---
+import '@wild-daily/ui/styles.css';
+import sprite from '@wild-daily/ui/sprite.svg?raw';
+import Seo from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+interface Props { title: string; description: string; active?: string; noindex?: boolean; jsonLd?: Record<string, unknown> | Record<string, unknown>[] }
+const { title, description, active = '', noindex = false, jsonLd } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <Seo title={title} description={description} noindex={noindex} jsonLd={jsonLd} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+    <script is:inline>
+      try { var t = (JSON.parse(localStorage.getItem('wilddaily:v1') || '{}').theme) || 'auto'; if (t !== 'auto') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <Fragment set:html={sprite} />
+    <Header active={active} />
+    <slot />
+    <Footer />
+    <script>
+      import '../scripts/common.ts';
+    </script>
+  </body>
+</html>

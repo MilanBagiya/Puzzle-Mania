@@ -1,0 +1,30 @@
+---
+const themes = [['auto', 'Match device'], ['light', 'Light'], ['dark', 'Dark']] as const;
+---
+<footer>
+  <div class="wrap">
+    <span>New puzzles at your local midnight. Progress is saved on this device only.</span>
+    <span class="row gap-s3" style="flex-wrap:wrap">
+      <a href="/">Today</a><a href="/games">All games</a><a href="/trek">Trail Trek</a><a href="/fresh-snow/archive">Archive</a><a href="/animals">Animal guides</a>
+      <a href="/journal">Journal</a><a href="/stats">Stats</a><a href="/fresh-snow/tutorial">Tutorial</a><a href="/fresh-snow/how-to-play">How to play</a>
+      <a href="#options" data-act="opts">Options</a>
+    </span>
+  </div>
+</footer>
+<dialog id="optsdlg" aria-labelledby="optstitle">
+  <div class="dlg">
+    <div class="dlg-head"><h2 class="h-m" id="optstitle">Options</h2><button class="btn btn-w iconbtn" data-act="closedlg" aria-label="Close">✕</button></div>
+    <div class="stack" style="gap:var(--s2)">
+      <b>Appearance</b>
+      <div class="seg" role="radiogroup" aria-label="Appearance">
+        {themes.map(([v, label]) => <button class="tab" role="radio" aria-checked="false" aria-selected="false" data-act="theme" data-v={v}>{label}</button>)}
+      </div>
+    </div>
+    <div class="stack" style="gap:var(--s2)">
+      <b>Your progress</b>
+      <p class="muted" style="margin:0">Streak, solved puzzles, journal cards and the tutorial are saved in this browser. Erasing them can't be undone.</p>
+      <button class="btn btn-w" data-act="reset" id="resetbtn">Erase my progress</button>
+    </div>
+    <button class="btn btn-p" data-act="closedlg">Done</button>
+  </div>
+</dialog>

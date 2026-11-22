@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+---
+<Base title="Trail Trek: 60 Fresh Snow stages" description="A Fresh Snow campaign: 60 stages in four chapters, from first tracks to the night forest. Earn up to three paws on every stage." active="trek">
+  <PageHead title="Trail Trek" lead="Sixty Fresh Snow stages that teach one animal at a time, then get harder and harder." />
+  <main class="wrap body">
+    <div class="card banner" style="margin-bottom:24px"><div class="grow"><h2 class="h-s" id="trek-sum">Your progress</h2><p class="muted" style="margin:4px 0 0">Stages unlock one at a time. Solve quickly with no hints for three paws.</p></div><a class="btn btn-p big" id="trek-continue" href="/trek/play?stage=1">Start stage 1</a></div>
+    <div class="stack" style="gap:24px" id="trek-map"><p class="coach">Loading the map…</p></div>
+  </main>
+  <script>import '../../scripts/trek-map.ts';</script>
+</Base>

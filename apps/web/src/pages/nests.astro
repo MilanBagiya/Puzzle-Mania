@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import GameHead from '../components/GameHead.astro';
+import HelpDialog from '../components/HelpDialog.astro';
+import { nest, tree } from '@wild-daily/ui';
+const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Nests', applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL('/nests', Astro.site).href, description: 'A daily logic puzzle: find the hidden bird nests using the numbers on the trees.', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
+---
+<Base title="Nests: daily logic puzzle" description="Find the hidden bird nests. Each tree's number is how many nests it can see along its row and column. A new puzzle every day." active="games" jsonLd={ld}>
+  <main class="wrap">
+    <GameHead title="Nests" prefix="nb" />
+    <div class="game">
+      <div class="stack"><div id="nb-result" hidden></div><div id="nb-game" class="stack"><p class="coach">Loading the meadow...</p></div></div>
+      <aside class="side">
+        <div class="card stack"><h2 class="h-s">The rules</h2>
+          <div class="row gap-s2 flex-nowrap"><Fragment set:html={tree(48)} /><p style="margin:0" class="muted">A tree's number is how many nests it can see in its row and column. Another tree blocks the view.</p></div>
+          <div class="row gap-s2 flex-nowrap"><Fragment set:html={nest(48)} /><p style="margin:0" class="muted">Nests never touch each other, not even corner to corner, and never sit on a tree.</p></div>
+        </div>
+        <div class="card stack" style="background:var(--good)"><h2 class="h-s">Tip</h2><p style="margin:0">Start with trees showing 0: every square they can see is empty. Tap twice to mark it with a dot.</p></div>
+      </aside>
+    </div>
+  </main>
+  <HelpDialog title="How to play Nests">
+    <ol class="steps"><li><b>Tap a square</b> to place a nest. Tap again to mark it "no nest", a third time to clear it.</li><li>Each <b>tree's number</b> is how many nests it can see along its row and column, until another tree blocks the view.</li><li><b>Nests never touch</b>, not even diagonally.</li><li>Place every nest, then tap <b>Check</b>.</li></ol>
+  </HelpDialog>
+  <script>import '../scripts/nests.ts';</script>
+</Base>

@@ -1,0 +1,14 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+---
+<Base title="Fresh Snow archive" description="Play any past day's Fresh Snow puzzles: Morning, Noon and Night." active="archive">
+  <PageHead title="Archive" />
+  <main class="wrap body">
+    <div class="game">
+      <div class="card stack" id="arc-cal"><p class="coach">Loading the calendar…</p></div>
+      <aside class="side" id="arc-panel"></aside>
+    </div>
+  </main>
+  <script>import '../../scripts/archive.ts';</script>
+</Base>

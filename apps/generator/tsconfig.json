@@ -1,8 +1,3 @@
-{
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "dist"
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
-}
+{ "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "noEmit": true, "module": "ESNext", "moduleResolution": "Bundler", "lib": ["ES2022", "DOM"], "types": ["node"], "strict": true, "noUncheckedIndexedAccess": true, "noPropertyAccessFromIndexSignature": false, "skipLibCheck": true },
+  "include": ["src"] }

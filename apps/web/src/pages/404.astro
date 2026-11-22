@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Scenery from '../components/Scenery.astro';
+import { character, print, tree } from '@wild-daily/ui';
+---
+<Base title="Page not found" description="This trail went cold." noindex>
+  <Scenery height={420}>
+    <div class="row" style="gap:30px; justify-content:center">
+      <div class="row" style="flex-wrap:nowrap; align-items:flex-end"><Fragment set:html={character('fox', 'oops', 170, 'shake')} /><Fragment set:html={tree(90)} /></div>
+      <div class="stack" style="max-width:460px">
+        <span class="pill p-w tilt-l" style="align-self:flex-start">Error 404</span>
+        <h1 class="h-xl">This trail went cold.</h1>
+        <p class="lead" style="color:var(--ink)">Fresh snow covered this page’s tracks. Let’s get you back on a trail.</p>
+        <div class="row"><a class="btn btn-p big" href="/">Today’s puzzles</a><a class="btn btn-w" href="/animals">Animal guides</a></div>
+        <div class="row" style="gap:10px; opacity:.6" aria-hidden="true"><Fragment set:html={print('fox', 28)} /><Fragment set:html={print('fox', 28)} /></div>
+      </div>
+    </div>
+  </Scenery>
+</Base>

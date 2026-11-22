@@ -1,0 +1,40 @@
+---
+import Base from '../../layouts/Base.astro';
+import GameHead from '../../components/GameHead.astro';
+import HelpDialog from '../../components/HelpDialog.astro';
+import { LEVELS, LEVEL_NAME } from '@wild-daily/core';
+import { ANIMAL_NAME, ANIMAL_RULE, character, type AnimalId } from '@wild-daily/ui';
+const animals: AnimalId[] = ['fox', 'rabbit', 'deer'];
+const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Fresh Snow', applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL('/fresh-snow', Astro.site).href, description: 'A daily animal tracks puzzle: follow the footprints and guide every animal home.', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
+---
+<Base title="Fresh Snow: daily animal tracks puzzle" description="Read the footprints in fresh snow and guide every animal home. A new Morning, Noon and Night puzzle every day, free." active="today" jsonLd={ld}>
+  <main class="wrap">
+    <GameHead title="Fresh Snow" prefix="fs" sub="Today's puzzle" />
+    <div class="banner" id="fs-banner" hidden class="mt-s2">
+      <Fragment set:html={character('fox', 'idle', 60)} />
+      <div class="grow"><b class="display h-s">First time playing?</b><div class="muted">Take the 1-minute guided tutorial, then come back to this puzzle.</div></div>
+      <div class="row gap-s2"><a class="btn btn-p" href="/fresh-snow/tutorial">Start tutorial</a><button class="btn btn-w" id="fs-skip">I know how</button></div>
+    </div>
+    <div class="game">
+      <div class="stack">
+        <nav class="tabs" id="fs-tabs" aria-label="Level">{LEVELS.map((l) => <a class="tab" data-level={l} href={`/fresh-snow?level=${l}`}>{LEVEL_NAME[l]}</a>)}</nav>
+        <div id="fs-result" hidden></div>
+        <div id="fs-game" class="stack"><p class="coach">Loading today's snowfield...</p><noscript><p class="coach bad">Fresh Snow needs JavaScript to play.</p></noscript></div>
+      </div>
+      <aside class="side">
+        <div class="card stack"><h2 class="h-s">How they move</h2>
+          {animals.map((a) => <div class="row gap-s2 flex-nowrap"><Fragment set:html={character(a, 'idle', 54, a === 'rabbit' ? 'boing' : '')} /><div><b class="display" style="font-size:18px">{ANIMAL_NAME[a]}</b><div class="muted" style="font-size:14px">{ANIMAL_RULE[a]}.</div></div></div>)}
+          <p class="muted" style="margin:0; font-size:14px">Every visible print of an animal must be on its trail. Snow drifts hide prints. One animal per burrow.</p>
+        </div>
+        <div class="card stack"><h2 class="h-s">Stuck?</h2><p class="muted" style="margin:0">Hint shows the next correct step. Tap an earlier step on the board to go back to it.</p><a class="btn btn-w" href="/fresh-snow/tutorial">Replay the tutorial</a></div>
+      </aside>
+    </div>
+  </main>
+  <HelpDialog title="How to play">
+    <ol class="steps"><li><b>Pick an animal</b> card above the board.</li><li><b>Tap where its trail starts</b> on the edge. Glowing squares are the places it could go.</li><li><b>Keep tapping</b> one step at a time until it reaches a burrow.</li><li>Do the same for every animal, then tap <b>Check</b>.</li></ol>
+    {animals.map((a) => <div class="kv"><Fragment set:html={character(a, 'idle', 48)} /><div><b>{ANIMAL_NAME[a]}</b> <span class="muted">{ANIMAL_RULE[a]}.</span></div></div>)}
+    <p class="muted" style="margin:0">Every visible print must be on its animal's trail, and no animal steps on a square showing only other prints. Drifts hide prints. One animal per burrow.</p>
+    <div class="row"><a class="btn btn-w" href="/fresh-snow/tutorial">Take the tutorial</a><button class="btn btn-p" data-act="closedlg">Back to the puzzle</button></div>
+  </HelpDialog>
+  <script>import '../../scripts/game.ts';</script>
+</Base>

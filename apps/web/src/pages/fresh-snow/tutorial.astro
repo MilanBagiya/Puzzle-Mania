@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+---
+<Base title="Fresh Snow tutorial" description="A one-minute guided puzzle that teaches how the fox and rabbit move in Fresh Snow." active="howto">
+  <PageHead title="Learn Fresh Snow in one minute" lead="Follow the coach. The glowing square shows where to tap next." />
+  <main class="wrap body">
+    <div class="game">
+      <div class="stack" id="tut"><p class="coach">Loading the tutorial…</p></div>
+      <aside class="side">
+        <div class="card stack"><h2 class="h-s">What you’re learning</h2><ol class="steps"><li>Trails start at the edge of the snow.</li><li>Each animal moves its own way.</li><li>Follow every print to a burrow.</li><li>One animal per burrow.</li></ol></div>
+        <div class="card stack" style="background:var(--good)"><h2 class="h-s">Want every rule?</h2><p style="margin:0">The How to play page has the move explorer and all six rules.</p><a class="btn btn-w" href="/fresh-snow/how-to-play">How to play</a></div>
+      </aside>
+    </div>
+  </main>
+  <script>import '../../scripts/tutorial.ts';</script>
+</Base>

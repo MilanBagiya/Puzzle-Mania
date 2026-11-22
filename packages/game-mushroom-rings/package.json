@@ -1,0 +1,10 @@
+{
+  "name": "@wild-daily/game-mushroom-rings",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts", "./engine": "./src/engine.ts" },
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json", "test": "vitest run" },
+  "dependencies": { "@wild-daily/ui": "workspace:*", "@wild-daily/game-fresh-snow": "workspace:*" },
+  "devDependencies": { "typescript": "5.6.3", "vitest": "2.1.9" }
+}

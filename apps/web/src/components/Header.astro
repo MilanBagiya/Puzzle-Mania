@@ -1,0 +1,20 @@
+---
+import { character } from '@wild-daily/ui';
+interface Props { active?: string }
+const { active = '' } = Astro.props;
+const links = [
+  ['today', '/', 'Today'], ['games', '/games', 'Games'], ['trek', '/trek', 'Trail Trek'], ['archive', '/fresh-snow/archive', 'Archive'],
+  ['guides', '/animals', 'Guides'], ['journal', '/journal', 'Journal'], ['stats', '/stats', 'Stats'],
+] as const;
+---
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="/"><Fragment set:html={character('fox', 'happy', 42)} />Wild Daily</a>
+    <nav class="nav" aria-label="Main">
+      {links.map(([key, href, label]) => <a href={href} aria-current={key === active ? 'page' : undefined}>{label}</a>)}
+    </nav>
+    <button class="btn btn-w iconbtn" data-act="opts" aria-label="Options">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path></svg>
+    </button>
+  </div>
+</header>

@@ -1,22 +1,29 @@
 {
   "name": "@wild-daily/web",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
+    "puzzles": "pnpm --filter @wild-daily/generator generate",
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "pnpm run puzzles && astro build",
     "preview": "astro preview",
-    "test": "vitest run",
-    "lint": "eslint . --ext .ts,.tsx",
-    "typecheck": "astro check"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "astro": "^4.16.0"
+    "astro": "7.4.7",
+    "@astrojs/sitemap": "3.7.4",
+    "@wild-daily/ui": "workspace:*",
+    "@wild-daily/core": "workspace:*",
+    "@wild-daily/game-fresh-snow": "workspace:*",
+    "@wild-daily/game-dawn-chorus": "workspace:*",
+    "@wild-daily/game-nests": "workspace:*",
+    "@wild-daily/game-stepping-stones": "workspace:*",
+    "@wild-daily/game-mushroom-rings": "workspace:*"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.0",
-    "typescript": "^5.5.0",
-    "vitest": "^2.0.0"
+    "typescript": "5.6.3",
+    "vitest": "2.1.9"
   }
 }

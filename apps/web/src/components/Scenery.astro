@@ -1,0 +1,14 @@
+---
+// Cut-paper header scenery (mountains, snow hills, front snow, sun). Content goes in the slot.
+interface Props { height?: number; pad?: number; class?: string }
+const { height = 220, pad = 32, class: extra = '' } = Astro.props;
+---
+<section class:list={['scene', extra]} style={`min-height:${height}px`}>
+  <svg class="hills" viewBox="0 0 1280 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <circle cx="1120" cy="52" r="26" style="fill:var(--sun)"></circle>
+    <path d="M0 120 L150 50 L290 105 L450 30 L640 115 L810 45 L990 108 L1150 36 L1280 96 V200 H0 Z" style="fill:var(--sky-2)"></path>
+    <path d="M0 150 Q220 110 460 142 T930 136 T1280 144 V200 H0 Z" style="fill:var(--hill)"></path>
+    <path d="M0 178 Q320 154 660 172 T1280 168 V200 H0 Z" style="fill:var(--front)"></path>
+  </svg>
+  <div class="wrap page-head" style={`padding-top:${pad}px; padding-bottom:${Math.max(72, Math.round(height * 0.3))}px`}><slot /></div>
+</section>

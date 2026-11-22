@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import GameHead from '../components/GameHead.astro';
+import HelpDialog from '../components/HelpDialog.astro';
+import { frog, lilyPad } from '@wild-daily/ui';
+const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Stepping Stones', applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL('/stepping-stones', Astro.site).href, description: 'A daily frog puzzle: each lily pad says exactly how far to jump next.', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
+---
+<Base title="Stepping Stones: daily frog puzzle" description="Help the frog cross the pond. Each lily pad's number is exactly how far to jump next, and pads sink after one use." active="games" jsonLd={ld}>
+  <main class="wrap">
+    <GameHead title="Stepping Stones" prefix="st" />
+    <div class="game">
+      <div class="stack"><div id="st-result" hidden></div><div id="st-game" class="stack"><p class="coach">Filling the pond...</p></div></div>
+      <aside class="side">
+        <div class="card stack"><h2 class="h-s">The rules</h2>
+          <div class="row gap-s2 flex-nowrap"><Fragment set:html={lilyPad(54)} /><p style="margin:0" class="muted">A pad's number is exactly how far the frog jumps next: up, down, left or right.</p></div>
+          <div class="row gap-s2 flex-nowrap"><Fragment set:html={frog(54)} /><p style="margin:0" class="muted">Each pad sinks after the frog leaves it. Reach the bank in the top-right corner.</p></div>
+        </div>
+        <div class="card stack" style="background:var(--rabbit-t)"><h2 class="h-s">Three paws</h2><p style="margin:0">Cross using the fewest possible jumps, without hints.</p></div>
+      </aside>
+    </div>
+  </main>
+  <HelpDialog title="How to play Stepping Stones">
+    <ol class="steps"><li>The frog starts on the <b>bottom-left pad</b>.</li><li>The number on its pad is <b>exactly how far</b> it must jump, in a straight line.</li><li>Pads <b>sink</b> once used. Glowing pads show where it can land.</li><li>Reach the <b>bank</b> in the top-right corner. Fewer jumps earn more paws.</li></ol>
+  </HelpDialog>
+  <script>import '../scripts/stones.ts';</script>
+</Base>

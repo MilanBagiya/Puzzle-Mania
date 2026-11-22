@@ -1,25 +1,13 @@
 {
   "name": "@wild-daily/ui",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles.css",
+    "./sprite.svg": "./src/sprite.svg"
   },
-  "scripts": {
-    "build": "tsc",
-    "test": "vitest run",
-    "lint": "eslint . --ext .ts",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "typescript": "^5.5.0",
-    "vitest": "^2.0.0"
-  }
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json", "test": "vitest run --passWithNoTests" },
+  "devDependencies": { "typescript": "5.6.3", "vitest": "2.1.9" }
 }

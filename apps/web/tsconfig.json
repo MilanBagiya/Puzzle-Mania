@@ -1,11 +1,1 @@
-{
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "jsx": "preserve",
-    "jsxImportSource": "astro",
-    "types": ["astro/client"],
-    "outDir": "dist"
-  },
-  "include": ["src/**/*", "astro.config.mjs", "env.d.ts"],
-  "exclude": ["node_modules", "dist"]
-}
+{ "extends": "astro/tsconfigs/strict", "include": [".astro/types.d.ts", "src"], "exclude": ["dist"] }

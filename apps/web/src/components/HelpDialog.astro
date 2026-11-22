@@ -1,0 +1,9 @@
+---
+interface Props { title: string }
+const { title } = Astro.props;
+---
+<dialog id="helpdlg" aria-labelledby="helptitle"><div class="dlg">
+  <div class="dlg-head"><h2 class="h-m" id="helptitle">{title}</h2><button class="btn btn-w iconbtn" data-act="closedlg" aria-label="Close">✕</button></div>
+  <slot />
+  <button class="btn btn-p" data-act="closedlg">Back to the puzzle</button>
+</div></dialog>

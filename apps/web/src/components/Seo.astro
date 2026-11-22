@@ -1,0 +1,21 @@
+---
+// One place for every page's <head> SEO: title, description, canonical, social cards, robots and JSON-LD.
+interface Props { title: string; description: string; noindex?: boolean; jsonLd?: Record<string, unknown> | Record<string, unknown>[] }
+const { title, description, noindex = false, jsonLd } = Astro.props;
+const fullTitle = title.includes('Wild Daily') ? title : `${title} · Wild Daily`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+---
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'} />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Wild Daily" />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+{ld.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}

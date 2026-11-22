@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+---
+<Base title="Your stats and badges" description="Your streaks, best times, Trail Trek progress and badges." active="stats" noindex>
+  <PageHead title="Your stats" />
+  <main class="wrap body">
+    <div class="grid3 gap-s3">
+      <div class="card stack" style="background:var(--fox-t); align-items:center; text-align:center"><b class="display h-xl" style="line-height:1" id="s-cur">0</b><span style="font-weight:800">day streak</span></div>
+      <div class="card stack" style="background:var(--rabbit-t); align-items:center; text-align:center"><b class="display h-xl" style="line-height:1" id="s-best">0</b><span style="font-weight:800">best streak</span></div>
+      <div class="card stack" style="background:var(--deer-t); align-items:center; text-align:center"><b class="display h-l" style="line-height:1.2" id="s-trek">Trail Trek</b><span style="font-weight:800">Trail Trek</span></div>
+    </div>
+    <p class="muted mt-s3" id="s-snow"></p>
+    <section class="section card stack"><h2 class="h-m">By game</h2>
+      <div style="overflow-x:auto"><table style="width:100%; min-width:520px; border-collapse:collapse; font-size:15px">
+        <thead><tr style="text-align:left"><th scope="col" style="padding:var(--s2) var(--s3)">Game</th><th scope="col" style="padding:var(--s2) var(--s3)">Solved</th><th scope="col" style="padding:var(--s2) var(--s3)">Best time</th><th scope="col" style="padding:var(--s2) var(--s3)">Average</th><th scope="col" style="padding:var(--s2) var(--s3)">3 paws</th></tr></thead>
+        <tbody id="s-table"></tbody></table></div>
+    </section>
+    <section class="section stack"><div class="row gap-s2" style="justify-content:space-between"><h2 class="h-m">Badges</h2><span class="pill p-y" id="s-badge-count"></span></div><div class="grid4 gap-s3" id="s-badges"></div></section>
+  </main>
+  <script>import '../scripts/stats.ts';</script>
+</Base>

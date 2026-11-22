@@ -1,0 +1,14 @@
+# Rebuilds the site every night so the puzzle window (60 days back, 120 ahead) keeps moving.
+# Setup: Cloudflare Pages > Settings > Builds > Deploy hooks > create one, then add it to
+# GitHub > Settings > Secrets > Actions as CF_PAGES_DEPLOY_HOOK.
+name: Nightly rebuild
+on:
+  schedule:
+    - cron: '15 3 * * *'   # 03:15 UTC daily
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages build
+        run: curl -fsS -X POST "${{ secrets.CF_PAGES_DEPLOY_HOOK }}"

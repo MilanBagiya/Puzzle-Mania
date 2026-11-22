@@ -1,0 +1,38 @@
+---
+import Base from '../../layouts/Base.astro';
+import Scenery from '../../components/Scenery.astro';
+import { GUIDES, type Guide } from '@wild-daily/core';
+import { character, print } from '@wild-daily/ui';
+export function getStaticPaths() { return GUIDES.map((g) => ({ params: { slug: g.slug }, props: { guide: g } })); }
+const { guide: g } = Astro.props as { guide: Guide };
+const art = g.art.kind === 'character' ? character(g.art.animal, 'idle', 110) + print(g.art.print, 46) : print(g.art.print, 90);
+const url = new URL(`/animals/${g.slug}`, Astro.site).href;
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'Article', headline: g.title, description: g.description, mainEntityOfPage: url },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: 'Animal guides', item: new URL('/animals', Astro.site).href },
+    { '@type': 'ListItem', position: 3, name: g.name, item: url } ] },
+];
+const more = GUIDES.filter((x) => x.slug !== g.slug).slice(0, 6);
+---
+<Base title={g.title} description={g.description} active="guides" jsonLd={ld}>
+  <Scenery height={240}>
+    <nav aria-label="Breadcrumb" style="font-weight:800"><a href="/animals">Animal guides</a></nav>
+    <h1 class="h-xl" style="margin-top:10px">{g.name} tracks in snow</h1>
+  </Scenery>
+  <main class="wrap body">
+    <div class="game">
+      <article class="stack" style="gap:22px">
+        <div class="card row" style="justify-content:center; gap:30px"><div class="row" style="flex-wrap:nowrap" set:html={art} /><div class="stack" style="max-width:320px; gap:6px"><b class="display" style="font-size:24px">{g.clue}</b><span>Print size: {g.size}</span></div></div>
+        <section class="card stack"><h2 class="h-m">What to look for</h2>{g.body.map((para) => <p style="margin:0; line-height:1.6">{para}</p>)}</section>
+        <section class="card stack" style="background:var(--note)"><h2 class="h-s">Look-alike</h2><p style="margin:0; line-height:1.6">{g.lookAlike}</p></section>
+        <section class="card row" style="background:var(--pine); color:#fff; justify-content:space-between"><div><h2 class="h-s">Practise with a daily puzzle</h2><p style="margin:4px 0 0; color:#DDF2E5">Fresh Snow turns track reading into a 3-minute game.</p></div><a class="btn btn-y" href="/fresh-snow">Play Fresh Snow</a></section>
+      </article>
+      <aside class="side">
+        <div class="card stack"><h2 class="h-s">More guides</h2>{more.map((x) => <a class="btn btn-w" href={`/animals/${x.slug}`} style="justify-content:flex-start">{x.name}</a>)}</div>
+        <p class="muted" style="font-size:13px; margin-top:14px">Facts are drawn from US state wildlife agencies and the National Park Service; full source lists are in the guide documents.</p>
+      </aside>
+    </div>
+  </main>
+</Base>

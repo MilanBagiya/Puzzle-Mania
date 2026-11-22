@@ -1,18 +1,26 @@
 {
   "name": "@wild-daily/generator",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "gen": "tsx src/index.ts",
-    "test": "vitest run",
-    "lint": "eslint . --ext .ts",
-    "typecheck": "tsc --noEmit"
+    "generate": "tsx src/index.ts --back 60 --days 120 --out ../web/public/puzzles",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@wild-daily/core": "workspace:*",
+    "@wild-daily/game-fresh-snow": "workspace:*",
+    "@wild-daily/game-nests": "workspace:*",
+    "@wild-daily/game-dawn-chorus": "workspace:*",
+    "@wild-daily/game-stepping-stones": "workspace:*",
+    "@wild-daily/game-mushroom-rings": "workspace:*"
+  },
   "devDependencies": {
-    "typescript": "^5.5.0",
-    "vitest": "^2.0.0",
-    "tsx": "^4.19.0"
+    "tsx": "4.23.15",
+    "typescript": "5.6.3",
+    "vitest": "2.1.9",
+    "@types/node": "22.10.2"
   }
 }

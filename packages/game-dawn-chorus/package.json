@@ -1,0 +1,10 @@
+{
+  "name": "@wild-daily/game-dawn-chorus",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json", "test": "vitest run" },
+  "dependencies": { "@wild-daily/game-fresh-snow": "workspace:*" },
+  "devDependencies": { "typescript": "5.6.3", "vitest": "2.1.9" }
+}
