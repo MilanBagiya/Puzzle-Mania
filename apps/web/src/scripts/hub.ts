@@ -1,7 +1,7 @@
 // Today page: Daily Set progress, streak with Snow Days, countdown, Trek, bonus games, badges, journal.
-import { addDays, BADGES, BONUS, DAILY_SET, GAMES, todaysPicks, JOURNAL, daysPlayed, earnedBadges, formatDate, formatTime, loadProgress, nextInSet, playedDay, setCount, streakInfo, trekStars, trekUnlocked, type GameKey } from '@wild-daily/core';
+import { activeSeason, addDays, BADGES, BONUS, DAILY_SET, GAMES, SEASON_INFO, packSeason, todaysPicks, type Season, JOURNAL, daysPlayed, earnedBadges, formatDate, formatTime, loadProgress, nextInSet, playedDay, setCount, streakInfo, trekStars, trekUnlocked, type GameKey } from '@wild-daily/core';
 import { TREK_STAGE_COUNT } from '@wild-daily/game-fresh-snow/engine';
-import { paws, print } from '@wild-daily/ui';
+import { bird, character, frog, mushroom, paws, print, svgUse } from '@wild-daily/ui';
 import { startCountdowns, today } from './daily';
 
 const p = loadProgress();
@@ -23,8 +23,29 @@ const row = (g: GameKey): void => {
   if (r && small) small.innerHTML = `${paws(r.stars, 14)} Solved in ${formatTime(r.time)}`;
   if (btn) { btn.textContent = r ? 'Replay' : 'Play'; btn.classList.toggle('btn-w', !!r); btn.classList.toggle('btn-p', !r); }
 };
-const picksEl = $('hub-picks');
-if (picksEl) picksEl.innerHTML = todaysPicks(today).map((g) => { const r = p.days[today]?.[g]; return `<div class="lvrow${r ? ' done' : ''}" data-game="${g}"><div><b>${GAMES[g].name}</b><small>${r ? `${paws(r.stars, 14)} Solved in ${formatTime(r.time)}` : 'Daily puzzle'}</small></div><a class="btn ${r ? 'btn-w' : 'btn-p'}" href="${GAMES[g].href}">${r ? 'Replay' : 'Play'}</a></div>`; }).join('');
+/** A small picture for every pack game (Today's picks rows). */
+const PACK_ICON: Record<string, () => string> = {
+  'frog-pond': () => frog(40), 'firefly-night': () => svgUse('n-firefly', '0 0 20 20', 34), 'owl-watch': () => svgUse('n-owl', '0 0 40 40', 40),
+  'acorn-stash': () => svgUse('n-acorn', '0 0 30 36', 32), beehive: () => svgUse('n-hive', '0 0 36 36', 38), 'beaver-lodges': () => svgUse('n-beaver', '0 0 80 80', 42),
+  'snow-picture': () => svgUse('i3-drift', '0 0 72 44', 44), 'otter-slide': () => svgUse('n-otter', '0 0 40 30', 42), 'moose-crossing': () => character('deer', 'idle', 42),
+  'burrow-escape': () => character('rabbit', 'idle', 42), 'salmon-run': () => svgUse('n-fish', '0 0 40 22', 42), 'bears-last-snack': () => svgUse('n-bear', '0 0 40 36', 40),
+  'who-ate': () => character('fox', 'idle', 42), 'freshest-track': () => print('fox', 32), 'egg-match': () => bird('#7FC4E8', 40), 'track-word': () => print('rabbit', 32),
+  'whose-print': () => print('deer', 32), 'feather-pairs': () => bird('#E2594A', 40), 'leaf-pile': () => svgUse('n-leaf', '0 0 24 24', 32), 'who-was-here': () => mushroom(36),
+};
+const tz = (): string => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch { return ''; } };
+function renderSeason(season: Season): void {
+  const info = SEASON_INFO[season];
+  set('hub-title', info.title); set('hub-lead', info.lead); set('hub-season', info.name);
+  const s = info.name.toLowerCase();
+  set('hub-picks-note', `Three games from the pack, chosen fresh every day, led by ${/^[aeiou]/.test(s) ? 'an' : 'a'} ${s} game. Solve all three for a badge.`);
+  const picksEl = $('hub-picks');
+  if (picksEl) picksEl.innerHTML = todaysPicks(today, 3, season).map((g) => {
+    const r = p.days[today]?.[g], fits = packSeason(g) === season;
+    return `<div class="lvrow${r ? ' done' : ''}" data-game="${g}"><div class="row" style="flex-wrap:nowrap; gap:10px">${PACK_ICON[g]?.() ?? ''}<div><b>${GAMES[g].name}</b><small>${r ? `${paws(r.stars, 14)} Solved in ${formatTime(r.time)}` : fits ? `In season: ${info.name.toLowerCase()}` : 'Daily puzzle'}</small></div></div><a class="btn ${r ? 'btn-w' : 'btn-p'}" href="${GAMES[g].href}">${r ? 'Replay' : 'Play'}</a></div>`;
+  }).join('');
+}
+renderSeason(activeSeason(p, today, tz()));
+document.addEventListener('wd:season', (e) => renderSeason((e as CustomEvent<Season>).detail));
 [...DAILY_SET, ...BONUS].forEach(row);
 const s = streakInfo(p, today);
 set('hub-streak', s.current ? `${s.current}-day streak` : 'Start a streak today');

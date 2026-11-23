@@ -1,7 +1,31 @@
 # Wild Daily — full site (Astro + all games)
 
-Drop-in code for `D:/Projects/Puzzle-Mania`. Installed, type-checked (strict), unit-tested (73 tests),
+Drop-in code for `D:/Projects/Puzzle-Mania`. Installed, type-checked (strict), unit-tested (77 tests),
 built (47 pages + 4,920 puzzle files) and every game played end to end in a browser before packaging.
+
+## Game juice (v5)
+
+- Every tap gets a quick pop; animals hop when they reach home; mistakes, hints and wins each have their own feel.
+- Wins: confetti in Papercraft colours, the result card slides in, paws stamp in one by one, badges pop,
+  the Journal card flips over; a bigger celebration and fanfare for a complete Daily Set or Trek chapter.
+- Sounds are generated in the browser (Web Audio), so there are no sound files. Sound effects and Vibration
+  are both OFF by default; players turn them on in Options.
+- Reduced motion: no confetti or big movement (sounds still work if switched on).
+- GSAP 3.15.1 and canvas-confetti 1.9.4 load only at the moment a puzzle is solved (game pages still load
+  about 4 KB up front). Code: `apps/web/src/scripts/juice.ts` and `sound.ts`.
+- Fix: on phones the tab bar hides while playing, so it can never cover a game's buttons.
+
+## Seasons (v4)
+
+- The site follows the real seasons: spring (Mar–May), summer (Jun–Aug), autumn (Sep–Nov), winter (Dec–Feb),
+  flipped for the Southern Hemisphere. The hemisphere is detected from the visitor's time zone (Australia,
+  New Zealand, South America, southern Africa); Options lets anyone pick a season or hemisphere.
+- Each season changes the scenery colours and adds living details (snowfall, butterflies and flowers,
+  fireflies and reeds, falling leaves and mushrooms). Falling pieces are hidden for reduced-motion users.
+- The hub's title and intro change with the season; Today's picks always lead with an in-season game; the
+  Games page marks "In season" games; new badge: Four seasons (23 badges in total).
+- Logic: `packages/core/src/season.ts` (seasonFor, hemisphereFromTimeZone, activeSeason, SEASON_INFO).
+  Pack game seasons: `PACK_META` in `packages/core/src/progress.ts`. Colours: the "Seasons" block in styles.css.
 
 ## Design update (v3)
 
@@ -50,7 +74,7 @@ solvers that work on the visible puzzle only.
 - **Paw ratings (1–3)** on every solve; best result is kept, so replays have a goal.
 - **Streaks with Snow Days**: one missed day per calendar week is forgiven automatically. Only puzzles
   played on their own day count toward streaks (archive play can't backfill), and the **best streak** is tracked.
-- **22 badges** (first solve, full set, 3/7/30-day streaks, no-hint Night, quick Morning, each game,
+- **23 badges** (first solve, full set, 3/7/30-day streaks, no-hint Night, quick Morning, each game,
   each Trek chapter, 30 Trek paws, archive explorer, naturalist…) with a "New badge!" moment.
 - **Forest Journal**: a new animal card with a real fact on each day played.
 - **Trail Trek**: 60 stages that teach one animal at a time, unlock in order, and award paws.
@@ -80,12 +104,12 @@ to a backup outside the project (nothing is deleted), and merges in this kit. Ch
 ```powershell
 cd D:\Projects\Puzzle-Mania
 git add -A; git commit -m "backup before game pack"
-$zip = "D:\Downloads\wild-daily-v3.zip"
+$zip = "D:\Downloads\wild-daily-v5.zip"
 $stamp = Get-Date -Format "yyyyMMdd-HHmmss"; $backup = "D:\Projects\Puzzle-Mania-old-src-$stamp"
 New-Item -ItemType Directory -Force $backup | Out-Null
 $old = @("apps\web\src", "apps\generator\src") + (Get-ChildItem packages -Directory | ForEach-Object { "packages\$($_.Name)\src" })
 foreach ($d in $old) { if (Test-Path $d) { Move-Item $d (Join-Path $backup ($d -replace '\\', '_')) } }
-$tmp = "$env:TEMP\wild-daily-v3-$stamp"; Expand-Archive $zip -DestinationPath $tmp
+$tmp = "$env:TEMP\wild-daily-v5-$stamp"; Expand-Archive $zip -DestinationPath $tmp
 robocopy $tmp . /E /NFL /NDL /NJH /NJS | Out-Null
 "game-pack exists: " + (Test-Path packages\game-pack)
 "pack games: " + (Get-ChildItem packages\game-pack\src\games -Name).Count
@@ -102,7 +126,7 @@ Expected: `game-pack exists: True` and `pack games: 20`.
 5. Run:
    ```
    pnpm install
-   pnpm -r run test                          # 73 tests
+   pnpm -r run test                          # 77 tests
    pnpm --filter @wild-daily/web puzzles     # writes 4,920 puzzle files (about 45 seconds)
    pnpm --filter @wild-daily/web dev         # http://localhost:4321
    ```

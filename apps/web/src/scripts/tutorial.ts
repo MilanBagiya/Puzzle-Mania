@@ -1,5 +1,6 @@
 // One-minute guided tutorial on a hand-made 4×4 board.
 import { loadProgress, saveProgress } from '@wild-daily/core';
+import './juice';
 import { ANIMAL_NAME, ANIMAL_SHORT, burrow, character, print, rock, tree, type AnimalId } from '@wild-daily/ui';
 
 const ROCKS = [4], TREES = [15];

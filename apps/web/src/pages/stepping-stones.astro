@@ -6,7 +6,7 @@ import { frog, lilyPad } from '@wild-daily/ui';
 const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Stepping Stones', applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL('/stepping-stones', Astro.site).href, description: 'A daily frog puzzle: each lily pad says exactly how far to jump next.', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 ---
 <Base title="Stepping Stones: daily frog puzzle" description="Help the frog cross the pond. Each lily pad's number is exactly how far to jump next, and pads sink after one use." active="games" jsonLd={ld}>
-  <main class="wrap body">
+  <main class="wrap" style="padding-top:18px">
     <GameHead title="Stepping Stones" prefix="st" />
     <div class="game">
       <div class="stack"><div id="st-result" hidden></div><div id="st-game" class="stack"><p class="coach">Filling the pond…</p></div></div>

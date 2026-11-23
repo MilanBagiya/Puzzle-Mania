@@ -73,7 +73,7 @@ describe('results, stars, trek, badges', () => {
     expect(first).toContain('first-tracks');
     expect(first).toContain('speedy');
     expect(takeNewBadges(p, T)).toEqual([]);
-    expect(BADGES.length).toBe(22);
+    expect(BADGES.length).toBe(23);
   });
   it('round-trips storage, upgrades old data and survives junk', () => {
     const store: Record<string, string> = {};
@@ -107,5 +107,36 @@ describe('content', () => {
     expect(GUIDES).toHaveLength(11);
     expect(JOURNAL).toHaveLength(12);
     for (const j of JOURNAL) expect(GUIDES.some((g) => g.slug === j.guide)).toBe(true);
+  });
+});
+
+import { hemisphereFromTimeZone, seasonFor } from './season.js';
+import { todaysPicks as picks, packSeason, PACK_KEYS as KEYS } from './progress.js';
+describe('seasons', () => {
+  it('uses meteorological seasons, flipped in the south', () => {
+    expect(seasonFor('2027-01-15')).toBe('winter'); expect(seasonFor('2027-04-01')).toBe('spring');
+    expect(seasonFor('2027-07-04')).toBe('summer'); expect(seasonFor('2026-11-22')).toBe('autumn');
+    expect(seasonFor('2026-12-25', 'south')).toBe('summer'); expect(seasonFor('2027-04-01', 'south')).toBe('autumn');
+  });
+  it('detects the hemisphere from the time zone', () => {
+    expect(hemisphereFromTimeZone('Australia/Sydney')).toBe('south'); expect(hemisphereFromTimeZone('Pacific/Auckland')).toBe('south');
+    expect(hemisphereFromTimeZone('Europe/London')).toBe('north'); expect(hemisphereFromTimeZone('America/Toronto')).toBe('north');
+    expect(hemisphereFromTimeZone(undefined)).toBe('north');
+  });
+  it('always leads Today’s picks with an in-season game', () => {
+    for (const s of ['spring', 'summer', 'autumn', 'winter'] as const) for (let d = 1; d <= 28; d++) {
+      const p = picks(`2027-02-${String(d).padStart(2, '0')}`, 3, s);
+      expect(packSeason(p[0]!)).toBe(s); expect(new Set(p).size).toBe(3);
+    }
+    expect(KEYS.every((k) => ['spring', 'summer', 'autumn', 'winter', 'any'].includes(packSeason(k)))).toBe(true);
+  });
+  it('awards Four seasons', async () => {
+    const { BADGES: B } = await import('./badges.js');
+    const four = B.find((b) => b.id === 'four-seasons')!;
+    const p: Progress = { days: {} };
+    for (const d of ['2027-01-10', '2027-04-10', '2027-07-10']) recordLevel(p, d, 'morning', r);
+    expect(four.earned(p, '2027-10-10')).toBe(false);
+    recordLevel(p, '2027-10-10', 'morning', r);
+    expect(four.earned(p, '2027-10-10')).toBe(true);
   });
 });

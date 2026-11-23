@@ -4,6 +4,8 @@ import sprite from '@wild-daily/ui/sprite.svg?raw';
 import Seo from '../components/Seo.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { SOUTH_TZ } from '@wild-daily/core';
+const southTz = SOUTH_TZ.source;
 interface Props { title: string; description: string; active?: string; noindex?: boolean; jsonLd?: Record<string, unknown> | Record<string, unknown>[] }
 const { title, description, active = '', noindex = false, jsonLd } = Astro.props;
 ---
@@ -17,8 +19,20 @@ const { title, description, active = '', noindex = false, jsonLd } = Astro.props
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
-    <script is:inline>
-      try { var t = (JSON.parse(localStorage.getItem('wilddaily:v1') || '{}').theme) || 'auto'; if (t !== 'auto') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+    <script is:inline define:vars={{ southTz }}>
+      // Theme and season are set before the page draws, so there is no flash of the wrong look.
+      (function () {
+        var d = {}; try { d = JSON.parse(localStorage.getItem('wilddaily:v1') || '{}') || {}; } catch (e) {}
+        var t = d.theme || 'auto'; if (t !== 'auto') document.documentElement.setAttribute('data-theme', t);
+        var s = d.season || 'auto';
+        if (['spring', 'summer', 'autumn', 'winter'].indexOf(s) < 0) {
+          var h = d.hemisphere;
+          if (h !== 'north' && h !== 'south') { var tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {} h = new RegExp(southTz).test(tz) ? 'south' : 'north'; }
+          var m = new Date().getMonth(), n = m >= 2 && m <= 4 ? 'spring' : m >= 5 && m <= 7 ? 'summer' : m >= 8 && m <= 10 ? 'autumn' : 'winter';
+          s = h === 'south' ? { spring: 'autumn', summer: 'winter', autumn: 'spring', winter: 'summer' }[n] : n;
+        }
+        document.documentElement.setAttribute('data-season', s);
+      })();
     </script>
   </head>
   <body>

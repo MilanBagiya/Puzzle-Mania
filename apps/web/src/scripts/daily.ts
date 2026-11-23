@@ -6,6 +6,7 @@ import {
 } from '@wild-daily/core';
 import { bird, character, paws, print } from '@wild-daily/ui';
 import { toast } from './toast';
+import './juice';
 
 export const today = todayIso();
 /** ?date=YYYY-MM-DD for archive play; never a future day. */

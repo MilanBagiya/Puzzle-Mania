@@ -1,7 +1,11 @@
 ---
-// Cut-paper header scenery (mountains, snow hills, front snow, sun). Content goes in the slot.
+// Cut-paper header scenery. Colours follow the season (tokens), and each season adds its own living details.
+import { svgUse } from '@wild-daily/ui';
 interface Props { height?: number; pad?: number; class?: string }
 const { height = 220, pad = 32, class: extra = '' } = Astro.props;
+const flakes = [[6, 0], [14, 1.2], [23, 2.6], [31, 0.6], [40, 3.1], [48, 1.8], [57, 0.3], [66, 2.2], [74, 1.1], [83, 3.4], [91, 0.9], [97, 2.9]];
+const leaves = [[8, 0], [22, 1.6], [38, 3.2], [55, 0.8], [71, 2.4], [86, 4]];
+const flies = [[12, 30, 0], [28, 18, 0.8], [46, 34, 1.6], [64, 22, 0.4], [80, 30, 2.2], [92, 14, 1.2]];
 ---
 <section class:list={['scene', extra]} style={`min-height:${height}px`}>
   <svg class="hills" viewBox="0 0 1280 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
@@ -10,5 +14,19 @@ const { height = 220, pad = 32, class: extra = '' } = Astro.props;
     <path d="M0 150 Q220 110 460 142 T930 136 T1280 144 V200 H0 Z" style="fill:var(--hill)"></path>
     <path d="M0 178 Q320 154 660 172 T1280 168 V200 H0 Z" style="fill:var(--front)"></path>
   </svg>
+  <div class="deco" aria-hidden="true">
+    <div class="deco-winter">{flakes.map(([x, d]) => <span class="flake snowfall" style={`left:${x}%; animation-delay:${d}s; animation-duration:${5 + (Number(x) % 3)}s`}></span>)}</div>
+    <div class="deco-spring">
+      <span class="item flutter" style="left:58%; top:22%" set:html={svgUse('n-butterfly', '0 0 30 24', 34)} />
+      <span class="item flutter" style="left:20%; top:40%; animation-delay:2.5s" set:html={svgUse('n-butterfly', '0 0 30 24', 26)} />
+      {[6, 18, 74, 88, 95].map((x, k) => <span class="item" style={`left:${x}%; bottom:6px`} set:html={svgUse(k % 2 ? 'n-tulip' : 'n-daisy', k % 2 ? '0 0 24 40' : '0 0 30 40', 22)} />)}
+    </div>
+    <div class="deco-summer">{flies.map(([x, y, d]) => <span class="item ffly" style={`left:${x}%; top:${y}%; animation-delay:${d}s`} set:html={svgUse('n-firefly', '0 0 20 20', 18)} />)}
+      {[10, 84].map((x) => <span class="item" style={`left:${x}%; bottom:4px`} set:html={svgUse('n-reed', '0 0 20 60', 20)} />)}
+    </div>
+    <div class="deco-autumn">{leaves.map(([x, d]) => <span class="item leaffall" style={`left:${x}%; top:0; animation-delay:${d}s`} set:html={svgUse('n-leaf', '0 0 24 24', 20)} />)}
+      {[12, 80].map((x) => <span class="item" style={`left:${x}%; bottom:4px`} set:html={svgUse('n-mush', '0 0 40 40', 26)} />)}
+    </div>
+  </div>
   <div class="wrap page-head" style={`padding-top:${pad}px; padding-bottom:${Math.max(72, Math.round(height * 0.3))}px`}><slot /></div>
 </section>

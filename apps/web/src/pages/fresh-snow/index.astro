@@ -6,18 +6,18 @@ const animals: AnimalId[] = ['fox', 'rabbit', 'deer'];
 const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Fresh Snow', applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL('/fresh-snow', Astro.site).href, description: 'A daily animal tracks puzzle: follow the footprints and guide every animal home.', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 ---
 <Base title="Fresh Snow: daily animal tracks puzzle" description="Read the footprints in fresh snow and guide every animal home. A new Morning, Noon and Night puzzle every day, free." active="today" jsonLd={ld}>
-  <main class="wrap body">
+  <main class="wrap" style="padding-top:18px">
     <div class="gamehead">
       <div class="row">
         <a class="btn btn-w" href="/" id="fs-back" style="min-height:44px; padding:0 12px"><Fragment set:html={chevron('left')} /><span class="sr">Back</span></a>
         <div><h1 class="h-l">Fresh Snow</h1><span class="muted" style="font-weight:800" id="fs-date">Today’s puzzle</span></div>
       </div>
-      <div class="row gap-s2"><span class="pill p-w timer" id="fs-timer" aria-label="Time">0:00</span><button class="btn btn-w iconbtn" data-act="help" aria-label="How to play"><b class="display" style="font-size:22px">?</b></button></div>
+      <div class="row" style="gap:8px"><span class="pill p-w timer" id="fs-timer" aria-label="Time">0:00</span><button class="btn btn-w iconbtn" data-act="help" aria-label="How to play"><b class="display" style="font-size:22px">?</b></button></div>
     </div>
     <div class="banner" id="fs-banner" hidden style="margin:6px 0 4px">
       <Fragment set:html={character('fox', 'idle', 60)} />
       <div class="grow"><b class="display" style="font-size:19px">First time playing?</b><div class="muted">Take the 1-minute guided tutorial, then come back to this puzzle.</div></div>
-      <div class="row gap-s2"><a class="btn btn-p" href="/fresh-snow/tutorial">Start tutorial</a><button class="btn btn-w" id="fs-skip">I know how</button></div>
+      <div class="row" style="gap:8px"><a class="btn btn-p" href="/fresh-snow/tutorial">Start tutorial</a><button class="btn btn-w" id="fs-skip">I know how</button></div>
     </div>
     <div class="game">
       <div class="stack">

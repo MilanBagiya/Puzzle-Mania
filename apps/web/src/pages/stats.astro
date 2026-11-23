@@ -6,12 +6,12 @@ import PageHead from '../components/PageHead.astro';
   <PageHead title="Your stats" />
   <main class="wrap body">
     <div class="statrow">
-      <div class="card stack gap-s1" style="background:var(--fox-t)"><b class="big" id="s-cur">0</b><span style="font-weight:800; font-size:14px">day streak</span></div>
-      <div class="card stack gap-s1" style="background:var(--rabbit-t)"><b class="big" id="s-best">0</b><span style="font-weight:800; font-size:14px">best streak</span></div>
-      <div class="card stack gap-s1" style="background:var(--deer-t)"><b class="big" id="s-trek-n">0</b><span style="font-weight:800; font-size:14px">Trek stages</span></div>
+      <div class="card stack" style="background:var(--fox-t); gap:4px"><b class="big" id="s-cur">0</b><span style="font-weight:800; font-size:14px">day streak</span></div>
+      <div class="card stack" style="background:var(--rabbit-t); gap:4px"><b class="big" id="s-best">0</b><span style="font-weight:800; font-size:14px">best streak</span></div>
+      <div class="card stack" style="background:var(--deer-t); gap:4px"><b class="big" id="s-trek-n">0</b><span style="font-weight:800; font-size:14px">Trek stages</span></div>
     </div>
-    <p class="muted mt-s2" id="s-trek"></p>
-    <p class="muted mt-s3" id="s-snow"></p>
+    <p class="muted" id="s-trek" style="margin:12px 0 0"></p>
+    <p class="muted" id="s-snow" style="margin-top:16px"></p>
     <section class="section card stack"><h2 class="h-m">By game</h2>
       <div style="overflow-x:auto"><table style="width:100%; border-collapse:collapse; font-size:15px">
         <thead><tr style="text-align:left"><th scope="col" style="padding:10px 12px">Game</th><th scope="col" style="padding:10px 12px">Solved</th><th scope="col" style="padding:10px 12px">Best time</th><th scope="col" class="hide-sm" style="padding:10px 12px">Average</th><th scope="col" style="padding:10px 12px">3 paws</th></tr></thead>

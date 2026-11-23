@@ -9,7 +9,7 @@ const { g } = Astro.props as { g: PackGame };
 const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: g.name, applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL(`/play/${g.id}`, Astro.site).href, description: g.blurb, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 ---
 <Base title={`${g.name}: daily puzzle`} description={`${g.blurb} A new ${g.name} puzzle every day, free.`} active="games" jsonLd={ld}>
-  <main class="wrap body">
+  <main class="wrap" style="padding-top:18px">
     <GameHead title={g.name} prefix="pk" back="/games" />
     <div class="game">
       <div class="stack"><div id="pk-result" hidden></div><div id="pk-game" class="stack" data-game={g.id}><p class="coach">Loading today’s puzzle…</p><noscript><p class="coach bad">This game needs JavaScript to play.</p></noscript></div></div>

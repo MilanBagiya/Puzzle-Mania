@@ -45,7 +45,7 @@ h1,h2,h3,.display{font-family:"Baloo 2", Nunito, system-ui, sans-serif; font-wei
 a{color:var(--ink)} a:hover{color:var(--coral-e1)}
 button{font:inherit; color:inherit}
 :focus-visible{outline:3px solid var(--coral); outline-offset:2px}
-.wrap{max-width:1080px; margin:0 auto; padding:0 var(--s4)}
+.wrap{max-width:1080px; margin:0 auto; padding:0 18px}
 .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
 
 /* header */
@@ -63,7 +63,7 @@ button{font:inherit; color:inherit}
 .scene .wrap{position:relative}
 
 /* paper surfaces */
-.card{background:var(--paper); border-radius:4px; box-shadow:0 4px 0 var(--edge1),0 8px 0 var(--edge2),0 14px 16px rgba(20,30,50,.14); padding:18px}
+.card{background:var(--paper); border-radius:4px; box-shadow:0 4px 0 var(--edge1),0 8px 0 var(--edge2),0 14px 22px rgba(20,30,50,.14); padding:18px}
 .sheet{background:var(--paper); border-radius:3px; box-shadow:0 3px 0 var(--edge1),0 6px 0 var(--edge2)}
 .tilt-l{transform:rotate(-1.2deg)} .tilt-r{transform:rotate(1deg)}
 
@@ -467,3 +467,91 @@ section[id]{scroll-margin-top:90px}
 .gcell.burrow{box-shadow:none; border-radius:4px}
 .exitcell{box-shadow:inset -5px 0 0 #2F7D5B !important}
 .day.plain small{visibility:hidden}
+
+/* ======================================================================
+   Seasons: palettes and living scenery (data-season on <html>)
+   ====================================================================== */
+@media (prefers-color-scheme: light){ :root[data-season="spring"]:not([data-theme="dark"]){--sky:#D3EEFB; --sky-2:#B7E39A; --hill:#8FD46A; --front:#6BBE55; --sun:#FFE59A;} }
+:root[data-theme="light"][data-season="spring"]{--sky:#D3EEFB; --sky-2:#B7E39A; --hill:#8FD46A; --front:#6BBE55; --sun:#FFE59A;}
+@media (prefers-color-scheme: light){ :root[data-season="summer"]:not([data-theme="dark"]){--sky:#FFEBC9; --sky-2:#9CD67E; --hill:#62BE70; --front:#5FB8E0; --sun:#FFB86B;} }
+:root[data-theme="light"][data-season="summer"]{--sky:#FFEBC9; --sky-2:#9CD67E; --hill:#62BE70; --front:#5FB8E0; --sun:#FFB86B;}
+@media (prefers-color-scheme: light){ :root[data-season="autumn"]:not([data-theme="dark"]){--sky:#F8E6CB; --sky-2:#EDB067; --hill:#D9A15E; --front:#B97A3E; --sun:#FFD27A;} }
+:root[data-theme="light"][data-season="autumn"]{--sky:#F8E6CB; --sky-2:#EDB067; --hill:#D9A15E; --front:#B97A3E; --sun:#FFD27A;}
+@media (prefers-color-scheme: dark){ :root[data-season="spring"]:not([data-theme="light"]){--sky-2:#1F3F3A; --hill:#2E5A3E; --front:#3E7A4E;} }
+:root[data-theme="dark"][data-season="spring"]{--sky-2:#1F3F3A; --hill:#2E5A3E; --front:#3E7A4E;}
+@media (prefers-color-scheme: dark){ :root[data-season="summer"]:not([data-theme="light"]){--sky-2:#1E3A4A; --hill:#2E5A3E; --front:#2A5A7E;} }
+:root[data-theme="dark"][data-season="summer"]{--sky-2:#1E3A4A; --hill:#2E5A3E; --front:#2A5A7E;}
+@media (prefers-color-scheme: dark){ :root[data-season="autumn"]:not([data-theme="light"]){--sky-2:#3A2C2A; --hill:#5A3E26; --front:#6E4A2A;} }
+:root[data-theme="dark"][data-season="autumn"]{--sky-2:#3A2C2A; --hill:#5A3E26; --front:#6E4A2A;}
+.deco{position:absolute; inset:0; overflow:hidden; pointer-events:none}
+.deco > div{display:none; position:absolute; inset:0}
+:root[data-season="winter"] .deco-winter,:root[data-season="spring"] .deco-spring,:root[data-season="summer"] .deco-summer,:root[data-season="autumn"] .deco-autumn,:root:not([data-season]) .deco-winter{display:block}
+.deco .flake{position:absolute; top:0; width:7px; height:7px; border-radius:50%; background:#fff; opacity:.9}
+.deco .item{position:absolute}
+.scene .wrap{z-index:1}
+.season-pill{display:inline-flex; align-items:center; gap:6px}
+.inseason{display:none}
+:root[data-season="spring"] [data-season="spring"] .inseason{display:inline-block}
+:root[data-season="summer"] [data-season="summer"] .inseason{display:inline-block}
+:root[data-season="autumn"] [data-season="autumn"] .inseason{display:inline-block}
+:root[data-season="winter"] [data-season="winter"] .inseason{display:inline-block}
+
+/* With reduced motion, falling snow and leaves would freeze in a line: hide them, keep still details */
+@media (prefers-reduced-motion: reduce){ .deco .flake, .deco .leaffall{display:none !important} }
+
+/* While playing (any page with a game header), the phone tab bar steps aside so it never covers the board's buttons.
+   The back button in the game header leads out. */
+@media (max-width:720px){
+  body:has(.gamehead) .tabbar{display:none}
+  body:has(.gamehead){padding-bottom:env(safe-area-inset-bottom,0px)}
+}
+
+/* ---------- Options panel ---------- */
+.dlg.opts{gap:18px}
+.optgroup{display:flex; flex-direction:column; gap:14px; padding-top:16px; border-top:2px solid var(--paper-line)}
+.optgroup-title{margin:0; font-family:"Baloo 2",sans-serif; font-size:19px; font-weight:800}
+.optrow{display:flex; flex-direction:column; gap:8px}
+.optlabel{font-weight:800; font-size:15px}
+.optlabel small{font-weight:700; font-size:13px; margin-left:4px}
+.optpair{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px}
+.opts .seg{gap:8px}
+.opts .seg5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.opts .seg2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.opts .tab{min-height:42px; font-size:14px; padding:4px 2px}
+.opts .tab[aria-selected="true"]{transform:none; box-shadow:0 3px 0 var(--coral-e1)}
+.optrow.dim{opacity:.55}
+@media (max-width:420px){ .opts .seg5 .tab{font-size:12px} }
+
+/* ======================================================================
+   Spacing rhythm: 24px between cards/sections, 16px inside cards, 10px between list rows
+   ====================================================================== */
+.game > .stack, .game > .side{display:flex; flex-direction:column; gap:24px}
+.side .card + .card, .side > * + *{margin-top:0}
+.game{gap:24px; margin-top:24px}
+.card.stack{gap:16px}
+.card .stack{gap:12px}
+.levels{gap:10px}
+.section{margin-top:48px}
+.section > h2 + .grid3, .section > .h-l{margin-bottom:0}
+.grid3, .grid2, .grid4{gap:24px}
+.coach{margin:0}
+#fs-game, #nb-game, #st-game, #mr-game, #pk-game, #tk-game, #tut{gap:16px}
+.gamehead{margin-bottom:8px}
+/* game cards: tags above the title, even-height text, buttons lined up */
+.cardtags{display:flex; gap:6px; flex-wrap:wrap; min-height:24px}
+.gamecard{gap:10px !important}
+.gamecard h2, .gamecard h3{margin:0}
+.gamecard .blurb{margin:0; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; min-height:calc(1.5em * 3)}
+.gamecard > .row:last-child{margin-top:auto; padding-top:6px}
+.packcard{gap:10px !important}
+/* footer: roomier links */
+footer .wrap{padding-top:28px; padding-bottom:28px; row-gap:16px}
+footer .row{gap:10px 18px !important; line-height:1.6}
+@media (max-width:720px){
+  .game{gap:20px; margin-top:16px}
+  .game > .stack, .game > .side{gap:20px}
+  .grid3, .grid2{gap:16px}
+  .section{margin-top:36px}
+  .gamecard .blurb{min-height:0}
+
+}

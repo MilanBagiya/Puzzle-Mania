@@ -1,10 +1,12 @@
 ---
 const themes = [['auto', 'Match device'], ['light', 'Light'], ['dark', 'Dark']] as const;
+const seasons = [['auto', 'Auto'], ['spring', 'Spring'], ['summer', 'Summer'], ['autumn', 'Autumn'], ['winter', 'Winter']] as const;
+const hemis = [['auto', 'Auto-detect'], ['north', 'North'], ['south', 'South']] as const;
 ---
 <footer>
   <div class="wrap">
     <span>New puzzles at your local midnight. Progress is saved on this device only.</span>
-    <span class="row gap-s4">
+    <span class="row" style="gap:14px">
       <a href="/">Today</a><a href="/games">All games</a><a href="/trek">Trail Trek</a><a href="/fresh-snow/archive">Archive</a><a href="/animals">Animal guides</a>
       <a href="/journal">Journal</a><a href="/stats">Stats</a><a href="/fresh-snow/tutorial">Tutorial</a><a href="/fresh-snow/how-to-play">How to play</a>
       <a href="#options" data-act="opts">Options</a>
@@ -12,19 +14,45 @@ const themes = [['auto', 'Match device'], ['light', 'Light'], ['dark', 'Dark']] 
   </div>
 </footer>
 <dialog id="optsdlg" aria-labelledby="optstitle">
-  <div class="dlg">
+  <div class="dlg opts">
     <div class="dlg-head"><h2 class="h-m" id="optstitle">Options</h2><button class="btn btn-w iconbtn" data-act="closedlg" aria-label="Close">✕</button></div>
-    <div class="stack" style="gap:8px">
-      <b>Appearance</b>
-      <div class="seg" role="radiogroup" aria-label="Appearance">
-        {themes.map(([v, label]) => <button class="tab" role="radio" aria-checked="false" aria-selected="false" data-act="theme" data-v={v}>{label}</button>)}
+
+    <section class="optgroup" aria-labelledby="opt-look">
+      <h3 id="opt-look" class="optgroup-title">Look</h3>
+      <div class="optrow">
+        <span class="optlabel">Appearance</span>
+        <div class="seg" role="radiogroup" aria-label="Appearance">
+          {themes.map(([v, label]) => <button class="tab" role="radio" aria-checked="false" aria-selected="false" data-act="theme" data-v={v}>{label}</button>)}
+        </div>
       </div>
-    </div>
-    <div class="stack" style="gap:8px">
-      <b>Your progress</b>
-      <p class="muted" style="margin:0">Streak, solved puzzles, journal cards and the tutorial are saved in this browser. Erasing them can’t be undone.</p>
+      <div class="optrow">
+        <span class="optlabel">Season <small class="muted" id="season-now"></small></span>
+        <div class="seg seg5" role="radiogroup" aria-label="Season">
+          {seasons.map(([v, label]) => <button class="tab" role="radio" aria-checked="false" aria-selected="false" data-act="season" data-v={v}>{label}</button>)}
+        </div>
+      </div>
+      <div class="optrow" id="hemi-row">
+        <span class="optlabel">Where you live <small class="muted" id="hemi-note">Used when Season is Auto</small></span>
+        <div class="seg" role="radiogroup" aria-label="Hemisphere">
+          {hemis.map(([v, label]) => <button class="tab" role="radio" aria-checked="false" aria-selected="false" data-act="hemi" data-v={v}>{label}</button>)}
+        </div>
+      </div>
+    </section>
+
+    <section class="optgroup" aria-labelledby="opt-fx">
+      <h3 id="opt-fx" class="optgroup-title">Sound and touch</h3>
+      <div class="optpair">
+        <div class="optrow"><span class="optlabel">Sound effects</span><div class="seg seg2" role="radiogroup" aria-label="Sound effects"><button class="tab" role="radio" aria-checked="true" aria-selected="true" data-act="sound" data-v="off">Off</button><button class="tab" role="radio" aria-checked="false" aria-selected="false" data-act="sound" data-v="on">On</button></div></div>
+        <div class="optrow"><span class="optlabel">Vibration</span><div class="seg seg2" role="radiogroup" aria-label="Vibration"><button class="tab" role="radio" aria-checked="true" aria-selected="true" data-act="vibrate" data-v="off">Off</button><button class="tab" role="radio" aria-checked="false" aria-selected="false" data-act="vibrate" data-v="on">On</button></div></div>
+      </div>
+    </section>
+
+    <section class="optgroup" aria-labelledby="opt-data">
+      <h3 id="opt-data" class="optgroup-title">Your progress</h3>
+      <p class="muted" style="margin:0; font-size:14px">Streaks, solved puzzles, Journal cards and the tutorial are saved in this browser only. Erasing them can’t be undone.</p>
       <button class="btn btn-w" data-act="reset" id="resetbtn">Erase my progress</button>
-    </div>
+    </section>
+
     <button class="btn btn-p" data-act="closedlg">Done</button>
   </div>
 </dialog>

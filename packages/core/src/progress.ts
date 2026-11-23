@@ -12,11 +12,11 @@ export const LEVEL_NOTE: Record<LevelId, string> = {
 
 /** The 20 games in the game pack (/play/<id>). */
 export const PACK_META = [
-  ['frog-pond', 'Frog Pond', 240], ['firefly-night', 'Firefly Night', 300], ['owl-watch', 'Owl Watch', 240], ['acorn-stash', 'Acorn Stash', 240],
-  ['beehive', 'Beehive', 300], ['beaver-lodges', 'Beaver Lodges', 300], ['snow-picture', 'Snow Picture', 420], ['otter-slide', 'Otter Slide', 150],
-  ['moose-crossing', 'Moose Crossing', 120], ['burrow-escape', 'Burrow Escape', 240], ['salmon-run', 'Salmon Run', 120], ['bears-last-snack', 'Bear’s Last Snack', 240],
-  ['who-ate', 'Who Ate the Berries?', 300], ['freshest-track', 'Freshest Track', 150], ['egg-match', 'Egg Match', 180], ['track-word', 'Track Word', 180],
-  ['whose-print', 'Whose Print?', 90], ['feather-pairs', 'Feather Pairs', 120], ['leaf-pile', 'Leaf Pile', 150], ['who-was-here', 'Who Was Here?', 90],
+  ['frog-pond', 'Frog Pond', 240, 'summer'], ['firefly-night', 'Firefly Night', 300, 'summer'], ['owl-watch', 'Owl Watch', 240, 'winter'], ['acorn-stash', 'Acorn Stash', 240, 'autumn'],
+  ['beehive', 'Beehive', 300, 'spring'], ['beaver-lodges', 'Beaver Lodges', 300, 'summer'], ['snow-picture', 'Snow Picture', 420, 'winter'], ['otter-slide', 'Otter Slide', 150, 'summer'],
+  ['moose-crossing', 'Moose Crossing', 120, 'winter'], ['burrow-escape', 'Burrow Escape', 240, 'winter'], ['salmon-run', 'Salmon Run', 120, 'autumn'], ['bears-last-snack', 'Bear’s Last Snack', 240, 'autumn'],
+  ['who-ate', 'Who Ate the Berries?', 300, 'any'], ['freshest-track', 'Freshest Track', 150, 'winter'], ['egg-match', 'Egg Match', 180, 'spring'], ['track-word', 'Track Word', 180, 'any'],
+  ['whose-print', 'Whose Print?', 90, 'any'], ['feather-pairs', 'Feather Pairs', 120, 'spring'], ['leaf-pile', 'Leaf Pile', 150, 'autumn'], ['who-was-here', 'Who Was Here?', 90, 'any'],
 ] as const;
 export type PackKey = (typeof PACK_META)[number][0];
 export const PACK_KEYS: readonly PackKey[] = PACK_META.map((m) => m[0]);
@@ -35,12 +35,21 @@ export const GAMES: Record<GameKey, GameInfo> = {
   rings: { name: 'Mushroom Rings', href: '/mushroom-rings', note: 'Find the spore, about 1 minute', par: 60 },
   ...(Object.fromEntries(PACK_META.map(([id, name, par]) => [id, { name, href: `/play/${id}`, note: 'Daily puzzle', par }])) as Record<PackKey, GameInfo>),
 };
-/** Three pack games featured each day (the same for everyone), to keep variety fresh. */
-export function todaysPicks(date: string, count = 3): PackKey[] {
+export type PackSeason = (typeof PACK_META)[number][3];
+export const packSeason = (k: PackKey): PackSeason => PACK_META.find((m) => m[0] === k)![3];
+/**
+ * Three pack games featured each day (the same for everyone in a hemisphere), to keep variety fresh.
+ * With a season, the first pick is always a game that belongs to that season.
+ */
+export function todaysPicks(date: string, count = 3, season?: 'spring' | 'summer' | 'autumn' | 'winter'): PackKey[] {
   let h = 2166136261;
   for (const ch of date) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
   const keys = PACK_KEYS.slice();
   for (let i = keys.length - 1; i > 0; i--) { h = Math.imul(h ^ (h >>> 13), 1274126177) >>> 0; const j = h % (i + 1); [keys[i], keys[j]] = [keys[j]!, keys[i]!]; }
+  if (season) {
+    const k = keys.findIndex((x) => packSeason(x) === season);
+    if (k > 0) { const [g] = keys.splice(k, 1); keys.unshift(g!); }
+  }
   return keys.slice(0, count);
 }
 
@@ -53,6 +62,12 @@ export interface Progress {
   trek?: Record<string, GameResult>;
   badges?: string[];
   theme?: Theme;
+  /** 'auto' follows the calendar; a season forces that look. */
+  season?: 'auto' | 'spring' | 'summer' | 'autumn' | 'winter';
+  hemisphere?: 'auto' | 'north' | 'south';
+  /** Sound effects and vibration: both off unless the player turns them on. */
+  sound?: boolean;
+  vibrate?: boolean;
   tutorialDone?: boolean;
   tutorialSeen?: boolean;
 }
