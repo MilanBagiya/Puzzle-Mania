@@ -1,7 +1,9 @@
+import './portal';
 // Shared on every page: Options dialog (theme, erase progress), help dialogs, close buttons.
 import { activeSeason, loadProgress, saveProgress, SEASON_INFO, todayIso, type Theme } from '@wild-daily/core';
 import { toast } from './toast';
 import { play } from './sound';
+import { goTo } from './nav';
 
 function applyTheme(t: Theme): void {
   if (t === 'auto') document.documentElement.removeAttribute('data-theme');
@@ -52,7 +54,7 @@ document.addEventListener('click', (e) => {
       const keep = loadProgress();
       saveProgress({ days: {}, ...(keep.sound ? { sound: keep.sound } : {}), ...(keep.vibrate ? { vibrate: keep.vibrate } : {}), ...(keep.theme ? { theme: keep.theme } : {}), ...(keep.season ? { season: keep.season } : {}), ...(keep.hemisphere ? { hemisphere: keep.hemisphere } : {}) });
       t.closest('dialog')?.close(); toast('Progress erased. Fresh start!');
-      window.setTimeout(() => { window.location.href = '/'; }, 600);
+      window.setTimeout(() => goTo('/'), 600);
       break;
     }
   }

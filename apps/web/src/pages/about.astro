@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+const contact = import.meta.env.PUBLIC_CONTACT_EMAIL as string | undefined;
+---
+<Base title="About Wild Daily" description="Wild Daily is a free collection of daily nature puzzles: animal tracks, birds, frogs, mushrooms and more, with a new set every day." active="">
+  <PageHead title="About Wild Daily" lead="Short daily puzzles from one forest, free to play." />
+  <main class="wrap body">
+    <div class="game">
+      <div class="stack">
+        <section class="card stack">
+          <h2 class="h-m">What it is</h2>
+          <p style="margin:0">Wild Daily is a set of short logic and nature puzzles that changes every day at your local midnight. The flagship game, Fresh Snow, asks you to read animal tracks in the snow and guide each animal home. Around it are 25 more games, from Nests and Dawn Chorus to Frog Pond, Owl Watch and Track Word.</p>
+          <p style="margin:0">Every puzzle is generated and checked by a computer program before it reaches you: logic puzzles always have exactly one answer, and route puzzles are always solvable.</p>
+        </section>
+        <section class="card stack">
+          <h2 class="h-m">Made for everyone</h2>
+          <p style="margin:0">The games are designed for adults and families. Text uses a typeface built for clear reading, colours are checked for contrast, everything works with a keyboard, and animations calm down if your device asks for reduced motion.</p>
+        </section>
+        <section class="card stack">
+          <h2 class="h-m">Your progress</h2>
+          <p style="margin:0">There are no accounts. Streaks, paws, badges and Journal cards are saved in your browser on this device. See the <a href="/privacy">privacy page</a> for details.</p>
+          {contact && <p style="margin:0">Questions or ideas? Write to <a href={`mailto:${contact}`}>{contact}</a>.</p>}
+        </section>
+      </div>
+      <aside class="side">
+        <div class="card stack" style="background:var(--good)"><h2 class="h-s">Start playing</h2><p style="margin:0">Today’s Daily Set takes about ten minutes.</p><a class="btn btn-p" href="/">Today’s puzzles</a><a class="btn btn-w" href="/games">All games</a></div>
+      </aside>
+    </div>
+  </main>
+</Base>

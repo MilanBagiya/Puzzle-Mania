@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+const contact = import.meta.env.PUBLIC_CONTACT_EMAIL as string | undefined;
+const updated = 'November 22, 2026';
+---
+<Base title="Privacy" description="How Wild Daily handles your data: no accounts, progress saved only on your device." active="">
+  <PageHead title="Privacy" lead={`Last updated ${updated}.`} />
+  <main class="wrap body">
+    <div class="game">
+      <div class="stack">
+        <section class="card stack">
+          <h2 class="h-m">The short version</h2>
+          <p style="margin:0">Wild Daily has no accounts and does not ask for your name or email. Your game progress stays in your own browser.</p>
+        </section>
+        <section class="card stack">
+          <h2 class="h-m">What is stored on your device</h2>
+          <p style="margin:0">Your streak, solved puzzles, paws, badges, Journal cards and settings (appearance, season, sound and vibration) are saved in your browser’s local storage on this device. They are not sent to us. You can erase them any time in <a href="#options" data-act="opts">Options</a>, or by clearing this site’s data in your browser.</p>
+        </section>
+        <section class="card stack">
+          <h2 class="h-m">What we do not use</h2>
+          <p style="margin:0">Wild Daily currently sets no cookies and runs no analytics or advertising code. Fonts and all game files are served from this site itself, so loading a page does not contact a font or analytics service.</p>
+        </section>
+        <section class="card stack">
+          <h2 class="h-m">Hosting</h2>
+          <p style="margin:0">Like any website, our hosting provider processes basic technical information needed to deliver pages to you, such as your IP address and browser type.</p>
+        </section>
+        <section class="card stack">
+          <h2 class="h-m">Changes</h2>
+          <p style="margin:0">If we add advertising or analytics in the future, we will update this page before they go live and, where the law requires it, ask for your consent first.</p>
+          {contact && <p style="margin:0">Questions about privacy: <a href={`mailto:${contact}`}>{contact}</a>.</p>}
+        </section>
+      </div>
+      <aside class="side"><div class="card stack"><h2 class="h-s">Related</h2><a class="btn btn-w" href="/terms">Terms of use</a><a class="btn btn-w" href="/about">About Wild Daily</a></div></aside>
+    </div>
+  </main>
+</Base>

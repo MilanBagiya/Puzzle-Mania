@@ -4,8 +4,9 @@ import { formatTime, loadProgress, recordTrek, saveProgress, takeNewBadges, trek
 import { ANIMAL_NAME, character, paws } from '@wild-daily/ui';
 import { loadPuzzle, share, today } from './daily';
 import { toast } from './toast';
+import { params } from './nav';
 
-const q = Number(new URLSearchParams(location.search).get('stage') ?? '1');
+const q = Number(params().get('stage') ?? '1');
 const p0 = loadProgress();
 const unlocked = trekUnlocked(p0);
 const stage = Math.min(Math.max(Number.isFinite(q) ? Math.round(q) : 1, 1), Math.min(unlocked, TREK_STAGE_COUNT));

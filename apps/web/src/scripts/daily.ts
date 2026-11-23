@@ -7,11 +7,12 @@ import {
 import { bird, character, paws, print } from '@wild-daily/ui';
 import { toast } from './toast';
 import './juice';
+import { params } from './nav';
 
 export const today = todayIso();
 /** ?date=YYYY-MM-DD for archive play; never a future day. */
 export function pageDate(): string {
-  const d = new URLSearchParams(location.search).get('date');
+  const d = params().get('date');
   return isIsoDate(d) && d <= today ? d : today;
 }
 export async function loadPuzzle<T>(path: string): Promise<T> {

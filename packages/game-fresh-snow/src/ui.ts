@@ -1,6 +1,6 @@
 // Fresh Snow board UI in plain DOM (no framework). Works from the puzzle alone:
 // the solution is never needed in the browser (hints come from the solver).
-import { ANIMAL_NAME, ANIMAL_RULE, ANIMAL_SHORT, burrow, character, drift, escapeHtml, moodClass, print, rock, tree, type Mood } from '@wild-daily/ui';
+import { ANIMAL_NAME, ANIMAL_RULE, ANIMAL_SHORT, Mover, burrow, character, drift, escapeHtml, moodClass, print, rock, tree, type Gait, type Mood } from '@wild-daily/ui';
 import { checkPaths, isBorder, prevDirOf, rawMoves, solve, SNOW, ROCK, TREE, type AnimalId, type PlayerPaths, type Puzzle } from './engine.js';
 
 export interface GameStats { time: number; hints: number }
@@ -36,6 +36,10 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
   const S: State = { paths: Object.fromEntries(p.animals.map((a) => [a, [] as number[]])), hist: [], sel: first, hints: 0, t0: Date.now(), wrong: -1, oops: null, msg: null, kind: '', done: false, secs: 0, next: [] };
   let wrongTimer = 0;
   let solution: Record<string, number[]> | null = null;
+  // Animals walk the board: fox trots, rabbit hops, deer walks.
+  const GAIT: Record<AnimalId, Gait> = { fox: 'trot', rabbit: 'hop', deer: 'walk' };
+  const mover = new Mover();
+  let prevHome = new Set<AnimalId>();
 
   const pathOf = (a: AnimalId): number[] => S.paths[a] ?? [];
   const isHome = (a: AnimalId): boolean => { const pa = pathOf(a); return pa.length > 0 && homes.has(pa[pa.length - 1] as number); };
@@ -103,10 +107,29 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
 <div class="boardwrap"><div class="board" role="grid" aria-label="Snowfield, ${n} by ${n}" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 86}px">${[...Array(n * n).keys()].map(cell).join('')}</div></div>
 <div class="tools"><button type="button" class="btn btn-w" data-fs="undo"${dis}>Undo</button><button type="button" class="btn btn-w" data-fs="clear"${dis}>Clear</button><button type="button" class="btn btn-y" data-fs="hint"${dis}>Hint</button><button type="button" class="btn btn-p" data-fs="check"${dis}>Check</button></div>`;
     if (focus != null) (root.querySelector(`[data-i="${focus}"]`) as HTMLElement | null)?.focus({ preventScroll: true });
+    syncAnimals();
+  }
+
+  function syncAnimals(): void {
+    const cellEl = (i: number): Element | null => root.querySelector(`[data-fs="cell"][data-i="${i}"]`);
+    const nowHome = new Set(p.animals.filter((a) => isHome(a)));
+    const arrived = [...nowHome].filter((a) => !prevHome.has(a));
+    const specs = S.done ? [] : p.animals.filter((a) => pathOf(a).length > 0 && (!isHome(a) || arrived.includes(a))).map((a) => {
+      const last = pathOf(a)[pathOf(a).length - 1] as number;
+      return { id: a, cell: last, el: cellEl(last), html: character(a, mood(a)), gait: GAIT[a], selected: a === S.sel && !isHome(a) };
+    });
+    mover.sync(root.querySelector<HTMLElement>('.boardwrap'), specs);
+    for (const a of arrived) {
+      if (S.done) break;
+      const home = pathOf(a)[pathOf(a).length - 1] as number;
+      cellEl(home)?.classList.add('arriving', 'burrowshake');
+      mover.dive(a, 330);
+    }
+    prevHome = nowHome;
   }
 
   function flashWrong(i: number, a: AnimalId, msg: string): void {
-    S.wrong = i; S.oops = a; S.msg = msg; S.kind = 'bad'; render(i);
+    S.wrong = i; S.oops = a; S.msg = msg; S.kind = 'bad'; render(i); mover.shake(a);
     window.clearTimeout(wrongTimer);
     wrongTimer = window.setTimeout(() => { S.wrong = -1; S.oops = null; S.msg = null; S.kind = ''; render(); }, 1500);
   }
@@ -161,7 +184,7 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
       return;
     }
     const e = errs[0]!;
-    S.oops = e.animal; S.msg = e.message; S.kind = 'bad'; render();
+    S.oops = e.animal; S.msg = e.message; S.kind = 'bad'; render(); mover.shake(e.animal);
     window.clearTimeout(wrongTimer);
     wrongTimer = window.setTimeout(() => { S.oops = null; render(); }, 1600);
   }
@@ -171,7 +194,7 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
     if (!t || !root.contains(t)) return;
     const act = t.dataset.fs;
     if (act === 'cell') tapCell(Number(t.dataset.i));
-    else if (act === 'sel') { S.sel = t.dataset.a as AnimalId; S.msg = null; render(); }
+    else if (act === 'sel') { S.sel = t.dataset.a as AnimalId; S.msg = null; render(); mover.hop(S.sel); }
     else if (act === 'undo') {
       const a = S.hist.pop();
       if (a && pathOf(a).length) { pathOf(a).pop(); S.sel = a; }
@@ -187,7 +210,9 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
     opts.timerEl.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
   }
   root.addEventListener('click', onClick);
+  const onResize = (): void => render();
+  window.addEventListener('resize', onResize);
   const timer = window.setInterval(tick, 1000);
   render(); tick();
-  return { destroy(): void { root.removeEventListener('click', onClick); window.clearInterval(timer); window.clearTimeout(wrongTimer); } };
+  return { destroy(): void { root.removeEventListener('click', onClick); window.removeEventListener('resize', onResize); window.clearInterval(timer); window.clearTimeout(wrongTimer); mover.clear(); } };
 }

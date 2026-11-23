@@ -52,3 +52,5 @@ export const stump = (w?: number): string => svgUse('n-stump', '0 0 38 30', w);
 export function paws(stars: number, w = 20): string {
   return `<span class="paws" role="img" aria-label="${stars} of 3 paws">${[1, 2, 3].map((k) => `<svg viewBox="0 0 20 20" width="${w}" height="${w}" aria-hidden="true" class="${k <= stars ? 'on' : 'off'}"><use href="#i-paw"></use></svg>`).join('')}</span>`;
 }
+export { Mover, type Gait, type TokenSpec } from './mover.js';
+export { cover, COVER_IDS } from './cover.js';

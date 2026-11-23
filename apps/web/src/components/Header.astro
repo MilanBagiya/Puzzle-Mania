@@ -1,36 +1,52 @@
 ---
+// App shell: dark top bar (menu, logo, live search, My games, streak, options) and the category sidebar.
 import { character } from '@wild-daily/ui';
+import { CATS, ICON, SEARCH_INDEX } from '../data/catalog';
 interface Props { active?: string }
 const { active = '' } = Astro.props;
-const links = [
-  ['today', '/', 'Today'], ['games', '/games', 'Games'], ['trek', '/trek', 'Trail Trek'], ['archive', '/fresh-snow/archive', 'Archive'],
-  ['guides', '/animals', 'Guides'], ['journal', '/journal', 'Journal'], ['stats', '/stats', 'Stats'],
+const main = [
+  ['today', '/', 'Home', 'home'], ['recent', '/recent', 'Recently played', 'recent'], ['new', '/games?sort=new', 'New games', 'new'],
+  ['daily', '/#daily', 'Daily Set', 'daily'], ['trek', '/trek', 'Trail Trek', 'trek'], ['archive', '/fresh-snow/archive', 'Archive', 'archive'],
+  ['journal', '/journal', 'Journal', 'journal'], ['stats', '/stats', 'Stats', 'stats'],
 ] as const;
-// Phone tab bar: the five places people go most. Archive and Guides stay one tap away on the Games page and footer.
-const tabs = [
-  ['today', '/', 'Today', 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'],
-  ['games', '/games', 'Games', 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z'],
-  ['trek', '/trek', 'Trek', 'M5 21V4m0 0h11l-2 4 2 4H5'],
-  ['journal', '/journal', 'Journal', 'M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11'],
-  ['stats', '/stats', 'Stats', 'M5 20V11M12 20V5M19 20v-7'],
-] as const;
+const extra = [['guides', '/animals', 'Animal guides', 'guides'], ['howto', '/fresh-snow/how-to-play', 'How to play', 'howto']] as const;
+const tabs = [['today', '/', 'Today', 'home'], ['games', '/games', 'Games', 'logic'], ['trek', '/trek', 'Trek', 'trek'], ['journal', '/journal', 'Journal', 'journal'], ['stats', '/stats', 'Stats', 'stats']] as const;
+const ic = (k: string, s = 22): string => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICON[k]}"></path></svg>`;
+const cur = (k: string): 'page' | undefined => (k === active ? 'page' : undefined);
 ---
-<header class="top">
-  <div class="wrap">
-    <a class="logo" href="/"><Fragment set:html={character('fox', 'happy', 42)} /><span>Wild Daily</span></a>
-    <nav class="nav" aria-label="Main">
-      {links.map(([key, href, label]) => <a href={href} aria-current={key === active ? 'page' : undefined}>{label}</a>)}
-    </nav>
-    <button class="btn btn-w iconbtn" data-act="opts" aria-label="Options">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path></svg>
+<header class="topbar">
+  <button class="tb-icon" data-act="nav" aria-label="Menu" aria-expanded="false" aria-controls="sidenav" set:html={ic('menu', 24)} />
+  <a class="logo" href="/"><Fragment set:html={character('fox', 'happy', 40)} /><span>Wild Daily</span></a>
+  <form class="tb-search" role="search" action="/games" method="get" autocomplete="off">
+    <input type="search" name="q" id="tb-q" placeholder="Search games" aria-label="Search games" aria-controls="tb-results" aria-autocomplete="list" />
+    <span class="tb-search-ic" set:html={ic('search', 20)} />
+    <div class="tb-results" id="tb-results" role="listbox" hidden></div>
+  </form>
+  <div class="tb-right">
+    <span class="tb-chip" id="tb-streak" title="Your streak" hidden><Fragment set:html={ic('flame', 18)} /><b>0</b></span>
+    <a class="tb-btn" href="/recent"><Fragment set:html={ic('mygames', 18)} /><span>My games</span></a>
+    <button class="tb-icon" data-act="opts" aria-label="Options">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path></svg>
     </button>
   </div>
+  <script type="application/json" id="wd-search" set:html={JSON.stringify(SEARCH_INDEX)} />
 </header>
+<nav class="sidenav" id="sidenav" aria-label="Main">
+  <ul>
+    {main.map(([k, href, label, icon]) => <li><a href={href} aria-current={cur(k)} title={label}><Fragment set:html={ic(icon)} /><span>{label}</span></a></li>)}
+  </ul>
+  <hr />
+  <p class="sn-head">Categories</p>
+  <ul>
+    {CATS.map((c) => <li><a href={`/games/${c.id}`} aria-current={cur(`cat-${c.id}`)} title={c.name}><Fragment set:html={ic(c.icon)} /><span>{c.name}</span></a></li>)}
+    <li><a href="/games" aria-current={cur('games')} title="All games"><Fragment set:html={ic('logic')} /><span>All games</span></a></li>
+  </ul>
+  <hr />
+  <ul>
+    {extra.map(([k, href, label, icon]) => <li><a href={href} aria-current={cur(k)} title={label}><Fragment set:html={ic(icon)} /><span>{label}</span></a></li>)}
+  </ul>
+</nav>
+<div class="navscrim" data-act="nav" hidden></div>
 <nav class="tabbar" aria-label="Main">
-  {tabs.map(([key, href, label, d]) => (
-    <a href={href} aria-current={key === active ? 'page' : undefined}>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={d}></path></svg>
-      <span>{label}</span>
-    </a>
-  ))}
+  {tabs.map(([key, href, label, icon]) => <a href={href} aria-current={key === active || (key === 'games' && active.startsWith('cat-')) ? 'page' : undefined}><Fragment set:html={ic(icon, 24)} /><span>{label}</span></a>)}
 </nav>

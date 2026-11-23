@@ -1,0 +1,22 @@
+---
+// Portal page header: breadcrumb, big title, description with "Show more", and the sort menu.
+interface Props { crumbs: [string, string?][]; title: string; blurb: string; more?: string; sort?: boolean }
+const { crumbs, title, blurb, more, sort = true } = Astro.props;
+---
+<div class="portal-head">
+  <nav class="crumbs" aria-label="Breadcrumb">{crumbs.map(([label, href], i) => <>{i > 0 && <span aria-hidden="true">›</span>}{href ? <a href={href}>{label}</a> : <span aria-current="page">{label}</span>}</>)}</nav>
+  <h1 class="portal-title">{title}</h1>
+  <div class="portal-row">
+    <div class="portal-blurb">
+      {more ? <details><summary><span>{blurb}</span> <b class="more-btn">Show more</b></summary><p>{more}</p></details> : <p>{blurb}</p>}
+    </div>
+    {sort && (
+      <label class="sortbox"><span class="sr-only">Sort games</span>
+        <select id="grid-sort">
+          <option value="featured">Featured</option><option value="new">Newest</option><option value="quick">Quickest first</option><option value="az">A to Z</option>
+        </select>
+      </label>
+    )}
+  </div>
+  <p class="muted grid-count" id="grid-count" aria-live="polite"></p>
+</div>

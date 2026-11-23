@@ -3,6 +3,17 @@
 Drop-in code for `D:/Projects/Puzzle-Mania`. Installed, type-checked (strict), unit-tested (77 tests),
 built (47 pages + 4,920 puzzle files) and every game played end to end in a browser before packaging.
 
+## Portal (v6)
+
+- App shell: dark top bar (menu, logo, live search, My games, streak) and a category sidebar (collapses to icons on
+  desktop, slide-out drawer on smaller screens; the phone tab bar stays).
+- Game tiles with cover art, Daily / New / In season / Solved badges and hover play button.
+- Pages: All games (/games, with search ?q= and sort), one page per category (/games/logic …), My games (/recent).
+- Home in rows: Daily Set tiles, Today's picks, Continue playing, In season, category rows.
+- One catalog for everything: apps/web/src/data/catalog.ts. Tiles: apps/web/src/scripts/tiles.ts. Behaviour: scripts/portal.ts.
+- Also since v5: moving animals, seasonal covers for all 26 games, self-hosted fonts (Fraunces + Atkinson Hyperlegible Next),
+  design system (radius, shadows, hover/focus states), About / Privacy / Terms pages. Set PUBLIC_CONTACT_EMAIL to show a contact address.
+
 ## Game juice (v5)
 
 - Every tap gets a quick pop; animals hop when they reach home; mistakes, hints and wins each have their own feel.
@@ -104,12 +115,12 @@ to a backup outside the project (nothing is deleted), and merges in this kit. Ch
 ```powershell
 cd D:\Projects\Puzzle-Mania
 git add -A; git commit -m "backup before game pack"
-$zip = "D:\Downloads\wild-daily-v5.zip"
+$zip = "D:\Downloads\wild-daily-v6.zip"
 $stamp = Get-Date -Format "yyyyMMdd-HHmmss"; $backup = "D:\Projects\Puzzle-Mania-old-src-$stamp"
 New-Item -ItemType Directory -Force $backup | Out-Null
 $old = @("apps\web\src", "apps\generator\src") + (Get-ChildItem packages -Directory | ForEach-Object { "packages\$($_.Name)\src" })
 foreach ($d in $old) { if (Test-Path $d) { Move-Item $d (Join-Path $backup ($d -replace '\\', '_')) } }
-$tmp = "$env:TEMP\wild-daily-v5-$stamp"; Expand-Archive $zip -DestinationPath $tmp
+$tmp = "$env:TEMP\wild-daily-v6-$stamp"; Expand-Archive $zip -DestinationPath $tmp
 robocopy $tmp . /E /NFL /NDL /NJH /NJS | Out-Null
 "game-pack exists: " + (Test-Path packages\game-pack)
 "pack games: " + (Get-ChildItem packages\game-pack\src\games -Name).Count

@@ -1,9 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import { activeFor } from '../data/catalog';
 import GameHead from '../components/GameHead.astro';
 import HelpDialog from '../components/HelpDialog.astro';
 ---
-<Base title="Dawn Chorus: daily bird puzzle" description="Five birds sang at sunrise. Read the clues and work out the order. A new puzzle every day." active="games">
+<Base title="Dawn Chorus: daily bird puzzle" description="Five birds sang at sunrise. Read the clues and work out the order. A new puzzle every day." active={activeFor('dawn')}>
   <main class="wrap" style="padding-top:18px">
     <GameHead title="Dawn Chorus" prefix="dc" />
     <div class="game">

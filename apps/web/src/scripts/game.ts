@@ -2,11 +2,12 @@
 import { createFreshSnowGame, type LevelId, type Puzzle } from '@wild-daily/game-fresh-snow';
 import { LEVEL_NAME, LEVELS, formatDate, formatTime, loadProgress, nextLevel, saveProgress } from '@wild-daily/core';
 import { ANIMAL_NAME, character } from '@wild-daily/ui';
+import { params } from './nav';
 import { loadPuzzle, pageDate, recordFinish, setDateLabel, shareLine, showLoadError, showResult, today } from './daily';
 
 const date = pageDate();
 let p = loadProgress();
-const lvParam = new URLSearchParams(location.search).get('level') as LevelId | null;
+const lvParam = params().get('level') as LevelId | null;
 const level: LevelId = lvParam && (LEVELS as readonly string[]).includes(lvParam) ? lvParam : nextLevel(p, date) ?? 'morning';
 const url = (l: string): string => `/fresh-snow?level=${l}${date !== today ? `&date=${date}` : ''}`;
 setDateLabel('fs-date', date);

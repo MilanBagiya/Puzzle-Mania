@@ -1,6 +1,6 @@
 // Moose Crossing: the moose slides on ice in a straight line until it hits a tree or the edge.
 // Reach the lake (the lake stops it). Fewer slides earn more paws. Every puzzle is solvable in 4–8 slides.
-import { character, tree } from '@wild-daily/ui';
+import { Mover, character, tree } from '@wild-daily/ui';
 import { btn, clock, coach, onAct, pills, range, rngFrom, shuffle, tools, type GameDef } from '../shared.js';
 
 export interface MoosePuzzle { n: number; seed: string; trees: number[]; start: number; lake: number; best: number }
@@ -43,17 +43,19 @@ const def: GameDef<MoosePuzzle> = {
     const n = p.n, trees = new Set(p.trees);
     let at = p.start, path = [p.start], hints = 0, done = false, msg: string | null = null, kind = '';
     const t = clock(ctx);
+    const mover = new Mover();
     const render = (): void => {
-      const cells = range(n * n).map((i) => `<div class="gcell ice${i === p.lake ? ' lake' : ''}${path.includes(i) && i !== at ? ' trail' : ''}" role="gridcell" aria-label="${i === at ? 'Moose' : i === p.lake ? 'Lake' : trees.has(i) ? 'Tree' : 'Ice'}">${trees.has(i) ? tree() : i === at ? character('deer', done ? 'happy' : 'idle', undefined, done ? 'cheer' : '') : ''}</div>`).join('');
+      const cells = range(n * n).map((i) => `<div class="gcell ice${i === p.lake ? ' lake' : ''}${path.includes(i) && i !== at ? ' trail' : ''}" data-cell="${i}" role="gridcell" aria-label="${i === at ? 'Moose' : i === p.lake ? 'Lake' : trees.has(i) ? 'Tree' : 'Ice'}">${trees.has(i) ? tree() : ''}</div>`).join('');
       const text = done ? `The moose reached the lake in ${path.length - 1} slides! Best possible: ${p.best}.` : msg ?? 'Pick a direction. The moose slides until it bumps into a tree or the edge. The lake stops it.';
       const arrows = done ? '' : `<div class="dpad"><span></span>${btn('go:0', '▲ Up')}<span></span>${btn('go:3', '◀ Left')}${btn('undo', 'Undo', 'btn-w', path.length < 2)}${btn('go:1', 'Right ▶')}<span></span>${btn('go:2', '▼ Down')}<span></span></div>`;
       root.innerHTML = `${pills(`Slides: ${path.length - 1}`, `Best possible: ${p.best}`)}${coach(text, done ? 'good' : kind)}<div class="boardwrap"><div class="board" role="grid" aria-label="Frozen pond" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 60}px; gap:3px">${cells}</div></div>${arrows}${tools(btn('restart', 'Restart', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done))}`;
+      mover.sync(root.querySelector<HTMLElement>('.boardwrap'), [{ id: 'moose', cell: at, el: root.querySelector(`[data-cell="${at}"]`), html: character('deer', done ? 'happy' : 'idle', undefined, done ? 'cheer' : ''), gait: 'slide', selected: !done, size: 1.05, puff: at === p.lake ? '#9FD3EE' : '#FFFFFF' }]);
     };
     const off = onAct(root, (act, arg) => {
       if (done) return; msg = null; kind = '';
       if (act === 'go') {
         const j = slide(p, at, Number(arg));
-        if (j === at) { msg = 'Bump! A tree or the edge is right there.'; kind = 'bad'; }
+        if (j === at) { msg = 'Bump! A tree or the edge is right there.'; kind = 'bad'; render(); mover.shake('moose'); return; }
         else { at = j; path.push(j); if (at === p.lake) { done = true; const time = t.stop(); render(); const moves = path.length - 1; ctx.onSolved({ time, hints, moves, stars: hints === 0 && moves === p.best ? 3 : moves <= p.best + 2 ? 2 : 1 }); return; } }
       } else if (act === 'undo') { path.pop(); at = path[path.length - 1]!; }
       else if (act === 'restart') { at = p.start; path = [p.start]; }
@@ -64,7 +66,7 @@ const def: GameDef<MoosePuzzle> = {
       render();
     });
     render();
-    return { destroy: () => { off(); t.kill(); } };
+    return { destroy: () => { off(); t.kill(); mover.clear(); } };
   },
 };
 export default def;

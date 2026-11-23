@@ -5,6 +5,9 @@ import Seo from '../components/Seo.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SOUTH_TZ } from '@wild-daily/core';
+// Fonts are self-hosted with the site (faster, and no visitor data sent to a font CDN).
+import '@fontsource-variable/fraunces/soft.css';
+import '@fontsource-variable/atkinson-hyperlegible-next/wght.css';
 const southTz = SOUTH_TZ.source;
 interface Props { title: string; description: string; active?: string; noindex?: boolean; jsonLd?: Record<string, unknown> | Record<string, unknown>[] }
 const { title, description, active = '', noindex = false, jsonLd } = Astro.props;
@@ -16,9 +19,6 @@ const { title, description, active = '', noindex = false, jsonLd } = Astro.props
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <Seo title={title} description={description} noindex={noindex} jsonLd={jsonLd} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
     <script is:inline define:vars={{ southTz }}>
       // Theme and season are set before the page draws, so there is no flash of the wrong look.
       (function () {

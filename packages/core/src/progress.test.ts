@@ -75,6 +75,12 @@ describe('results, stars, trek, badges', () => {
     expect(takeNewBadges(p, T)).toEqual([]);
     expect(BADGES.length).toBe(23);
   });
+  it('gives every badge a distinct name (ignoring case)', () => {
+    const names = BADGES.map((b) => b.name.toLowerCase());
+    expect(new Set(names).size).toBe(names.length);
+    // The first-puzzle badge keeps its id so badges people already earned stay earned.
+    expect(BADGES.find((b) => b.id === 'first-tracks')?.name).toBe('First steps');
+  });
   it('round-trips storage, upgrades old data and survives junk', () => {
     const store: Record<string, string> = {};
     const s = { getItem: (k: string) => store[k] ?? null, setItem: (k: string, v: string) => { store[k] = v; } };

@@ -8,5 +8,5 @@ const site = process.env.SITE_URL || 'https://example.com';
 export default defineConfig({
   site,
   output: 'static',
-  integrations: [sitemap({ filter: (page) => !/\/journal\/?$/.test(page) })],
+  integrations: [sitemap({ filter: (page) => !/\/journal\/?$/.test(page) && !/\/dev\//.test(page) })], // /dev/ = temporary design pages
 });

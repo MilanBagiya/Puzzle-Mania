@@ -1,11 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { activeFor } from '../../data/catalog';
 import { LEVELS, LEVEL_NAME } from '@wild-daily/core';
 import { ANIMAL_NAME, ANIMAL_RULE, character, chevron, type AnimalId } from '@wild-daily/ui';
 const animals: AnimalId[] = ['fox', 'rabbit', 'deer'];
 const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Fresh Snow', applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL('/fresh-snow', Astro.site).href, description: 'A daily animal tracks puzzle: follow the footprints and guide every animal home.', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 ---
-<Base title="Fresh Snow: daily animal tracks puzzle" description="Read the footprints in fresh snow and guide every animal home. A new Morning, Noon and Night puzzle every day, free." active="today" jsonLd={ld}>
+<Base title="Fresh Snow: daily animal tracks puzzle" description="Read the footprints in fresh snow and guide every animal home. A new Morning, Noon and Night puzzle every day, free." active={activeFor('fresh-snow')} jsonLd={ld}>
   <main class="wrap" style="padding-top:18px">
     <div class="gamehead">
       <div class="row">

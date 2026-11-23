@@ -1,11 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
+import { activeFor } from '../data/catalog';
 import GameHead from '../components/GameHead.astro';
 import HelpDialog from '../components/HelpDialog.astro';
 import { leaf, mushroom, stump } from '@wild-daily/ui';
 const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Mushroom Rings', applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL('/mushroom-rings', Astro.site).href, description: 'A one-minute daily deduction puzzle: find where the spore landed from its ring of mushrooms.', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 ---
-<Base title="Mushroom Rings: one-minute daily puzzle" description="A ring of mushrooms spread out from one spore. Read the ring and find where the spore landed, in three guesses." active="games" jsonLd={ld}>
+<Base title="Mushroom Rings: one-minute daily puzzle" description="A ring of mushrooms spread out from one spore. Read the ring and find where the spore landed, in three guesses." active={activeFor('rings')} jsonLd={ld}>
   <main class="wrap" style="padding-top:18px">
     <GameHead title="Mushroom Rings" prefix="mr" />
     <div class="game">

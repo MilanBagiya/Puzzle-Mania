@@ -1,5 +1,5 @@
 // Stepping Stones board UI.
-import { escapeHtml, frog, lilyPad } from '@wild-daily/ui';
+import { Mover, escapeHtml, frog, lilyPad } from '@wild-daily/ui';
 import { jumpsFrom, shortestRoute, type StonesPuzzle } from './engine.js';
 
 export interface StonesOptions { puzzle: StonesPuzzle; timerEl?: HTMLElement | null; onSolved?: (s: { time: number; hints: number; moves: number }) => void }
@@ -8,14 +8,16 @@ export function createStonesGame(root: HTMLElement, opts: StonesOptions): { dest
   let route = [p.start], hints = 0, done = false, secs = 0, msg: string | null = null, kind = '', bad = -1;
   const t0 = Date.now();
   const used = (): Set<number> => new Set(route);
+  const mover = new Mover();
+  const syncFrog = (): void => { const at = route[route.length - 1]!; mover.sync(root.querySelector<HTMLElement>('.pond'), [{ id: 'frog', cell: at, el: root.querySelector(`[data-st="${at}"]`), html: frog(), gait: 'leap', selected: !done, size: 0.8, puff: '#BFE3F5' }]); };
   function render(): void {
     const at = route[route.length - 1]!, next = done ? [] : jumpsFrom(p, at, used());
     const stuck = !done && next.length === 0;
     const cells = p.pads.map((k, i) => {
       const r = Math.floor(i / n) + 1, c = (i % n) + 1;
-      if (i === p.goal) return `<button class="st-cell${next.includes(i) ? ' next' : ''}" data-st="${i}" aria-label="Far bank${next.includes(i) ? ', you can jump here' : ''}"><span class="bank">Bank</span>${at === i ? `<span class="frogpos">${frog()}</span>` : ''}</button>`;
+      if (i === p.goal) return `<button class="st-cell${next.includes(i) ? ' next' : ''}" data-st="${i}" aria-label="Far bank${next.includes(i) ? ', you can jump here' : ''}"><span class="bank">Bank</span></button>`;
       const sunk = route.includes(i) && i !== at;
-      return `<button class="st-cell${sunk ? ' sunk' : ''}${next.includes(i) ? ' next' : ''}${bad === i ? ' bad' : ''}" data-st="${i}" aria-label="Row ${r}, column ${c}: pad ${k}${sunk ? ', sunk' : ''}${next.includes(i) ? ', you can jump here' : ''}">${lilyPad().replace('<svg', '<svg class="pad"')}<span class="n">${k}</span>${at === i ? `<span class="frogpos">${frog()}</span>` : ''}</button>`;
+      return `<button class="st-cell${sunk ? ' sunk' : ''}${next.includes(i) ? ' next' : ''}${bad === i ? ' bad' : ''}" data-st="${i}" aria-label="Row ${r}, column ${c}: pad ${k}${sunk ? ', sunk' : ''}${next.includes(i) ? ', you can jump here' : ''}">${lilyPad().replace('<svg', '<svg class="pad"')}<span class="n">${k}</span></button>`;
     }).join('');
     let coach = msg ?? (stuck ? 'Oh no, the frog is stuck! Tap Undo to go back, or Restart.' : `The frog is on a ${p.pads[at]}. It must jump exactly ${p.pads[at]} ${p.pads[at] === 1 ? 'pad' : 'pads'} in a straight line. Glowing pads are where it can land.`);
     if (done) coach = `Made it across in ${route.length - 1} jumps! The best route takes ${p.best}.`;
@@ -23,6 +25,7 @@ export function createStonesGame(root: HTMLElement, opts: StonesOptions): { dest
 <p class="coach ${done ? 'good' : stuck ? 'bad' : kind}" role="status">${escapeHtml(coach)}</p>
 <div class="pond"><div class="board" role="grid" aria-label="Pond, ${n} by ${n}" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 80}px">${cells}</div></div>
 <div class="tools" style="grid-template-columns:repeat(3,minmax(0,1fr))"><button class="btn btn-w" data-st-act="undo"${done || route.length < 2 ? ' disabled' : ''}>Undo</button><button class="btn btn-w" data-st-act="restart"${done ? ' disabled' : ''}>Restart</button><button class="btn btn-y" data-st-act="hint"${done ? ' disabled' : ''}>Hint</button></div>`;
+    syncFrog();
   }
   function onClick(e: Event): void {
     const t = (e.target as HTMLElement).closest<HTMLElement>('[data-st],[data-st-act]');
@@ -34,7 +37,7 @@ export function createStonesGame(root: HTMLElement, opts: StonesOptions): { dest
       if (jumpsFrom(p, at, used()).includes(i)) {
         route.push(i);
         if (i === p.goal) { done = true; secs = Math.round((Date.now() - t0) / 1000); render(); tick(); opts.onSolved?.({ time: secs, hints, moves: route.length - 1 }); return; }
-      } else if (i !== at) { bad = i; msg = route.includes(i) ? 'That pad has sunk. Each pad holds the frog only once.' : `The frog must jump exactly ${p.pads[at]} in a straight line from here.`; kind = 'bad'; }
+      } else if (i !== at) { bad = i; msg = route.includes(i) ? 'That pad has sunk. Each pad holds the frog only once.' : `The frog must jump exactly ${p.pads[at]} in a straight line from here.`; kind = 'bad'; render(); mover.shake('frog'); return; }
     } else if (t.dataset.stAct === 'undo') route.pop();
     else if (t.dataset.stAct === 'restart') route = [p.start];
     else if (t.dataset.stAct === 'hint') {

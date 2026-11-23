@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import PortalHead from '../components/PortalHead.astro';
+import { CATALOG } from '../data/catalog';
+import { tileHtml } from '../scripts/tiles';
+---
+<Base title="Recently played" description="The games you played most recently on this device." active="recent" noindex>
+  <main class="wrap portal">
+    <PortalHead crumbs={[['Home', '/'], ['Recently played']]} title="My games" blurb="The games you played most recently, newest first. Saved on this device only." sort={false} />
+    <div class="tiles" id="recent-grid" set:html={CATALOG.map((e) => tileHtml(e)).join('')} />
+    <div class="card stack" id="recent-empty" hidden><h2 class="h-m">Nothing here yet</h2><p class="muted" style="margin:0">Play any game and it will appear here.</p><a class="btn btn-p" href="/">Today’s puzzles</a></div>
+  </main>
+  <script>
+    import { loadProgress } from '@wild-daily/core';
+    import { markSolved } from '../scripts/portal';
+    const p = loadProgress(), grid = document.getElementById('recent-grid')!;
+    const last = new Map<string, string>();
+    Object.entries(p.days).forEach(([date, day]) => Object.keys(day).forEach((k) => {
+      grid.querySelectorAll<HTMLElement>('.tile').forEach((t) => { if ((t.getAttribute('data-keys') ?? '').split(' ').includes(k)) { const id = t.getAttribute('data-id')!; if (!last.has(id) || last.get(id)! < date) last.set(id, date); } });
+    }));
+    if (Object.keys(p.trek ?? {}).length) last.set('trek', '9999-12-31');
+    const tiles = [...grid.querySelectorAll<HTMLElement>('.tile')];
+    tiles.forEach((t) => { t.hidden = !last.has(t.getAttribute('data-id')!); });
+    tiles.filter((t) => !t.hidden).sort((a, b) => (last.get(b.getAttribute('data-id')!)! > last.get(a.getAttribute('data-id')!)! ? 1 : -1)).forEach((t) => grid.appendChild(t));
+    document.getElementById('recent-empty')!.hidden = last.size > 0;
+    document.getElementById('grid-count')!.textContent = last.size ? `${last.size} ${last.size === 1 ? 'game' : 'games'}` : '';
+    markSolved(grid);
+  </script>
+</Base>

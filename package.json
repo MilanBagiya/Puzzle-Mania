@@ -10,17 +10,18 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,json,md,css,html}\"",
-    "gen": "pnpm --filter generator run gen"
+    "gen": "pnpm --filter generator run gen",
+    "qa": "pnpm --filter @wild-daily/qa run qa"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^2.0.0",
+    "eslint": "^9.0.0",
+    "fast-check": "^3.20.0",
+    "prettier": "^3.3.0",
     "turbo": "^2.0.0",
     "typescript": "^5.5.0",
-    "prettier": "^3.3.0",
-    "eslint": "^9.0.0",
     "typescript-eslint": "^8.0.0",
-    "vitest": "^2.0.0",
-    "@vitest/coverage-v8": "^2.0.0",
-    "fast-check": "^3.20.0"
+    "vitest": "^2.0.0"
   },
   "engines": {
     "node": ">=20.0.0"

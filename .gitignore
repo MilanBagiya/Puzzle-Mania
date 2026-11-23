@@ -12,3 +12,6 @@ coverage/
 .DS_Store
 Thumbs.db
 apps/web/public/puzzles/
+# Large local art tools and sources (kept on disk, not in git)
+tools/Blender/
+tools/art-sources/

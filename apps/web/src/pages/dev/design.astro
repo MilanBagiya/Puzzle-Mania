@@ -1,0 +1,308 @@
+---
+// TEMPORARY design board (dev only): three colour directions and three font pairings on the same sample content.
+// noindex, not linked from navigation, left out of the sitemap. Production styles are NOT loaded here.
+import sprite from '@wild-daily/ui/sprite.svg?raw';
+import { cover } from '@wild-daily/ui';
+// Fonts for this page only (Fredoka and Bricolage Grotesque are dev-only packages until a pairing is chosen).
+import '@fontsource-variable/fraunces/soft.css';
+import '@fontsource-variable/atkinson-hyperlegible-next/wght.css';
+import '@fontsource-variable/fredoka/wght.css';
+import '@fontsource-variable/bricolage-grotesque/wght.css';
+
+// ---------- colour maths (WCAG 2.x) ----------
+type RGB = [number, number, number];
+const hex = (h: string): RGB => { const s = h.replace('#', ''); return [0, 2, 4].map((i) => parseInt(s.slice(i, i + 2), 16)) as RGB; };
+const toHex = (c: RGB): string => '#' + c.map((v) => Math.round(Math.min(255, Math.max(0, v))).toString(16).padStart(2, '0')).join('').toUpperCase();
+const lum = (c: RGB): number => { const f = (v: number): number => { const x = v / 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
+const ratio = (a: string, b: string): number => { const x = lum(hex(a)), y = lum(hex(b)); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+const mix = (a: string, b: string, t: number): string => { const x = hex(a), y = hex(b); return toHex([0, 1, 2].map((i) => (x[i] as number) + ((y[i] as number) - (x[i] as number)) * t) as RGB); };
+/** Colour of a translucent layer over a solid background. */
+const over = (bg: string, top: RGB, alpha: number): string => mix(bg, toHex(top), alpha);
+
+/** Nudge fg towards black or white (away from the backgrounds) until it passes `need` on every background. */
+function adjust(fg: string, bgs: string[], need: number): string {
+  const lightBg = bgs.every((b) => lum(hex(b)) > 0.18);
+  const target = lightBg ? '#000000' : '#FFFFFF';
+  for (let t = 0; t <= 1.0001; t += 0.01) { const c = mix(fg, target, t); if (bgs.every((b) => ratio(c, b) >= need)) return c; }
+  return target;
+}
+
+// ---------- the directions ----------
+interface Palette {
+  page: string; surface: string; raised: string; text: string; soft: string; muted: string; border: string;
+  primary: string; onPrimary: string; accent: string; onAccent: string; highlight: string; onHighlight: string;
+  topbar: string; topbarInk: string; topbarField: string; topbarSoft: string;
+  side: string; sideInk: string; sideActive: string; sideIcon: string;
+  tile: string; cell: string; cellTarget: string; clue: string; onClue: string;
+  hero?: { sky: string; far: string; mid: string; ground: string; sun: string };
+}
+interface Variant { mode: 'Light' | 'Dark'; proposed?: boolean; p: Palette }
+interface Direction { key: string; name: string; blurb: string; variants: Variant[] }
+
+const DIRECTIONS: Direction[] = [
+  { key: 'A', name: 'Night Forest', blurb: 'Dark-first, like the big game portals. Cover art glows against deep blue.', variants: [
+    { mode: 'Dark', p: { page: '#0E1322', surface: '#171E33', raised: '#212A45', text: '#F1F4FB', soft: '#B7C0D8', muted: '#8C97B5', border: '#2C3657',
+      primary: '#3DBA85', onPrimary: '#0E1322', accent: '#FF7A59', onAccent: '#0E1322', highlight: '#FFC94A', onHighlight: '#0E1322',
+      topbar: '#171E33', topbarInk: '#F1F4FB', topbarField: '#212A45', topbarSoft: '#8C97B5',
+      side: '#171E33', sideInk: '#F1F4FB', sideActive: '#212A45', sideIcon: '#FFC94A',
+      tile: '#212A45', cell: '#212A45', cellTarget: '#3A3320', clue: '#F1F4FB', onClue: '#0E1322' } },
+  ] },
+  { key: 'B', name: 'Fresh Paper', blurb: 'Clean light surfaces, crisp edges, colour only where it means something.', variants: [
+    { mode: 'Light', p: { page: '#F3F6FA', surface: '#FFFFFF', raised: '#EEF2F8', text: '#1C2433', soft: '#3F4A5C', muted: '#5B6577', border: '#DCE3EC',
+      primary: '#2F7D5B', onPrimary: '#FFFFFF', accent: '#F2704D', onAccent: '#1C2433', highlight: '#F6C445', onHighlight: '#1C2433',
+      topbar: '#1C2433', topbarInk: '#F3F6FA', topbarField: '#2A3446', topbarSoft: '#B9C3D3',
+      side: '#FFFFFF', sideInk: '#1C2433', sideActive: '#EEF2F8', sideIcon: '#2F7D5B',
+      tile: '#1E2642', cell: '#EEF2F8', cellTarget: '#FFF4C2', clue: '#1C2433', onClue: '#FFFFFF' } },
+    { mode: 'Dark', proposed: true, p: { page: '#0F141C', surface: '#18202B', raised: '#222C3A', text: '#EEF2F8', soft: '#BAC4D3', muted: '#8F9AAD', border: '#2B3646',
+      primary: '#45B07F', onPrimary: '#0F141C', accent: '#FF7A59', onAccent: '#0F141C', highlight: '#F6C445', onHighlight: '#0F141C',
+      topbar: '#18202B', topbarInk: '#EEF2F8', topbarField: '#222C3A', topbarSoft: '#8F9AAD',
+      side: '#18202B', sideInk: '#EEF2F8', sideActive: '#222C3A', sideIcon: '#45B07F',
+      tile: '#222C3A', cell: '#222C3A', cellTarget: '#3B3520', clue: '#EEF2F8', onClue: '#0F141C' } },
+  ] },
+  { key: 'C', name: 'Seasonal Paper', blurb: 'Today’s look, refined: a neutral page, with seasonal colour only in the hero scenery.', variants: [
+    { mode: 'Light', p: { page: '#F5F3EE', surface: '#FFFFFF', raised: '#EFECE5', text: '#233142', soft: '#3E4A5C', muted: '#5D6878', border: '#E4DED2',
+      primary: '#2F7D5B', onPrimary: '#FFFFFF', accent: '#F2704D', onAccent: '#233142', highlight: '#F6C445', onHighlight: '#233142',
+      topbar: '#141A2E', topbarInk: '#EEF2FA', topbarField: '#1E2642', topbarSoft: '#A3AECB',
+      side: '#141A2E', sideInk: '#EEF2FA', sideActive: '#2A3356', sideIcon: '#F6C445',
+      tile: '#1E2642', cell: '#F2EFE8', cellTarget: '#FFF4C2', clue: '#233142', onClue: '#FFFFFF',
+      hero: { sky: '#FADFC0', far: '#EDB46C', mid: '#D99B57', ground: '#B9793E', sun: '#FFD07A' } } },
+    { mode: 'Dark', proposed: true, p: { page: '#151518', surface: '#1F1F24', raised: '#2A2A31', text: '#F2EFE8', soft: '#C9C4BA', muted: '#9E998F', border: '#34343C',
+      primary: '#4DB287', onPrimary: '#151518', accent: '#FF8A66', onAccent: '#151518', highlight: '#F6C445', onHighlight: '#151518',
+      topbar: '#0E1120', topbarInk: '#EEF2FA', topbarField: '#1A1F33', topbarSoft: '#A3AECB',
+      side: '#0E1120', sideInk: '#EEF2FA', sideActive: '#252B45', sideIcon: '#F6C445',
+      tile: '#2A2A31', cell: '#2A2A31', cellTarget: '#3D3520', clue: '#F2EFE8', onClue: '#151518',
+      hero: { sky: '#2A2240', far: '#6B4A3A', mid: '#7E5634', ground: '#5C3E25', sun: '#F3E7C3' } } },
+  ] },
+];
+
+// Tile name overlay: same gradient as today's site. Titles are measured against its darkest-but-one stop (the title sits
+// where the gradient is about 0.8 opaque), over the tile colour, as the QA check does.
+const TILE_SHADE: RGB = [14, 20, 38];
+
+interface Row { role: string; fg: string; bg: string; bgName: string; need: number; got: number; fixed?: string; fixedGot?: number }
+interface Checked { p: Palette; rows: Row[] }
+
+/** Every text colour on every background it is used on. Failing colours are adjusted (once per role, for all its backgrounds). */
+function check(v: Variant): Checked {
+  const p = { ...v.p };
+  const tileUnder = over(p.tile, TILE_SHADE, 0.8);
+  const uses: [keyof Palette, string, [string, string][]][] = [
+    ['text', 'Body text', [['page', p.page], ['surface', p.surface], ['raised', p.raised]]],
+    ['soft', 'Soft text', [['page', p.page], ['surface', p.surface], ['raised', p.raised]]],
+    ['muted', 'Muted (captions)', [['page', p.page], ['surface', p.surface], ['raised', p.raised]]],
+    ['onPrimary', 'Primary / Check label, Daily pill', [['primary', p.primary]]],
+    ['onAccent', 'Accent label, In season pill', [['accent', p.accent]]],
+    ['onHighlight', 'Hint label, New pill', [['highlight', p.highlight]]],
+    ['topbarInk', 'Top bar text', [['top bar', p.topbar], ['search field', p.topbarField]]],
+    ['topbarSoft', 'Search placeholder', [['search field', p.topbarField]]],
+    ['sideInk', 'Sidebar text', [['sidebar', p.side], ['active item', p.sideActive]]],
+    ['onClue', 'Clue badge number', [['clue badge', p.clue]]],
+  ];
+  const rows: Row[] = [];
+  for (const [key, role, bgs] of uses) {
+    const fg = p[key] as string;
+    const fails = bgs.some(([, b]) => ratio(fg, b) < 4.5);
+    const fixed = fails ? adjust(fg, bgs.map(([, b]) => b), 4.5) : undefined;
+    for (const [bgName, bg] of bgs) rows.push({ role, fg, bg, bgName, need: 4.5, got: ratio(fg, bg), ...(fixed ? { fixed, fixedGot: ratio(fixed, bg) } : {}) });
+    if (fixed) (p as unknown as Record<string, unknown>)[key] = fixed;
+  }
+  // Board numbers (text on cells), and tile titles (white on the name gradient).
+  for (const [bgName, bg] of [['board cell', p.cell], ['target cell', p.cellTarget]] as const) rows.push({ role: 'Board number', fg: p.text, bg, bgName, need: 4.5, got: ratio(p.text, bg) });
+  rows.push({ role: 'Tile title (white)', fg: '#FFFFFF', bg: tileUnder, bgName: 'tile name gradient', need: 4.5, got: ratio('#FFFFFF', tileUnder) });
+  rows.push({ role: 'Tile subtitle (90% white)', fg: mix(tileUnder, '#FFFFFF', 0.9), bg: tileUnder, bgName: 'tile name gradient', need: 4.5, got: ratio(mix(tileUnder, '#FFFFFF', 0.9), tileUnder) });
+  return { p, rows };
+}
+
+const BOARD = DIRECTIONS.map((d) => ({ ...d, checked: d.variants.map((v) => ({ v, ...check(v) })) }));
+const vars = (p: Palette): string => Object.entries(p).filter(([, v]) => typeof v === 'string').map(([k, v]) => `--${k}:${v}`).join(';') +
+  (p.hero ? `;--hsky:${p.hero.sky};--hfar:${p.hero.far};--hmid:${p.hero.mid};--hground:${p.hero.ground};--hsun:${p.hero.sun}` : '');
+
+const TILES = [['fresh-snow', 'Fresh Snow', '1–12 min'], ['frog-pond', 'Frog Pond', '2–4 min'], ['firefly-night', 'Firefly Night', '3–5 min'], ['track-word', 'Track Word', '1–3 min']] as const;
+const FONTS = [
+  { n: 1, name: 'Fraunces + Atkinson Hyperlegible Next', note: 'current', display: "'Fraunces Variable', Georgia, serif", weight: 700, extra: 'font-variation-settings:"SOFT" 100; letter-spacing:-0.01em' },
+  { n: 2, name: 'Fredoka + Atkinson Hyperlegible Next', note: 'rounded, playful', display: "'Fredoka Variable', system-ui, sans-serif", weight: 600, extra: 'letter-spacing:0' },
+  { n: 3, name: 'Bricolage Grotesque + Atkinson Hyperlegible Next', note: 'modern, bold', display: "'Bricolage Grotesque Variable', system-ui, sans-serif", weight: 800, extra: 'letter-spacing:-0.02em' },
+];
+// Small board excerpt: numbers and one clue badge.
+const CELLS = ['', '2', '', '', '1', '', '', 'T', '', '', '3', '', '', '', '', '', '1', '', 'C', '', '', '', '', '2', ''];
+const fmt = (n: number): string => n.toFixed(2) + ':1';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Design board (dev)</title>
+</head>
+<body class="dz-body">
+  <Fragment set:html={sprite} />
+  <header class="dz-head">
+    <h1>Design board</h1>
+    <p>Temporary dev page: three directions on the same content, with WCAG contrast computed for every text colour on every background it is used on. Colours that missed AA were adjusted; the table shows the original and the fix. Nothing here changes the live site.</p>
+  </header>
+  <main class="dz-grid">
+    {BOARD.map((d) => (
+      <section class="dz-dir" aria-labelledby={`dir-${d.key}`}>
+        <h2 id={`dir-${d.key}`}>{d.key} · {d.name}</h2>
+        <p class="dz-blurb">{d.blurb}</p>
+        {d.checked.map(({ v, p, rows }) => (
+          <div class="dz-variant">
+            <h3>{v.mode} mode{v.proposed ? ' (proposed)' : ''}</h3>
+            <div class="dz-swatches">
+              {(['page', 'surface', 'raised', 'text', 'soft', 'muted', 'primary', 'accent', 'highlight'] as const).map((k) => (
+                <span class="dz-sw"><i style={`background:${p[k]}`}></i><span>{k}<br /><code>{p[k]}</code></span></span>
+              ))}
+            </div>
+            <div class="ds" style={vars(p)}>
+              <div class="ds-top"><b class="ds-logo">Wild Daily</b><span class="ds-search">Search games</span><span class="ds-icon" aria-hidden="true">☰</span></div>
+              {p.hero && (
+                <div class="ds-hero" aria-hidden="true"><svg viewBox="0 0 320 70" preserveAspectRatio="none"><rect width="320" height="70" fill="var(--hsky)"></rect><circle cx="262" cy="22" r="12" fill="var(--hsun)"></circle><path d="M0 46 L60 26 L120 40 L190 18 L260 40 L320 28 V70 H0 Z" fill="var(--hfar)"></path><path d="M0 58 Q90 46 170 56 T320 52 V70 H0 Z" fill="var(--hmid)"></path><path d="M0 66 Q120 60 230 64 T320 62 V70 H0 Z" fill="var(--hground)"></path></svg></div>
+              )}
+              <div class="ds-body">
+                <nav class="ds-side" aria-label={`Sidebar sample ${d.key} ${v.mode}`}>
+                  <a href="#" aria-current="page"><i>▦</i>Logic</a><a href="#"><i>↗</i>Paths</a><a href="#"><i>?</i>Guessing</a>
+                </nav>
+                <div class="ds-main">
+                  <p class="ds-crumbs">Games › Logic</p>
+                  <p class="ds-title">Logic puzzles</p>
+                  <div class="ds-tiles">
+                    {TILES.map(([id, name, time]) => (
+                      <a class="ds-tile" href="#"><span class="ds-art" set:html={cover(id, name)}></span><span class="ds-badges"><span class="ds-pill pr">Daily</span></span><span class="ds-name"><b>{name}</b><small>{time}</small></span></a>
+                    ))}
+                  </div>
+                  <div class="ds-card">
+                    <p class="ds-cardtitle">How they move</p>
+                    <p class="ds-text">The fox walks one square diagonally. Every visible print must be on its trail.</p>
+                    <p class="ds-soft">Secondary text: hint shows the next correct step.</p>
+                    <p class="ds-muted">Caption · Monday, November 23</p>
+                  </div>
+                  <div class="ds-btns">
+                    <button type="button" class="ds-btn pr">Primary</button><button type="button" class="ds-btn sec">Secondary</button>
+                    <button type="button" class="ds-btn hl">Hint</button><button type="button" class="ds-btn ck">Check</button>
+                  </div>
+                  <div class="ds-pills"><span class="ds-pill pr">Daily</span><span class="ds-pill hl">New</span><span class="ds-pill ac">In season</span><span class="ds-pill neu">0:42</span></div>
+                  <div class="ds-boardwrap"><div class="ds-board">
+                    {CELLS.map((c, i) => <span class={`ds-cell${i === 7 ? ' tgt' : ''}${c === 'C' ? ' clue' : ''}`}>{c === 'T' ? '' : c === 'C' ? <b>4</b> : c}</span>)}
+                  </div></div>
+                </div>
+              </div>
+            </div>
+            <table class="dz-table">
+              <caption>Contrast: {d.name}, {v.mode.toLowerCase()} mode (AA: 4.5:1)</caption>
+              <thead><tr><th scope="col">Text</th><th scope="col">On</th><th scope="col">Ratio</th><th scope="col">Result</th></tr></thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr class={r.fixed ? 'fix' : ''}>
+                    <td>{r.role}<br /><code>{r.fg}</code></td>
+                    <td>{r.bgName}<br /><code>{r.bg}</code></td>
+                    <td>{fmt(r.got)}</td>
+                    <td>{r.fixed ? <span>Adjusted to <code>{r.fixed}</code>: {fmt(r.fixedGot ?? 0)}</span> : r.got >= r.need ? 'Pass' : 'FAIL'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
+        <div class="dz-fonts" style={vars(d.checked[0]!.p)}>
+          <h3>Font pairings ({d.checked[0]!.v.mode.toLowerCase()} mode)</h3>
+          {FONTS.map((f) => (
+            <div class="df">
+              <p class="df-label">{f.n}. {f.name} <span>({f.note})</span></p>
+              <p class="df-h1" style={`font-family:${f.display}; font-weight:${f.weight}; ${f.extra}`}>Fresh Snow</p>
+              <p class="df-h2" style={`font-family:${f.display}; font-weight:${f.weight}; ${f.extra}`}>How they move · Logic puzzles</p>
+              <p class="df-body">Read the footprints and guide every animal home.</p>
+              <p class="df-num">0:42 · Step 3 of 25 · 1 2 3 4 5 6 7 8 9 0</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    ))}
+  </main>
+</body>
+</html>
+
+<style is:global>
+  :root { color-scheme: light; --ui: 'Atkinson Hyperlegible Next Variable', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  .dz-body { margin: 0; background: #E9ECF1; color: #1C2433; font-family: var(--ui); font-weight: 500; }
+  .dz-head { padding: 20px 16px 4px; max-width: 1400px; margin: 0 auto; }
+  .dz-head h1 { margin: 0 0 6px; font-size: 28px; font-weight: 800; }
+  .dz-head p { margin: 0; max-width: 820px; color: #3F4A5C; font-size: 15px; }
+  .dz-grid { display: grid; grid-template-columns: 1fr; gap: 24px; padding: 20px 16px 40px; max-width: 1400px; margin: 0 auto; }
+  @media (min-width: 1200px) { .dz-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; } }
+  .dz-dir { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .dz-dir h2 { margin: 0; font-size: 22px; font-weight: 800; }
+  .dz-dir h3 { margin: 0 0 10px; font-size: 15px; font-weight: 800; }
+  .dz-blurb { margin: -8px 0 0; color: #3F4A5C; font-size: 14px; }
+  .dz-variant { background: #FFFFFF; border-radius: 12px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .dz-swatches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 10px; margin-bottom: 12px; }
+  .dz-sw { display: flex; gap: 6px; align-items: center; font-size: 12px; color: #3F4A5C; line-height: 1.2; }
+  .dz-sw i { flex: none; width: 22px; height: 22px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); }
+  .dz-sw code, .dz-table code { font-family: var(--ui); font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .dz-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+  .dz-table caption { text-align: left; font-weight: 800; font-size: 13px; padding-bottom: 6px; }
+  .dz-table th, .dz-table td { text-align: left; padding: 5px 6px; border-bottom: 1px solid #E3E8EF; vertical-align: top; }
+  .dz-table tr.fix td { background: #FFF6D6; }
+  .dz-fonts { background: var(--page); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .dz-fonts h3 { color: var(--text); }
+  .df { background: var(--surface); border-radius: 10px; padding: 14px 16px; }
+  .df p { margin: 0; }
+  .df-label { font-size: 12.5px; font-weight: 800; color: var(--soft); margin-bottom: 6px !important; }
+  .df-label span { font-weight: 600; }
+  .df-h1 { font-size: 32px; line-height: 1.08; color: var(--text); }
+  .df-h2 { font-size: 19px; line-height: 1.2; color: var(--text); margin-top: 4px !important; }
+  .df-body { font-size: 15px; color: var(--soft); margin-top: 6px !important; }
+  .df-num { font-size: 15px; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums lining-nums; margin-top: 4px !important; }
+
+  /* ---- sample (everything below reads only the direction's tokens) ---- */
+  .ds { background: var(--page); color: var(--text); border-radius: 12px; overflow: hidden; font-family: var(--ui); box-shadow: 0 0 0 1px var(--border); }
+  .ds p { margin: 0; }
+  .ds-top { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--topbar); color: var(--topbarInk); }
+  .ds-logo { font-family: 'Fraunces Variable', Georgia, serif; font-variation-settings: "SOFT" 100; font-size: 16px; white-space: nowrap; }
+  .ds-search { flex: 1; min-width: 0; height: 30px; border-radius: 999px; background: var(--topbarField); color: var(--topbarSoft); font-size: 13px; font-weight: 600; display: flex; align-items: center; padding: 0 12px; white-space: nowrap; overflow: hidden; }
+  .ds-icon { font-size: 16px; }
+  .ds-hero svg { display: block; width: 100%; height: 46px; }
+  .ds-body { display: flex; gap: 0; }
+  .ds-side { flex: none; width: 92px; background: var(--side); padding: 8px 6px; display: flex; flex-direction: column; gap: 2px; border-right: 1px solid var(--border); }
+  .ds-side a { display: flex; gap: 6px; align-items: center; padding: 7px 6px; border-radius: 8px; color: var(--sideInk); text-decoration: none; font-size: 12.5px; font-weight: 700; }
+  .ds-side a i { font-style: normal; color: var(--sideIcon); width: 12px; text-align: center; }
+  .ds-side a[aria-current="page"] { background: var(--sideActive); }
+  .ds-main { flex: 1; min-width: 0; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .ds-crumbs { font-size: 12px; font-weight: 800; color: var(--soft); }
+  .ds-title { font-weight: 800; text-transform: uppercase; font-size: 24px; line-height: 1; letter-spacing: -0.01em; }
+  .ds-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .ds-tile { position: relative; display: block; aspect-ratio: 16/10; border-radius: 10px; overflow: hidden; background: var(--tile); color: #fff; text-decoration: none; isolation: isolate; }
+  .ds-art svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .ds-badges { position: absolute; top: 5px; left: 5px; z-index: 2; }
+  .ds-name { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; flex-direction: column; padding: 18px 7px 6px; background: linear-gradient(to top, rgba(14,20,38,.88), rgba(14,20,38,.55) 55%, transparent); }
+  .ds-name b { font-size: 12.5px; font-weight: 800; line-height: 1.1; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+  .ds-name small { font-size: 10.5px; font-weight: 700; color: rgba(255,255,255,.9); }
+  .ds-card { background: var(--surface); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 5px; box-shadow: 0 0 0 1px var(--border), 0 3px 0 var(--border); }
+  .ds-cardtitle { font-family: 'Fraunces Variable', Georgia, serif; font-variation-settings: "SOFT" 100; font-weight: 700; font-size: 17px; }
+  .ds-text { font-size: 13.5px; color: var(--text); }
+  .ds-soft { font-size: 13px; color: var(--soft); }
+  .ds-muted { font-size: 12px; color: var(--muted); font-weight: 700; }
+  .ds-btns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .ds-btn { min-height: 40px; border: 0; border-radius: 10px; font: inherit; font-weight: 800; font-size: 14px; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; }
+  .ds-btn.pr { background: var(--primary); color: var(--onPrimary); box-shadow: 0 3px 0 rgba(0,0,0,.25); }
+  .ds-btn.ck { background: var(--primary); color: var(--onPrimary); box-shadow: 0 3px 0 rgba(0,0,0,.25), inset 0 0 0 2px rgba(255,255,255,.18); }
+  .ds-btn.hl { background: var(--highlight); color: var(--onHighlight); box-shadow: 0 3px 0 rgba(0,0,0,.2); }
+  .ds-btn.sec { background: var(--surface); color: var(--text); box-shadow: 0 0 0 1px var(--border), 0 3px 0 var(--border); }
+  .ds-btn:active { transform: translateY(2px); box-shadow: none; }
+  .ds-btn:focus-visible, .ds-tile:focus-visible, .ds-side a:focus-visible { outline: 3px solid #2F6FC0; outline-offset: 2px; }
+  .ds-btn:disabled { opacity: .5; cursor: not-allowed; }
+  @media (hover: hover) and (pointer: fine) { .ds-btn:hover { transform: translateY(-2px); } .ds-tile:hover { transform: translateY(-2px); } }
+  @media (prefers-reduced-motion: reduce) { .ds-btn, .ds-tile { transition: none; } .ds-btn:hover, .ds-tile:hover, .ds-btn:active { transform: none; } }
+  .ds-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ds-pill { display: inline-block; font-size: 11px; font-weight: 800; line-height: 1; padding: 5px 9px; border-radius: 999px; }
+  .ds-pill.pr { background: var(--primary); color: var(--onPrimary); }
+  .ds-pill.hl { background: var(--highlight); color: var(--onHighlight); }
+  .ds-pill.ac { background: var(--accent); color: var(--onAccent); }
+  .ds-pill.neu { background: var(--surface); color: var(--text); box-shadow: 0 0 0 1px var(--border); font-variant-numeric: tabular-nums; }
+  .ds-boardwrap { background: var(--surface); border-radius: 12px; padding: 8px; box-shadow: 0 0 0 1px var(--border); }
+  .ds-board { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; max-width: 220px; margin: 0 auto; }
+  .ds-cell { aspect-ratio: 1; border-radius: 6px; background: var(--cell); color: var(--text); display: grid; place-items: center; font-weight: 800; font-size: 14px; font-variant-numeric: tabular-nums; box-shadow: inset 0 -2px 0 var(--border); }
+  .ds-cell.tgt { background: var(--cellTarget); box-shadow: inset 0 -3px 0 var(--highlight); }
+  .ds-cell.clue b { background: var(--clue); color: var(--onClue); border-radius: 5px; padding: 2px 6px; font-size: 12px; }
+</style>

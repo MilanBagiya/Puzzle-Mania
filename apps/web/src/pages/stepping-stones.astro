@@ -1,11 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
+import { activeFor } from '../data/catalog';
 import GameHead from '../components/GameHead.astro';
 import HelpDialog from '../components/HelpDialog.astro';
 import { frog, lilyPad } from '@wild-daily/ui';
 const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Stepping Stones', applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL('/stepping-stones', Astro.site).href, description: 'A daily frog puzzle: each lily pad says exactly how far to jump next.', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 ---
-<Base title="Stepping Stones: daily frog puzzle" description="Help the frog cross the pond. Each lily pad's number is exactly how far to jump next, and pads sink after one use." active="games" jsonLd={ld}>
+<Base title="Stepping Stones: daily frog puzzle" description="Help the frog cross the pond. Each lily pad's number is exactly how far to jump next, and pads sink after one use." active={activeFor('stones')} jsonLd={ld}>
   <main class="wrap" style="padding-top:18px">
     <GameHead title="Stepping Stones" prefix="st" />
     <div class="game">

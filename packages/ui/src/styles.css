@@ -1,5 +1,8 @@
 /* Wild Daily — Papercraft theme (FINAL, Nov 22 2026). Tokens, components and animations shared by every page and game. */
 :root{
+  --font-display:"Fraunces Variable", "Fraunces", Georgia, "Times New Roman", serif;
+  --font-ui:"Atkinson Hyperlegible Next Variable", "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
   --sky:#BFE0F2; --sky-2:#A7D2EA; --hill:#E4F1F9; --front:#FFFFFF; --sun:#FFE59A;
   --paper:#FFFFFF; --edge1:#D9CBB6; --edge2:#C2B097; --edge3:#B9A68A; --paper-line:#EFE6D8;
   --ink:#233142; --ink-soft:#4E5D6E; --ink-mute:#6B7B8C;
@@ -39,9 +42,9 @@
   color-scheme: dark; }
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:border-box}
-body{margin:0; background:var(--sky); color:var(--ink); font-family:Nunito, ui-rounded, "Segoe UI", system-ui, sans-serif; font-weight:600; -webkit-font-smoothing:antialiased}
+body{margin:0; background:var(--sky); color:var(--ink); font-family:var(--font-ui); font-weight:500; -webkit-font-smoothing:antialiased}
 body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:30; background:var(--paper)}
-h1,h2,h3,.display{font-family:"Baloo 2", Nunito, system-ui, sans-serif; font-weight:800; margin:0; line-height:1.05}
+h1,h2,h3,.display{font-family:var(--font-display); font-weight:700; font-variation-settings:"SOFT" 100; margin:0; line-height:1.08; letter-spacing:-0.01em}
 a{color:var(--ink)} a:hover{color:var(--coral-e1)}
 button{font:inherit; color:inherit}
 :focus-visible{outline:3px solid var(--coral); outline-offset:2px}
@@ -51,7 +54,7 @@ button{font:inherit; color:inherit}
 /* header */
 .top{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:var(--paper); box-shadow:0 3px 0 var(--edge1),0 6px 0 var(--edge2)}
 .top .wrap{display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:8px; padding-bottom:8px; flex-wrap:wrap}
-.logo{display:flex; align-items:center; gap:6px; text-decoration:none; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:24px}
+.logo{display:flex; align-items:center; gap:6px; text-decoration:none; font-family:var(--font-display); font-weight:700; font-variation-settings:"SOFT" 100; font-size:24px}
 .nav{display:flex; gap:6px; flex-wrap:wrap}
 .nav a{padding:7px 12px; border-radius:3px; text-decoration:none; font-weight:800; font-size:14px; background:var(--paper); box-shadow:0 3px 0 var(--edge1),0 5px 0 var(--edge2); outline:1px solid var(--paper-line)}
 .nav a[aria-current="page"]{background:var(--coral); color:#233142; box-shadow:0 2px 0 var(--coral-e1); transform:translateY(3px); outline:0}
@@ -75,7 +78,7 @@ button{font:inherit; color:inherit}
 .btn-y{background:var(--mustard); color:#233142; box-shadow:0 3px 0 var(--mustard-e1),0 6px 0 var(--mustard-e2)}
 .btn-w{background:var(--paper); color:var(--ink); box-shadow:0 3px 0 var(--edge1),0 6px 0 var(--edge2); outline:1px solid var(--paper-line)}
 .btn[disabled]{opacity:.5; cursor:not-allowed; transform:none}
-.btn.big{min-height:56px; font-size:19px; font-family:"Baloo 2",sans-serif}
+.btn.big{min-height:56px; font-size:19px; font-family:var(--font-ui)}
 .pill{display:inline-block; padding:4px 10px; border-radius:2px; font-weight:800; font-size:13px}
 .p-y{background:var(--mustard); color:#233142; box-shadow:0 3px 0 var(--mustard-e1)}
 .p-g{background:var(--pine); color:#fff; box-shadow:0 2px 0 var(--pine-e2)}
@@ -112,7 +115,7 @@ main{padding-bottom:56px}
 .acard{display:flex; align-items:center; gap:6px; padding:6px 10px 6px 4px; border:0; border-radius:3px; background:var(--paper); box-shadow:0 3px 0 var(--edge1),0 6px 0 var(--edge2); cursor:pointer; text-align:left; min-height:60px; transition:transform .12s ease}
 .acard[aria-pressed="true"]{box-shadow:0 2px 0 var(--edge2); transform:translateY(4px)}
 .acard[data-a="fox"][aria-pressed="true"]{background:var(--fox-t)} .acard[data-a="rabbit"][aria-pressed="true"]{background:var(--rabbit-t)} .acard[data-a="deer"][aria-pressed="true"]{background:var(--deer-t)}
-.acard b{font-family:"Baloo 2",sans-serif; font-size:18px; display:block; line-height:1}
+.acard b{font-family:var(--font-display); font-weight:700; font-variation-settings:"SOFT" 100; font-size:18px; display:block; line-height:1}
 .acard small{font-size:12px; font-weight:800; color:var(--ink-soft)}
 .acard .home{margin-left:auto; font-size:11px}
 .coach{min-height:58px; padding:10px 14px; border-radius:3px; background:var(--note); box-shadow:0 3px 0 var(--edge1); font-weight:800; font-size:15.5px; line-height:1.35; display:flex; align-items:center; gap:10px}
@@ -158,7 +161,7 @@ main{padding-bottom:56px}
 .jcard[aria-pressed="true"]{box-shadow:0 0 0 3px var(--coral),0 4px 0 var(--edge1),0 8px 0 var(--edge2)}
 .stage{border-radius:3px; background:var(--soft); box-shadow:inset 0 -4px 0 var(--soft-e); display:flex; align-items:center; justify-content:center; gap:8px}
 details{border-radius:3px; background:var(--paper); box-shadow:0 3px 0 var(--edge1),0 6px 0 var(--edge2); padding:14px 16px}
-details summary{cursor:pointer; list-style:none; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:19px}
+details summary{cursor:pointer; list-style:none; font-family:var(--font-display); font-weight:700; font-variation-settings:"SOFT" 100; font-size:19px}
 details summary::-webkit-details-marker{display:none}
 details p{margin:8px 0 0; line-height:1.5}
 .toast{position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); z-index:40; padding:10px 16px; border-radius:3px; background:var(--ink); color:var(--paper); font-weight:800; box-shadow:0 4px 0 rgba(0,0,0,.25)}
@@ -168,7 +171,7 @@ footer a{color:#fff}
 .dc-branch{position:relative; height:120px}
 .dc-slots{position:absolute; inset:0 0 auto 0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:4px}
 .dc-slot{height:104px; padding:0; border:0; background:transparent; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; cursor:pointer}
-.dc-empty{width:44px; height:44px; margin-bottom:16px; border-radius:50%; border:2.5px dashed var(--ink-mute); display:grid; place-items:center; font-family:"Baloo 2",sans-serif; font-size:20px; color:var(--ink-mute)}
+.dc-empty{width:44px; height:44px; margin-bottom:16px; border-radius:50%; border:2.5px dashed var(--ink-mute); display:grid; place-items:center; font-family:var(--font-ui); font-size:20px; color:var(--ink-mute)}
 .dc-tray{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:6px}
 .dc-bird{min-height:72px; border:0; border-radius:3px; background:var(--paper); box-shadow:0 3px 0 var(--edge1),0 6px 0 var(--edge2); display:flex; flex-direction:column; align-items:center; cursor:pointer; padding:4px 0}
 .dc-bird span,.dc-slot span{font-size:11px; font-weight:800; color:var(--ink)}
@@ -209,7 +212,7 @@ main{padding-bottom:var(--s6)}
 .levels{display:flex; flex-direction:column; gap:var(--s2)}
 .lvrow{display:flex; align-items:center; justify-content:space-between; gap:var(--s2); padding:var(--s2) var(--s3); border-radius:3px; background:var(--soft); box-shadow:inset 0 -3px 0 var(--soft-e)}
 .lvrow.done{background:var(--good); box-shadow:inset 0 -3px 0 var(--good-e)}
-.lvrow b{font-family:"Baloo 2",sans-serif; font-size:19px; display:block; line-height:1.1}
+.lvrow b{font-family:var(--font-display); font-weight:700; font-variation-settings:"SOFT" 100; font-size:19px; display:block; line-height:1.1}
 .lvrow small{font-size:13px; font-weight:800; color:var(--ink-soft)}
 .lvrow .btn{min-height:42px; padding:0 16px; font-size:15px}
 .monthbar{display:grid; grid-template-columns:44px 1fr 44px; align-items:center; gap:var(--s2); text-align:center}
@@ -320,11 +323,11 @@ dialog::backdrop{background:rgba(20,30,50,.45)}
 .pond{background:#8DD3F2; border-radius:4px; padding:10px; box-shadow:inset 0 -6px 0 #6CB8DE, 0 4px 0 var(--edge1),0 8px 0 var(--edge2)}
 .st-cell{position:relative; aspect-ratio:1; border:0; padding:0; background:transparent; display:grid; place-items:center; cursor:pointer}
 .st-cell > svg.pad{width:92%; height:auto; position:absolute}
-.st-cell .n{position:relative; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:clamp(16px,4vw,24px); color:#fff; text-shadow:0 2px 0 #2F6B3A}
+.st-cell .n{position:relative; font-family:var(--font-ui); font-weight:800; font-size:clamp(16px,4vw,24px); color:#fff; text-shadow:0 2px 0 #2F6B3A}
 .st-cell.sunk > svg.pad{opacity:.18} .st-cell.sunk .n{opacity:.3}
 .st-cell.next > svg.pad{filter:drop-shadow(0 0 6px #FFE45C) drop-shadow(0 0 2px #FFE45C)}
 .st-cell .frogpos{position:absolute; width:78%; z-index:2}
-.st-cell .bank{font-family:"Baloo 2",sans-serif; font-weight:800; font-size:13px; color:#1F5A2A; background:#B7E39A; border-radius:3px; padding:6px 4px; box-shadow:0 3px 0 #6BBE55; width:92%; text-align:center}
+.st-cell .bank{font-family:var(--font-ui); font-weight:800; font-size:13px; color:#1F5A2A; background:#B7E39A; border-radius:3px; padding:6px 4px; box-shadow:0 3px 0 #6BBE55; width:92%; text-align:center}
 .st-cell.bad{animation:shake .35s ease 2}
 .mr-cell{position:relative; aspect-ratio:1; border:0; border-radius:3px; padding:0; background:#D8E7B8; box-shadow:0 2px 0 #B9CF8F,0 4px 0 #94B068; display:grid; place-items:center; cursor:pointer; transition:transform .12s ease}
 .mr-cell:hover{transform:translateY(-2px)}
@@ -358,7 +361,7 @@ button.gcell:hover{transform:translateY(-2px)}
 .gcell.autumn{background:#F3E1C2; box-shadow:0 2px 0 #E2C79C,0 4px 0 #C9A86A}
 .gcell.meadow{background:#E3F4D6}
 .gcell.dusk{background:#3B3F6B; box-shadow:0 2px 0 #2C3058,0 4px 0 #1F2244} .gcell.dusk.lit{background:#F7E9A0; box-shadow:0 2px 0 #E8D06B,0 4px 0 #C9B04A} .gcell.dusk .dot{background:#B5B9E0}
-.gcell.lodge{box-shadow:none; border-radius:2px} .lodgenum{font-family:"Baloo 2",sans-serif; font-weight:800; font-size:20px; background:#fff; border-radius:50%; width:30px; height:30px; display:grid; place-items:center; box-shadow:0 2px 0 #C2B097}
+.gcell.lodge{box-shadow:none; border-radius:2px} .lodgenum{font-family:var(--font-ui); font-weight:800; font-size:20px; background:#fff; border-radius:50%; width:30px; height:30px; display:grid; place-items:center; box-shadow:0 2px 0 #C2B097}
 .gcell.river{background:#E9F5EC; box-shadow:0 2px 0 #CFE6C2}
 .gcell.river .spring{position:absolute; width:26%; aspect-ratio:1; border-radius:50%; background:#1F5F8E}
 .gcell.river .otter{position:absolute; width:52%; bottom:6%}
@@ -366,7 +369,8 @@ button.gcell:hover{transform:translateY(-2px)}
 .gcell.burrow{box-shadow:0 2px 0 rgba(0,0,0,.12)} .gcell.burrow > svg{width:90%}
 .exit{position:absolute; right:-4px; top:calc(2 * (100% / 6) + 10px); font-weight:800; font-size:12px; background:var(--good); padding:4px 6px; border-radius:3px}
 .gcell.stream{background:#BFE3F5; box-shadow:0 2px 0 #8DC6E6} .gcell.stream.spawn{background:#9BD08A; box-shadow:0 2px 0 #6BBE55} .gcell.stream b{font-size:clamp(15px,3.6vw,22px)} .gcell.stream .fishpos{position:absolute; width:70%; bottom:8%}
-.gcell.forest{background:#E3F4D6} .gcell.forest.trail{background:#FFE3D8} .stepnum{position:absolute; top:2px; left:4px; font-size:11px; font-weight:800; color:var(--ink-soft)}
+.gcell.forest{background:#E3F4D6} .gcell.forest.trail{background:#FFE3D8} /* Forest squares stay light in dark mode too, so the step number keeps a fixed dark ink (5.8:1 on the trail pink, 5.9:1 on green). */
+.stepnum{position:absolute; top:2px; left:4px; font-size:11px; font-weight:800; color:#4E5D6E}
 .gcell.pond{box-shadow:0 2px 0 rgba(0,0,0,.08)}
 .gcell.leafy{background:#DDEFD2} .gcell.leafy > svg{filter:hue-rotate(80deg) saturate(.8)} .gcell.leafy.gold{background:#FFF1C9} .gcell.leafy.gold > svg{filter:none}
 .dpad{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; max-width:360px; margin:0 auto; width:100%}
@@ -387,7 +391,7 @@ button.gcell:hover{transform:translateY(-2px)}
 .peg{width:10px; height:10px; border-radius:50%; border:2px solid var(--tile-e2)} .peg.exact{background:var(--ink); border-color:var(--ink)} .peg.near{border-color:var(--ink)}
 .eggbtn{border:0; background:transparent; padding:4px; cursor:pointer; border-radius:6px} .eggbtn[disabled]{opacity:.3; cursor:default}
 .wrow{display:grid; grid-template-columns:repeat(5,44px); gap:6px}
-.wtile{width:44px; height:44px; display:grid; place-items:center; border-radius:3px; border:2px solid var(--tile-e2); font-family:"Baloo 2",sans-serif; font-weight:800; font-size:22px}
+.wtile{width:44px; height:44px; display:grid; place-items:center; border-radius:3px; border:2px solid var(--tile-e2); font-family:var(--font-ui); font-weight:800; font-size:22px}
 .wtile.typed{border-color:var(--ink-mute)} .wtile.g{background:var(--pine); border-color:var(--pine); color:#fff} .wtile.y{background:var(--mustard); border-color:var(--mustard); color:#233142} .wtile.x{background:var(--soft-e); border-color:var(--soft-e)}
 .kb{display:flex; flex-direction:column; gap:6px; align-items:center}
 .kbrow{display:flex; gap:4px; justify-content:center; width:100%}
@@ -415,7 +419,7 @@ button.gcell:hover{transform:translateY(-2px)}
 .scene.hub + main{margin-top:-56px; position:relative}
 .statrow{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px}
 .statrow .card{align-items:center; text-align:center}
-.statrow .big{font-family:"Baloo 2",sans-serif; font-weight:800; font-size:clamp(30px,7vw,52px); line-height:1}
+.statrow .big{font-family:var(--font-ui); font-weight:800; font-size:clamp(30px,7vw,52px); line-height:1}
 .jump{display:flex; gap:8px; overflow-x:auto; padding:2px 2px 10px; scrollbar-width:none} .jump::-webkit-scrollbar{display:none}
 .jump a{flex:none; padding:8px 14px; border-radius:3px; background:var(--paper); box-shadow:0 3px 0 var(--edge1); text-decoration:none; font-weight:800; font-size:14px}
 .gamecard .stage{height:120px}
@@ -502,14 +506,14 @@ section[id]{scroll-margin-top:90px}
 /* While playing (any page with a game header), the phone tab bar steps aside so it never covers the board's buttons.
    The back button in the game header leads out. */
 @media (max-width:720px){
-  body:has(.gamehead) .tabbar{display:none}
-  body:has(.gamehead){padding-bottom:env(safe-area-inset-bottom,0px)}
+  body:has(.gamehead) .tabbar, body:has(#tut) .tabbar{display:none}
+  body:has(.gamehead), body:has(#tut){padding-bottom:env(safe-area-inset-bottom,0px)}
 }
 
 /* ---------- Options panel ---------- */
 .dlg.opts{gap:18px}
 .optgroup{display:flex; flex-direction:column; gap:14px; padding-top:16px; border-top:2px solid var(--paper-line)}
-.optgroup-title{margin:0; font-family:"Baloo 2",sans-serif; font-size:19px; font-weight:800}
+.optgroup-title{margin:0; font-family:var(--font-ui); font-size:19px; font-weight:800}
 .optrow{display:flex; flex-direction:column; gap:8px}
 .optlabel{font-weight:800; font-size:15px}
 .optlabel small{font-weight:700; font-size:13px; margin-left:4px}
@@ -555,3 +559,288 @@ footer .row{gap:10px 18px !important; line-height:1.6}
   .gamecard .blurb{min-height:0}
 
 }
+
+/* ---------- moving animals (Mover) ---------- */
+.tok{position:absolute; z-index:4; pointer-events:none; display:block}
+.tok-face,.tok-inner{display:block; width:100%; height:100%}
+.tok svg{display:block; width:100%; height:100%; filter:drop-shadow(0 3px 0 rgba(35,49,66,.16))}
+.tok.sel .tok-inner{animation:tokbob 1.5s ease-in-out infinite}
+@keyframes tokbob{50%{transform:translateY(-4px)}}
+.tok-bubble{position:absolute; right:-6px; top:-10px; width:24px; height:24px; border-radius:50%; background:#fff; color:#C9412A; font-family:var(--font-ui); font-weight:800; font-size:17px; display:grid; place-items:center; box-shadow:0 2px 0 #E2C7C0,0 4px 10px rgba(0,0,0,.15); animation:bubblein .3s cubic-bezier(.3,1.6,.5,1)}
+@keyframes bubblein{from{transform:scale(0)}}
+.puff{position:absolute; width:8px; height:8px; border-radius:50%; pointer-events:none; z-index:3; box-shadow:0 0 0 1px rgba(140,170,195,.35)}
+.cell.arriving > svg{animation:arrivepop .5s .42s both}
+@keyframes arrivepop{from{transform:scale(0) translateY(12px)} 70%{transform:scale(1.18)} to{transform:scale(1)}}
+.cell.burrowshake > svg{animation:burrowshake .5s ease}
+@keyframes burrowshake{25%{transform:rotate(-6deg)}75%{transform:rotate(5deg)}}
+@media (prefers-reduced-motion: reduce){ .tok.sel .tok-inner,.cell.arriving > svg,.cell.burrowshake > svg{animation:none} }
+
+/* Space between the page content and the footer.
+   (.wrap sets padding:0 18px, which used to cancel main's bottom padding; this rule is more specific.) */
+main.wrap, main{padding-bottom:64px}
+@media (max-width:720px){ main.wrap, main{padding-bottom:48px} }
+/* Phones: the footer runs down behind the tab bar (no beige strip between them). */
+@media (max-width:720px){
+  body{padding-bottom:0 !important}
+  footer .wrap{padding-bottom:calc(28px + 74px + env(safe-area-inset-bottom,0px))}
+  body:has(.gamehead) footer .wrap, body:has(#tut) footer .wrap{padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
+}
+
+
+/* ======================================================================
+   Typography: Fraunces (soft storybook serif) for headings and names;
+   Atkinson Hyperlegible Next for text, buttons and every puzzle number.
+   ====================================================================== */
+body{line-height:1.55; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility}
+.h-xl{letter-spacing:-0.02em; line-height:1.04}
+.h-l{letter-spacing:-0.015em}
+.btn, .tab, .pill, .key, .jump a, .tabbar a{font-family:var(--font-ui)}
+.btn{font-weight:700}
+.btn.big{font-weight:800}
+.coach{font-weight:600}
+.muted{font-weight:500}
+/* numbers: clear and even-width so timers and scores don't wobble */
+.timer, .stats b, .statrow .big, .num, .pill, #hub-count, .lodgenum, .st-cell .n, .gcell b, .nclue, .stepnum, .wtile, .key, .day b, .tk-tile b, .badge-tile small{font-variant-numeric:tabular-nums lining-nums}
+.statrow .big, .stats b{font-family:var(--font-display); font-variation-settings:"SOFT" 100; font-weight:700}
+/* puzzle numbers inside boards always use the hyper-legible face */
+.gcell .display, .dc-tray .display, .st-cell .n, .lodgenum, .gcell .num, .cell .num{font-family:var(--font-ui); font-weight:800; letter-spacing:0}
+
+/* ======================================================================
+   Design system v4: radius, elevation and interaction states
+   ====================================================================== */
+:root{
+  --r-s:8px; --r-m:12px; --r-l:18px; --r-xl:24px; --r-full:999px;
+  --shade:rgba(30,40,62,.22); --shade-strong:rgba(30,40,62,.32);
+  --focus:#2F6FC0;
+  --pine-h:#358C66; --coral-h:#F5835F; --mustard-h:#F9CF5E; --paper-h:#F6FAFD;
+  --lift:-2px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --shade:rgba(0,0,0,.45); --shade-strong:rgba(0,0,0,.6); --focus:#8EB8FF; --paper-h:#1C2A57 } }
+:root[data-theme="dark"]{ --shade:rgba(0,0,0,.45); --shade-strong:rgba(0,0,0,.6); --focus:#8EB8FF; --paper-h:#1C2A57 }
+
+/* ---- surfaces ---- */
+.card{border-radius:var(--r-l); box-shadow:0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 16px 28px -12px var(--shade)}
+.coach{border-radius:var(--r-m)}
+.lvrow{border-radius:var(--r-m)}
+.acard{border-radius:var(--r-m)}
+dialog, .dlg{border-radius:var(--r-xl)}
+.stage{border-radius:var(--r-m)}
+.hero-art, .boardwrap > .board, .pond{border-radius:var(--r-l)}
+.badge-tile, .dc-bird, .dc-slot{border-radius:var(--r-m)}
+
+/* ---- buttons ---- */
+.btn{border-radius:var(--r-m); transition:transform .14s ease, box-shadow .14s ease, background-color .14s ease, filter .14s ease}
+.btn-p{box-shadow:0 4px 0 var(--pine-e1), 0 10px 16px -8px var(--shade)}
+.btn-c{box-shadow:0 4px 0 var(--coral-e1), 0 10px 16px -8px var(--shade)}
+.btn-y{box-shadow:0 4px 0 var(--mustard-e1), 0 10px 16px -8px var(--shade)}
+.btn-w{box-shadow:0 4px 0 var(--edge1), 0 10px 16px -8px var(--shade); outline:1px solid var(--paper-line); outline-offset:-1px}
+.iconbtn{border-radius:var(--r-m)}
+.btn:active:not([disabled]){transform:translateY(3px)}
+.btn-p:active:not([disabled]){box-shadow:0 1px 0 var(--pine-e1), 0 2px 4px var(--shade)}
+.btn-c:active:not([disabled]){box-shadow:0 1px 0 var(--coral-e1), 0 2px 4px var(--shade)}
+.btn-y:active:not([disabled]){box-shadow:0 1px 0 var(--mustard-e1), 0 2px 4px var(--shade)}
+.btn-w:active:not([disabled]){box-shadow:0 1px 0 var(--edge1), 0 2px 4px var(--shade)}
+.btn[disabled], .btn[aria-disabled="true"]{opacity:.5; cursor:not-allowed; filter:saturate(.6); transform:none !important}
+
+/* ---- tabs, chips, pills ---- */
+.tab{border-radius:var(--r-m); box-shadow:0 4px 0 var(--edge1), 0 10px 14px -10px var(--shade); transition:transform .14s ease, box-shadow .14s ease, background-color .14s ease}
+.tab[aria-selected="true"]{transform:translateY(2px); box-shadow:0 2px 0 var(--coral-e1)}
+.pill{border-radius:var(--r-full); padding:4px 12px}
+.jump a{border-radius:var(--r-full); transition:transform .14s ease, box-shadow .14s ease}
+.timer{border-radius:var(--r-full)}
+.nav a{border-radius:var(--r-m); transition:transform .14s ease, box-shadow .14s ease, background-color .14s ease}
+.tabbar a{border-radius:var(--r-m)}
+
+/* ---- board tiles ---- */
+.cell, .gcell:not(.lodge):not(.burrow), .st-cell, .ncell, .day, .pcard{border-radius:var(--r-s)}
+.hexrow .gcell{border-radius:0}
+.cell, .gcell, .st-cell, .pcard, .day, .acard, .lvrow{transition:transform .14s ease, box-shadow .14s ease, background-color .15s ease}
+
+/* ---- keyboard focus: always visible, never on mouse clicks ---- */
+:where(a, button, [tabindex], summary):focus-visible{outline:3px solid var(--focus); outline-offset:3px; border-radius:var(--r-m)}
+.cell:focus-visible, .gcell:focus-visible, .st-cell:focus-visible, .ncell:focus-visible{outline-offset:1px; border-radius:var(--r-s)}
+
+/* ---- links ---- */
+a:not(.btn):not(.card):not(.logo):not(.tab):not(.jump a){text-underline-offset:3px; text-decoration-thickness:2px; transition:color .14s ease, text-decoration-color .14s ease}
+footer a{text-decoration-color:rgba(255,255,255,.35)}
+
+/* ---- hover: only on devices with a real pointer (no sticky hovers on phones) ---- */
+@media (hover:hover) and (pointer:fine){
+  .btn:hover:not([disabled]){transform:translateY(var(--lift))}
+  .btn-p:hover:not([disabled]){background:var(--pine-h); box-shadow:0 6px 0 var(--pine-e1), 0 14px 20px -8px var(--shade-strong)}
+  .btn-c:hover:not([disabled]){background:var(--coral-h); box-shadow:0 6px 0 var(--coral-e1), 0 14px 20px -8px var(--shade-strong)}
+  .btn-y:hover:not([disabled]){background:var(--mustard-h); box-shadow:0 6px 0 var(--mustard-e1), 0 14px 20px -8px var(--shade-strong)}
+  .btn-w:hover:not([disabled]){background:var(--paper-h); box-shadow:0 6px 0 var(--edge1), 0 14px 20px -8px var(--shade-strong)}
+  .tab:not([aria-selected="true"]):hover{transform:translateY(var(--lift)); background:var(--paper-h); box-shadow:0 6px 0 var(--edge1), 0 14px 18px -10px var(--shade-strong)}
+  .jump a:hover, .nav a:not([aria-current="page"]):hover{transform:translateY(var(--lift)); box-shadow:0 5px 0 var(--edge1), 0 12px 16px -10px var(--shade-strong)}
+  a.card:hover, .gamecard:hover, .guidecard:hover{transform:translateY(-4px); box-shadow:0 3px 0 var(--edge1), 0 9px 0 var(--edge2), 0 26px 36px -14px var(--shade-strong)}
+  a.card, .gamecard, .guidecard{transition:transform .18s ease, box-shadow .18s ease}
+  .acard:hover{transform:translateY(var(--lift)); box-shadow:0 5px 0 var(--edge1), 0 8px 0 var(--edge2), 0 14px 18px -10px var(--shade-strong)}
+  .lvrow:hover{transform:translateY(-1px); background:var(--paper-h)}
+  button.cell:hover, button.gcell:hover, .st-cell:hover, .pcard:not(.up):hover, a.day:hover, button.day:hover{transform:translateY(-3px); filter:brightness(1.03)}
+  .tabbar a:not([aria-current="page"]):hover{background:var(--soft); color:var(--ink)}
+  a:not(.btn):not(.card):not(.logo):not(.tab):hover{color:var(--coral-e1)}
+  footer a:hover{color:#fff; text-decoration-color:var(--mustard)}
+  .logo:hover svg{transform:rotate(-6deg) scale(1.05); transition:transform .2s ease}
+}
+@media (prefers-reduced-motion: reduce){
+  .btn:hover, .tab:hover, a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover, .lvrow:hover, button.cell:hover, button.gcell:hover, .st-cell:hover, .jump a:hover, .nav a:hover, .btn:active{transform:none !important}
+}
+/* Locked Trek stages: dashed outline stays, text a shade darker so it reads clearly (WCAG AA) */
+.tstage.locked{color:var(--ink-soft); border-radius:var(--r-s)}
+.tstage{border-radius:var(--r-s)}
+/* Remaining surfaces brought onto the radius scale */
+.boardwrap, .banner{border-radius:var(--r-l)}
+.nb-cell, .mr-cell{border-radius:var(--r-s)}
+.st-cell .bank{border-radius:var(--r-full)}
+.nb-cell, .mr-cell{transition:transform .14s ease, box-shadow .14s ease, background-color .15s ease}
+@media (hover:hover) and (pointer:fine){ button.nb-cell:hover, button.mr-cell:hover{transform:translateY(-3px); filter:brightness(1.03)} }
+@media (prefers-reduced-motion: reduce){ button.nb-cell:hover, button.mr-cell:hover{transform:none !important} }
+
+/* ---------- game covers ---------- */
+.cover{display:block; width:100%; height:auto; aspect-ratio:16/10; border-radius:var(--r-m)}
+.coverwrap{display:block; border-radius:var(--r-m); overflow:hidden; box-shadow:inset 0 0 0 1px rgba(35,49,66,.06)}
+.gamecard .coverwrap{margin:-4px -4px 2px}
+@media (hover:hover) and (pointer:fine){ .gamecard:hover .cover use{transition:transform .3s ease} }
+
+/* ======================================================================
+   Portal shell (top bar + sidebar), tiles, shelves and portal pages
+   ====================================================================== */
+:root{ --shell:#141A2E; --shell-2:#1E2642; --shell-3:#2A3356; --shell-ink:#EEF2FA; --shell-soft:#A3AECB; --topbar-h:64px; --side-w:240px; --side-mini:76px }
+.top{display:none}
+.topbar{position:sticky; top:0; z-index:40; height:var(--topbar-h); display:flex; align-items:center; gap:12px; padding:0 14px; background:var(--shell); color:var(--shell-ink); box-shadow:0 1px 0 rgba(255,255,255,.06), 0 8px 24px -12px rgba(0,0,0,.5)}
+.topbar .logo{color:var(--shell-ink); font-size:21px; flex:none}
+.topbar .logo span{color:var(--shell-ink)}
+.tb-icon{flex:none; width:42px; height:42px; border:0; border-radius:var(--r-m); background:transparent; color:var(--shell-ink); display:grid; place-items:center; cursor:pointer; transition:background-color .15s ease}
+.tb-search{position:relative; flex:1 1 auto; max-width:560px; margin:0 auto}
+.tb-search input{width:100%; height:44px; border:0; border-radius:var(--r-full); background:var(--shell-2); color:var(--shell-ink); padding:0 46px 0 20px; font:inherit; font-size:15px; font-weight:600; box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.tb-search input::placeholder{color:var(--shell-soft)}
+.tb-search input:focus{outline:none; box-shadow:inset 0 0 0 2px var(--mustard)}
+.tb-search-ic{position:absolute; right:16px; top:50%; transform:translateY(-50%); color:var(--shell-soft); pointer-events:none; display:flex}
+.tb-results{position:absolute; left:0; right:0; top:calc(100% + 8px); background:var(--paper); color:var(--ink); border-radius:var(--r-l); box-shadow:0 18px 40px -12px rgba(0,0,0,.45); padding:8px; z-index:50; display:flex; flex-direction:column}
+.tb-hit{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 12px; border-radius:var(--r-m); text-decoration:none; color:var(--ink)}
+.tb-hit small{color:var(--ink-mute); font-weight:700; font-size:12px}
+.tb-hit.on, .tb-hit:hover{background:var(--soft)}
+.tb-all{padding:10px 12px; font-weight:800; font-size:14px; border-top:1px solid var(--paper-line); margin-top:4px}
+.tb-none{margin:0; padding:12px; color:var(--ink-mute)}
+.tb-right{display:flex; align-items:center; gap:8px; flex:none}
+.tb-btn{display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 14px; border-radius:var(--r-full); background:var(--shell-2); color:var(--shell-ink); text-decoration:none; font-weight:800; font-size:14px; transition:background-color .15s ease}
+.tb-chip{display:inline-flex; align-items:center; gap:5px; height:34px; padding:0 12px; border-radius:var(--r-full); background:rgba(242,112,77,.18); color:#FFB59D; font-weight:800}
+.topbar a:not(.btn):not(.card):not(.logo):hover{color:var(--shell-ink)}
+/* sidebar */
+.sidenav{position:fixed; z-index:35; top:var(--topbar-h); bottom:0; left:0; width:var(--side-w); background:var(--shell); color:var(--shell-ink); overflow-y:auto; padding:14px 10px 24px; display:none; scrollbar-width:thin}
+.sidenav ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+.sidenav a{display:flex; align-items:center; gap:14px; padding:10px 12px; border-radius:var(--r-m); color:var(--shell-ink); text-decoration:none; font-weight:700; font-size:15px; white-space:nowrap; transition:background-color .15s ease}
+.sidenav a svg{flex:none; color:var(--shell-soft)}
+.sidenav a[aria-current="page"]{background:var(--shell-3)}
+.sidenav a[aria-current="page"] svg{color:var(--mustard)}
+.sidenav hr{border:0; border-top:1px solid rgba(255,255,255,.08); margin:12px 6px}
+.sn-head{margin:0 12px 6px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--shell-soft)}
+.navscrim{position:fixed; inset:var(--topbar-h) 0 0 0; z-index:34; background:rgba(10,14,28,.5)}
+@media (min-width:1100px){
+  .sidenav{display:block}
+  body{padding-left:var(--side-w)}
+  :root[data-nav="mini"] body{padding-left:var(--side-mini)}
+  :root[data-nav="mini"] .sidenav{width:var(--side-mini)}
+  :root[data-nav="mini"] .sidenav a{justify-content:center; padding:12px 0}
+  :root[data-nav="mini"] .sidenav a span, :root[data-nav="mini"] .sn-head{display:none}
+  .navscrim{display:none !important}
+}
+@media (max-width:1099px){
+  :root[data-drawer] .sidenav{display:block; box-shadow:12px 0 32px rgba(0,0,0,.4)}
+  :root[data-drawer] body{overflow:hidden}
+}
+@media (max-width:720px){
+  .topbar{gap:6px; padding:0 8px}
+  .topbar .logo span{display:none}
+  .tb-btn span{display:none}
+  .tb-btn{width:40px; padding:0; justify-content:center}
+  .tb-search input{height:40px; font-size:14px; padding-left:14px}
+  .tb-chip{height:30px; padding:0 8px}
+}
+@media (hover:hover) and (pointer:fine){
+  .tb-icon:hover, .tb-btn:hover, .sidenav a:hover{background:var(--shell-3)}
+}
+/* portal pages */
+.portal{padding-top:22px}
+.portal-head{display:flex; flex-direction:column; gap:10px; margin-bottom:18px}
+.crumbs{display:flex; gap:8px; align-items:center; font-weight:800; font-size:14px; color:var(--ink-soft)}
+.crumbs a{color:var(--ink); text-decoration:none}
+.portal-title{font-family:var(--font-ui); font-weight:800; text-transform:uppercase; letter-spacing:-0.01em; font-size:clamp(34px,5.4vw,60px); line-height:1; font-variation-settings:normal}
+.portal-row{display:flex; gap:16px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap}
+.portal-blurb{flex:1 1 420px; font-weight:600; color:var(--ink)}
+.portal-blurb p{margin:0}
+.portal-blurb details summary{display:block; cursor:pointer; list-style:none; font-family:var(--font-ui); font-weight:600; font-size:16px; font-variation-settings:normal}
+.portal-blurb details summary::-webkit-details-marker{display:none}
+.portal-blurb .more-btn{color:var(--coral-e1); white-space:nowrap}
+.portal-blurb details[open] .more-btn{display:none}
+.portal-blurb details p{margin:8px 0 0; color:var(--ink-soft)}
+.sortbox select{appearance:none; height:44px; min-width:190px; padding:0 40px 0 16px; border-radius:var(--r-m); border:2px solid var(--paper-line); background:var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23233142' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center; color:var(--ink); font:inherit; font-weight:800; cursor:pointer}
+.grid-count{margin:0; font-weight:700; font-size:14px}
+.sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+/* tiles */
+.tiles{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:18px}
+.tiles-5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.tile{position:relative; display:block; aspect-ratio:16/10; border-radius:var(--r-l); overflow:hidden; background:var(--shell-2); text-decoration:none; color:#fff; box-shadow:0 10px 22px -12px var(--shade-strong); transition:transform .18s ease, box-shadow .18s ease; isolation:isolate}
+.tile-art{position:absolute; inset:0}
+.tile-art .cover{width:100%; height:100%; aspect-ratio:auto; border-radius:0; transition:transform .35s ease}
+.tile-badges{position:absolute; top:10px; left:10px; display:flex; gap:6px; flex-wrap:wrap; z-index:2}
+.tbadge{font-size:11px; font-weight:800; line-height:1; padding:5px 9px; border-radius:var(--r-full); background:#fff; color:#233142; box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.tbadge.daily{background:#2F7D5B; color:#fff}
+.tbadge.new{background:#F6C445; color:#233142}
+.tbadge.season{display:none; background:#F2704D; color:#233142}
+:root[data-season="spring"] .tile[data-season="spring"] .tbadge.season, :root[data-season="summer"] .tile[data-season="summer"] .tbadge.season, :root[data-season="autumn"] .tile[data-season="autumn"] .tbadge.season, :root[data-season="winter"] .tile[data-season="winter"] .tbadge.season{display:inline-block}
+.tbadge.solved{background:#fff; color:#22604A}
+.tile-name{position:absolute; left:0; right:0; bottom:0; z-index:2; display:flex; flex-direction:column; gap:2px; padding:34px 14px 12px; background:linear-gradient(to top, rgba(14,20,38,.88), rgba(14,20,38,.55) 55%, transparent)}
+.tile-name b{font-size:16px; font-weight:800; line-height:1.15; text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.tile-name small{font-size:12.5px; font-weight:700; color:rgba(255,255,255,.88); display:flex; align-items:center; gap:4px}
+.tile-name small .paws svg{width:13px; height:13px}
+.tile-play{position:absolute; z-index:2; top:50%; left:50%; width:54px; height:54px; margin:-27px 0 0 -27px; border-radius:50%; background:rgba(255,255,255,.92); color:#2F7D5B; display:grid; place-items:center; opacity:0; transform:scale(.7); transition:opacity .18s ease, transform .18s ease; box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.tile.done{box-shadow:0 0 0 3px #2F7D5B, 0 10px 22px -12px var(--shade-strong)}
+.tile[hidden]{display:none}
+.tile:focus-visible{outline:3px solid var(--focus); outline-offset:3px}
+@media (hover:hover) and (pointer:fine){
+  .tile:hover{transform:translateY(-5px); box-shadow:0 22px 34px -14px var(--shade-strong)}
+  .tile:hover .tile-art .cover{transform:scale(1.06)}
+  .tile:hover .tile-play{opacity:1; transform:scale(1)}
+}
+@media (prefers-reduced-motion: reduce){ .tile:hover{transform:none} .tile:hover .tile-art .cover{transform:none} }
+/* shelves (home rows) */
+.home{display:flex; flex-direction:column; gap:34px}
+.shelf{display:flex; flex-direction:column; gap:12px}
+.shelf-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px}
+.shelf-title{font-family:var(--font-ui); font-weight:800; font-size:clamp(20px,2.4vw,26px); letter-spacing:-0.01em; font-variation-settings:normal}
+.shelf-link{font-weight:800; font-size:14px; white-space:nowrap}
+.shelf-note{margin:-6px 0 0; font-size:14px}
+.rail{display:grid; grid-auto-flow:column; grid-auto-columns:clamp(210px,24%,280px); gap:16px; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; padding:4px 2px 14px; margin:0 -2px; scrollbar-width:thin}
+.rail > .tile{scroll-snap-align:start}
+.setbar{height:10px; border-radius:var(--r-full); background:var(--soft); overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,.08)}
+.setbar > div{width:0; height:100%; background:linear-gradient(90deg,#2F7D5B,#56B08A); border-radius:var(--r-full); transition:width .4s ease}
+.hub-cards{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px}
+.hub-hero{display:flex}
+@media (max-width:1100px){ .tiles-5{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:720px){
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
+  .tiles-5{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tile-name{padding:26px 10px 9px}
+  .tile-name b{font-size:14px}
+  .tile-name small{font-size:11.5px}
+  .tile-badges{top:7px; left:7px; gap:4px}
+  .tbadge{font-size:10px; padding:4px 7px}
+  .rail{grid-auto-columns:62%}
+  .hub-cards{grid-template-columns:1fr}
+  .home{gap:28px}
+  .sortbox select{min-width:0; width:100%}
+  .sortbox{width:100%}
+}
+/* portal fixes */
+@media (min-width:1100px){
+  .topbar{margin-left:calc(-1 * var(--side-w))}
+  :root[data-nav="mini"] .topbar{margin-left:calc(-1 * var(--side-mini))}
+}
+.scene.hub + main.portal{margin-top:0; padding-top:28px}
+.portal-blurb details{background:none; box-shadow:none; padding:0; border:0}
+.portal-blurb details summary{padding:0; background:none; box-shadow:none}
+.tile-name b{color:#fff}
+.tile-name small{color:rgba(255,255,255,.9)}
+a.tile:hover{color:#fff}

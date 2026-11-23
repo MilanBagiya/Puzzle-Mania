@@ -1,65 +1,66 @@
 ---
 import Base from '../layouts/Base.astro';
 import Scenery from '../components/Scenery.astro';
-import { BONUS, DAILY_SET, GAMES } from '@wild-daily/core';
-import { bird, burrow, character, drift, frog, mushroom, nest, print, rock, tree } from '@wild-daily/ui';
-const ld = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Wild Daily', url: new URL('/', Astro.site).href, description: 'Short daily puzzles from one snowy forest.' };
-const icon: Record<string, string> = { morning: character('fox', 'idle', 44), noon: character('rabbit', 'idle', 44), night: character('deer', 'idle', 44), nests: nest(44), dawn: bird('#E2594A', 44), stones: frog(44), rings: mushroom(40) };
-const label = (k: string): string => GAMES[k as keyof typeof GAMES].name.replace('Fresh Snow · ', 'Fresh Snow: ');
+import { DAILY_SET, GAMES } from '@wild-daily/core';
+import { character } from '@wild-daily/ui';
+import { CATS, byCat, entryById } from '../data/catalog';
+import { tileHtml } from '../scripts/tiles';
+const ld = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Wild Daily', url: new URL('/', Astro.site).href, description: 'Short daily puzzles from one forest.' };
+// Daily Set as tiles: the three Fresh Snow levels share its cover, each with its own label.
+const LEVEL: Record<string, string> = { morning: 'Morning', noon: 'Noon', night: 'Night' };
+const SUB: Record<string, string> = { morning: '2 animals · 1–2 min', noon: '3 animals · 3–5 min', night: 'Hardest · 8–12 min', nests: '2–4 min', dawn: '1–3 min' };
+const dailyTiles = DAILY_SET.map((g) => {
+  if (LEVEL[g]) return tileHtml(entryById('fresh-snow')!, { label: `Fresh Snow · ${LEVEL[g]}`, sub: SUB[g], href: GAMES[g].href, key: g });
+  return tileHtml(entryById(g)!, { sub: SUB[g] ?? GAMES[g].note, key: g });
+}).join('');
+const rail = (ids: string[]): string => ids.map((id) => entryById(id)).filter(Boolean).map((e) => tileHtml(e!)).join('');
 ---
-<Base title="Wild Daily · Daily animal puzzles" description="Fresh Snow, Nests, Dawn Chorus and more: short daily puzzles about real animals. A new set every morning, free to play." active="today" jsonLd={ld}>
-  <Scenery height={320} pad={30} class="hub">
-    <div class="row" style="justify-content:space-between; align-items:center; gap:26px">
-      <div class="stack" style="max-width:600px">
-        <div class="row" style="gap:8px"><span class="pill p-w tilt-l" id="hub-date">Today’s puzzles</span><span class="pill p-y season-pill" id="hub-season"></span></div>
+<Base title="Wild Daily · Daily animal puzzles" description="Fresh Snow, Nests, Dawn Chorus and 23 more: short daily puzzles about real animals. A new set every morning, free to play." active="today" jsonLd={ld}>
+  <Scenery height={230} pad={26} class="hub">
+    <div class="hub-hero">
+      <div class="stack" style="gap:12px; max-width:640px">
+        <div class="row" style="gap:8px"><span class="pill p-w" id="hub-date">Today’s puzzles</span><span class="pill p-y season-pill" id="hub-season"></span><span class="pill p-w" id="hub-streak">Start a streak today</span></div>
         <h1 class="h-xl" id="hub-title">Fresh snow fell overnight.</h1>
-        <p class="lead" style="color:var(--ink)" id="hub-lead">Five short puzzles are waiting in the forest. Solve one to keep your streak; solve all five to complete the Daily Set.</p>
+        <p class="lead" style="color:var(--ink); margin:0" id="hub-lead">Five short puzzles are waiting in the forest. Solve one to keep your streak; solve all five to complete the Daily Set.</p>
         <div class="row"><a class="btn btn-p big" id="hub-play" href="/fresh-snow?level=morning">Play Morning</a><a class="btn btn-w" href="/fresh-snow/tutorial" id="hub-tut">Start the tutorial</a></div>
-      </div>
-      <div class="card tilt-r hero-art" style="width:240px; padding:12px" aria-hidden="true">
-        <div class="board" style="grid-template-columns:repeat(3,1fr)">
-          <span class="cell blocked" set:html={tree()} /><span class="cell blocked"><span class="prints" set:html={print('fox')} /></span><span class="cell blocked" set:html={drift()} />
-          <span class="cell blocked"><span class="prints" set:html={print('rabbit')} /></span><span class="cell next blocked"><span class="prints" set:html={print('fox')} /></span><span class="cell blocked" set:html={rock()} />
-          <span class="cell blocked"><span class="prints" set:html={print('deer')} /></span><span class="cell blocked" set:html={burrow()} /><span class="cell st-fox blocked" set:html={character('fox', 'happy', undefined, 'cheer')} />
-        </div>
       </div>
     </div>
   </Scenery>
-  <main class="wrap">
-    <div class="game" style="margin-top:0">
-      <div class="stack">
-        <section class="card stack">
-          <div class="row" style="justify-content:space-between"><h2 class="h-m">Today’s Daily Set</h2><span class="muted" style="font-weight:800" id="hub-set">0 of 5 solved</span></div>
-          <div style="height:12px; border-radius:2px; background:var(--soft); box-shadow:inset 0 2px 0 var(--soft-e); overflow:hidden"><div id="hub-setbar" style="width:0; height:100%; background:var(--pine); transition:width .4s ease"></div></div>
-          <div class="levels">
-            {DAILY_SET.map((g) => <div class="lvrow" data-game={g}><div class="row" style="flex-wrap:nowrap; gap:10px"><Fragment set:html={icon[g]} /><div><b>{label(g)}</b><small>{GAMES[g].note}</small></div></div><a class="btn btn-p" href={GAMES[g].href}>Play</a></div>)}
-          </div>
-          <div class="banner" id="hub-setdone" hidden style="background:var(--good)"><Fragment set:html={character('deer', 'happy', 64, 'cheer')} /><div class="grow"><b class="display" style="font-size:19px">Daily Set complete!</b><div class="muted">Fresh snow falls in <b class="countdown" data-countdown>soon</b>.</div></div></div>
-        </section>
-        <section class="card stack" style="background:var(--rabbit-t)">
-          <div class="row" style="justify-content:space-between"><div><h2 class="h-m">Trail Trek</h2><span class="muted" style="font-weight:800" id="hub-trek">60 stages</span></div><Fragment set:html={character('fox', 'happy', 70, 'cheer')} /></div>
-          <p style="margin:0">A Fresh Snow campaign you can play any time: 60 stages, four chapters, three paws each.</p>
-          <div class="row"><a class="btn btn-p" id="hub-trek-btn" href="/trek/play?stage=1">Start the trek</a><a class="btn btn-w" href="/trek">See the map</a></div>
-        </section>
-        <section class="card stack" style="background:var(--note)">
-          <div class="row" style="justify-content:space-between"><h2 class="h-m">Today’s picks</h2><a href="/games" style="font-weight:800">All 26 games</a></div>
-          <p class="muted" style="margin:0" id="hub-picks-note">Three games from the pack, chosen fresh every day. Solve all three for a badge.</p>
-          <div class="levels" id="hub-picks"></div>
-        </section>
-        <section class="stack">
-          <h2 class="h-m">Bonus games</h2>
-          <div class="levels card">
-            {BONUS.map((g) => <div class="lvrow" data-game={g}><div class="row" style="flex-wrap:nowrap; gap:10px"><Fragment set:html={icon[g]} /><div><b>{label(g)}</b><small>{GAMES[g].note}</small></div></div><a class="btn btn-p" href={GAMES[g].href}>Play</a></div>)}
-          </div>
-        </section>
+  <main class="wrap portal home">
+    <section class="shelf" id="daily">
+      <div class="shelf-head"><h2 class="shelf-title">Today’s Daily Set</h2><span class="muted" style="font-weight:800" id="hub-set">0 of 5 solved</span></div>
+      <div class="setbar"><div id="hub-setbar"></div></div>
+      <div class="tiles tiles-5" id="hub-levels" set:html={dailyTiles} />
+      <div class="banner" id="hub-setdone" hidden style="background:var(--good)"><Fragment set:html={character('deer', 'happy', 64, 'cheer')} /><div class="grow"><b class="display" style="font-size:19px">Daily Set complete!</b><div class="muted">Fresh snow falls in <b class="countdown" data-countdown>soon</b>.</div></div></div>
+    </section>
+    <section class="shelf">
+      <div class="shelf-head"><h2 class="shelf-title">Today’s picks</h2><a class="shelf-link" href="/games">All games</a></div>
+      <p class="muted shelf-note" id="hub-picks-note">Three games from the pack, chosen fresh every day. Solve all three for a badge.</p>
+      <div class="rail" id="hub-picks"></div>
+    </section>
+    <section class="shelf" id="hub-continue-wrap" hidden>
+      <div class="shelf-head"><h2 class="shelf-title">Continue playing</h2><a class="shelf-link" href="/recent">My games</a></div>
+      <div class="rail" id="hub-continue"></div>
+    </section>
+    <section class="shelf">
+      <div class="shelf-head"><h2 class="shelf-title" id="hub-season-title">In season now</h2></div>
+      <div class="rail" id="hub-inseason"></div>
+    </section>
+    <section class="shelf hub-cards">
+      <div class="card stack" style="background:var(--rabbit-t)">
+        <div class="row" style="justify-content:space-between"><div><h2 class="h-m">Trail Trek</h2><span class="muted" style="font-weight:800" id="hub-trek">60 stages</span></div><Fragment set:html={character('fox', 'happy', 64, 'cheer')} /></div>
+        <p style="margin:0">A Fresh Snow campaign you can play any time: 60 stages, four chapters, three paws each.</p>
+        <div class="row"><a class="btn btn-p" id="hub-trek-btn" href="/trek/play?stage=1">Start the trek</a><a class="btn btn-w" href="/trek">See the map</a></div>
       </div>
-      <aside class="side">
-        <div class="card stack"><div class="row" style="justify-content:space-between"><h2 class="h-s">Your week</h2><span class="pill p-y" id="hub-streak">Start a streak today</span></div><div class="cal" id="hub-week" style="grid-template-columns:repeat(7,1fr)"></div><p class="muted" style="margin:0; font-size:14px" id="hub-best">One missed day a week is forgiven.</p></div>
-        <div class="card stack"><h2 class="h-s">Next fresh snow</h2><p style="margin:0">New puzzles in <b class="countdown" data-countdown>soon</b>.</p></div>
-        <div class="card stack" style="background:var(--good)"><h2 class="h-s">Forest Journal</h2><p style="margin:0" id="hub-journal">Each day you play adds an animal card.</p><a class="btn btn-w" href="/journal">Open journal</a></div>
-        <div class="card stack"><h2 class="h-s">Badges</h2><p style="margin:0" id="hub-badges">22 badges to earn</p><a class="btn btn-w" href="/stats">See your stats</a></div>
-      </aside>
-    </div>
+      <div class="card stack"><h2 class="h-s">Your week</h2><div class="cal" id="hub-week" style="grid-template-columns:repeat(7,1fr)"></div><p class="muted" style="margin:0; font-size:14px" id="hub-best">One missed day a week is forgiven.</p><p style="margin:0">New puzzles in <b class="countdown" data-countdown>soon</b>.</p></div>
+      <div class="card stack" style="background:var(--good)"><h2 class="h-s">Journal and badges</h2><p style="margin:0" id="hub-journal">Each day you play adds an animal card.</p><p style="margin:0" id="hub-badges">Badges to earn</p><div class="row"><a class="btn btn-w" href="/journal">Journal</a><a class="btn btn-w" href="/stats">Stats</a></div></div>
+    </section>
+    {CATS.map((c) => (
+      <section class="shelf">
+        <div class="shelf-head"><h2 class="shelf-title">{c.name}</h2><a class="shelf-link" href={`/games/${c.id}`}>See all {byCat(c.id).length}</a></div>
+        <div class="rail" set:html={rail(byCat(c.id).map((e) => e.id))} />
+      </section>
+    ))}
   </main>
   <script>import '../scripts/hub.ts';</script>
 </Base>

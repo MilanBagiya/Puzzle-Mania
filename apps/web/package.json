@@ -12,22 +12,26 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "astro": "7.4.7",
     "@astrojs/sitemap": "3.7.4",
-    "@wild-daily/ui": "workspace:*",
+    "@fontsource-variable/atkinson-hyperlegible-next": "5.3.0",
+    "@fontsource-variable/fraunces": "5.3.0",
     "@wild-daily/core": "workspace:*",
-    "@wild-daily/game-fresh-snow": "workspace:*",
     "@wild-daily/game-dawn-chorus": "workspace:*",
-    "@wild-daily/game-nests": "workspace:*",
-    "@wild-daily/game-stepping-stones": "workspace:*",
+    "@wild-daily/game-fresh-snow": "workspace:*",
     "@wild-daily/game-mushroom-rings": "workspace:*",
+    "@wild-daily/game-nests": "workspace:*",
     "@wild-daily/game-pack": "workspace:*",
-    "gsap": "3.15.1",
-    "canvas-confetti": "1.9.4"
+    "@wild-daily/game-stepping-stones": "workspace:*",
+    "@wild-daily/ui": "workspace:*",
+    "astro": "7.4.7",
+    "canvas-confetti": "1.9.4",
+    "gsap": "3.15.1"
   },
   "devDependencies": {
+    "@fontsource-variable/bricolage-grotesque": "5.3.0",
+    "@fontsource-variable/fredoka": "5.3.0",
+    "@types/canvas-confetti": "1.9.0",
     "typescript": "5.6.3",
-    "vitest": "2.1.9",
-    "@types/canvas-confetti": "1.9.0"
+    "vitest": "2.1.9"
   }
 }

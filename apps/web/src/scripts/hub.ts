@@ -1,7 +1,10 @@
 // Today page: Daily Set progress, streak with Snow Days, countdown, Trek, bonus games, badges, journal.
-import { activeSeason, addDays, BADGES, BONUS, DAILY_SET, GAMES, SEASON_INFO, packSeason, todaysPicks, type Season, JOURNAL, daysPlayed, earnedBadges, formatDate, formatTime, loadProgress, nextInSet, playedDay, setCount, streakInfo, trekStars, trekUnlocked, type GameKey } from '@wild-daily/core';
+import { activeSeason, addDays, BADGES, DAILY_SET, GAMES, SEASON_INFO, packSeason, todaysPicks, type Season, JOURNAL, daysPlayed, earnedBadges, formatDate, formatTime, loadProgress, nextInSet, playedDay, setCount, streakInfo, trekStars, trekUnlocked, type GameKey } from '@wild-daily/core';
 import { TREK_STAGE_COUNT } from '@wild-daily/game-fresh-snow/engine';
-import { bird, character, frog, mushroom, paws, print, svgUse } from '@wild-daily/ui';
+import { paws, print } from '@wild-daily/ui';
+import { CATALOG, entryById } from '../data/catalog';
+import { tileHtml } from './tiles';
+import { markSolved } from './portal';
 import { startCountdowns, today } from './daily';
 
 const p = loadProgress();
@@ -16,22 +19,11 @@ set('hub-set', `${n} of ${DAILY_SET.length} solved`);
 const bar = $('hub-setbar'); if (bar) bar.style.width = `${(n / DAILY_SET.length) * 100}%`;
 if (n === DAILY_SET.length) $('hub-setdone')?.removeAttribute('hidden');
 const row = (g: GameKey): void => {
-  const el = document.querySelector<HTMLElement>(`.lvrow[data-game="${g}"]`); if (!el) return;
-  const r = p.days[today]?.[g];
-  el.classList.toggle('done', !!r);
-  const small = el.querySelector('small'), btn = el.querySelector<HTMLAnchorElement>('a');
-  if (r && small) small.innerHTML = `${paws(r.stars, 14)} Solved in ${formatTime(r.time)}`;
-  if (btn) { btn.textContent = r ? 'Replay' : 'Play'; btn.classList.toggle('btn-w', !!r); btn.classList.toggle('btn-p', !r); }
+  const el = document.querySelector<HTMLElement>(`#hub-levels .tile[data-keys="${g}"]`); if (!el) return;
+  const r = p.days[today]?.[g]; if (!r) return;
+  const small = el.querySelector('.tile-name small'); if (small) small.innerHTML = `${paws(r.stars, 14)} ${formatTime(r.time)}`;
 };
-/** A small picture for every pack game (Today's picks rows). */
-const PACK_ICON: Record<string, () => string> = {
-  'frog-pond': () => frog(40), 'firefly-night': () => svgUse('n-firefly', '0 0 20 20', 34), 'owl-watch': () => svgUse('n-owl', '0 0 40 40', 40),
-  'acorn-stash': () => svgUse('n-acorn', '0 0 30 36', 32), beehive: () => svgUse('n-hive', '0 0 36 36', 38), 'beaver-lodges': () => svgUse('n-beaver', '0 0 80 80', 42),
-  'snow-picture': () => svgUse('i3-drift', '0 0 72 44', 44), 'otter-slide': () => svgUse('n-otter', '0 0 40 30', 42), 'moose-crossing': () => character('deer', 'idle', 42),
-  'burrow-escape': () => character('rabbit', 'idle', 42), 'salmon-run': () => svgUse('n-fish', '0 0 40 22', 42), 'bears-last-snack': () => svgUse('n-bear', '0 0 40 36', 40),
-  'who-ate': () => character('fox', 'idle', 42), 'freshest-track': () => print('fox', 32), 'egg-match': () => bird('#7FC4E8', 40), 'track-word': () => print('rabbit', 32),
-  'whose-print': () => print('deer', 32), 'feather-pairs': () => bird('#E2594A', 40), 'leaf-pile': () => svgUse('n-leaf', '0 0 24 24', 32), 'who-was-here': () => mushroom(36),
-};
+
 const tz = (): string => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch { return ''; } };
 function renderSeason(season: Season): void {
   const info = SEASON_INFO[season];
@@ -39,16 +31,25 @@ function renderSeason(season: Season): void {
   const s = info.name.toLowerCase();
   set('hub-picks-note', `Three games from the pack, chosen fresh every day, led by ${/^[aeiou]/.test(s) ? 'an' : 'a'} ${s} game. Solve all three for a badge.`);
   const picksEl = $('hub-picks');
-  if (picksEl) picksEl.innerHTML = todaysPicks(today, 3, season).map((g) => {
-    const r = p.days[today]?.[g], fits = packSeason(g) === season;
-    return `<div class="lvrow${r ? ' done' : ''}" data-game="${g}"><div class="row" style="flex-wrap:nowrap; gap:10px">${PACK_ICON[g]?.() ?? ''}<div><b>${GAMES[g].name}</b><small>${r ? `${paws(r.stars, 14)} Solved in ${formatTime(r.time)}` : fits ? `In season: ${info.name.toLowerCase()}` : 'Daily puzzle'}</small></div></div><a class="btn ${r ? 'btn-w' : 'btn-p'}" href="${GAMES[g].href}">${r ? 'Replay' : 'Play'}</a></div>`;
-  }).join('');
+  if (picksEl) { picksEl.innerHTML = todaysPicks(today, 3, season).map((g) => { const e = entryById(g); return e ? tileHtml(e, { sub: packSeason(g) === season ? `In season · ${e.time}` : e.time }) : ''; }).join(''); markSolved(picksEl); }
+  const seasonEl = $('hub-inseason');
+  set('hub-season-title', `In season: ${info.name.toLowerCase()}`);
+  if (seasonEl) { seasonEl.innerHTML = CATALOG.filter((e) => e.season === season).sort((a, b) => a.featured - b.featured).map((e) => tileHtml(e)).join(''); markSolved(seasonEl); }
 }
 renderSeason(activeSeason(p, today, tz()));
 document.addEventListener('wd:season', (e) => renderSeason((e as CustomEvent<Season>).detail));
-[...DAILY_SET, ...BONUS].forEach(row);
+DAILY_SET.forEach(row);
+// Continue playing: games played in the last two weeks, newest first.
+{
+  const seen = new Map<string, string>();
+  Object.entries(p.days).sort(([a], [b]) => (a < b ? 1 : -1)).forEach(([date, day]) => Object.keys(day).forEach((k) => {
+    const e = CATALOG.find((x) => x.keys.includes(k as GameKey)); if (e && !seen.has(e.id) && date >= addDays(today, -14)) seen.set(e.id, date);
+  }));
+  const wrap = $('hub-continue-wrap'), el = $('hub-continue');
+  if (wrap && el && seen.size) { el.innerHTML = [...seen.keys()].slice(0, 8).map((id) => tileHtml(entryById(id)!)).join(''); markSolved(el); wrap.hidden = false; }
+}
 const s = streakInfo(p, today);
-set('hub-streak', s.current ? `${s.current}-day streak` : 'Start a streak today');
+set('hub-streak', s.current ? `🔥 ${s.current}-day streak` : 'Start a streak today');
 set('hub-best', `Best: ${s.best} ${s.best === 1 ? 'day' : 'days'}${s.snowDays.length ? ` · ${s.snowDays.length} Snow Day used` : ''}`);
 const unlocked = Math.min(trekUnlocked(p), TREK_STAGE_COUNT + 1);
 set('hub-trek', unlocked > TREK_STAGE_COUNT ? 'All 60 stages cleared!' : `Stage ${unlocked} of ${TREK_STAGE_COUNT} · ${trekStars(p)} ${trekStars(p) === 1 ? 'paw' : 'paws'} earned`);

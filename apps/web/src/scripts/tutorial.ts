@@ -1,7 +1,7 @@
 // One-minute guided tutorial on a hand-made 4×4 board.
 import { loadProgress, saveProgress } from '@wild-daily/core';
 import './juice';
-import { ANIMAL_NAME, ANIMAL_SHORT, burrow, character, print, rock, tree, type AnimalId } from '@wild-daily/ui';
+import { ANIMAL_NAME, ANIMAL_SHORT, Mover, burrow, character, print, rock, tree, type AnimalId } from '@wild-daily/ui';
 
 const ROCKS = [4], TREES = [15];
 const HOMES: Record<number, AnimalId> = { 3: 'fox', 10: 'rabbit' };
@@ -16,6 +16,8 @@ const STEPS: { a: AnimalId; cell: number; say: string }[] = [
   { a: 'rabbit', cell: 10, say: 'Last hop: 2 squares to the right, into the empty burrow.' },
 ];
 let step = 0, wrong = -1, msg: string | null = null, timer = 0;
+const mover = new Mover();
+let homeBefore = new Set<AnimalId>();
 const box = document.getElementById('tut') as HTMLElement;
 function render(): void {
   const done = step >= STEPS.length, cur = done ? null : STEPS[step]!;
@@ -45,16 +47,27 @@ function render(): void {
 <div class="boardwrap" style="max-width:420px; width:100%; margin:0 auto"><div class="board" style="grid-template-columns:repeat(4,1fr)">${cells}</div></div>
 ${done ? `<div class="row"><a class="btn btn-p big" href="/fresh-snow?level=morning">Play today’s Morning puzzle</a><button class="btn btn-w" data-reset>Replay tutorial</button></div>`
     : `<div class="row"><button class="btn btn-w" data-reset>Start over</button><a class="btn btn-w" href="/" id="tut-skip">Skip for now</a></div>`}`;
+  // The fox trots and the rabbit hops along the steps you tap; each dives into its burrow at the end.
+  const homeNow = new Set<AnimalId>((['fox', 'rabbit'] as AnimalId[]).filter((a) => (a === 'fox' ? step >= 4 : step >= STEPS.length)));
+  const specs = (['fox', 'rabbit'] as AnimalId[]).map((a) => {
+    const mine = STEPS.slice(0, step).filter((s) => s.a === a);
+    if (!mine.length || (homeNow.has(a) && homeBefore.has(a))) return null;
+    const cell = mine[mine.length - 1]!.cell;
+    return { id: a, cell, el: box.querySelector(`[data-i="${cell}"]`), html: character(a, wrong >= 0 && cur?.a === a ? 'oops' : 'idle'), gait: (a === 'fox' ? 'trot' : 'hop') as 'trot' | 'hop', selected: cur?.a === a };
+  }).filter((x): x is NonNullable<typeof x> => x !== null);
+  mover.sync(box.querySelector<HTMLElement>('.boardwrap'), specs);
+  for (const a of homeNow) if (!homeBefore.has(a)) { const home = a === 'fox' ? 3 : 10; box.querySelector(`[data-i="${home}"]`)?.classList.add('arriving', 'burrowshake'); mover.dive(a, 330); }
+  homeBefore = homeNow;
 }
 box.addEventListener('click', (e) => {
   const t = (e.target as HTMLElement).closest<HTMLElement>('[data-i],[data-reset],#tut-skip');
   if (!t) return;
   if (t.id === 'tut-skip') { const p = loadProgress(); p.tutorialSeen = true; saveProgress(p); return; }
-  if (t.dataset.reset !== undefined) { step = 0; wrong = -1; msg = null; render(); return; }
+  if (t.dataset.reset !== undefined) { step = 0; wrong = -1; msg = null; homeBefore = new Set(); mover.clear(); render(); return; }
   if (step >= STEPS.length) return;
   const i = Number(t.dataset.i);
   if (i === STEPS[step]!.cell) { step++; wrong = -1; msg = null; }
-  else { wrong = i; msg = 'Not that square. Tap the glowing one.'; window.clearTimeout(timer); timer = window.setTimeout(() => { wrong = -1; msg = null; render(); }, 1300); }
+  else { wrong = i; msg = 'Not that square. Tap the glowing one.'; window.clearTimeout(timer); timer = window.setTimeout(() => { wrong = -1; msg = null; render(); }, 1300); render(); const who = STEPS[step]!.a; if (mover.has(who)) mover.shake(who); return; }
   render();
 });
 render();

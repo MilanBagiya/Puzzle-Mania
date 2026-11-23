@@ -9,7 +9,7 @@ const anyDay = (p: Progress, f: (d: NonNullable<Progress['days'][string]>) => bo
 const trekDone = (p: Progress, upTo: number): boolean => { for (let s = 1; s <= upTo; s++) if (!p.trek?.[String(s)]) return false; return true; };
 
 export const BADGES: readonly Badge[] = [
-  { id: 'first-tracks', name: 'First tracks', desc: 'Solve your first puzzle.', icon: '🐾', earned: (p) => daysPlayed(p) > 0 },
+  { id: 'first-tracks', name: 'First steps', desc: 'Solve your first puzzle.', icon: '🐾', earned: (p) => daysPlayed(p) > 0 },
   { id: 'tutorial', name: 'Quick learner', desc: 'Finish the tutorial.', icon: '🎓', earned: (p) => !!p.tutorialDone },
   { id: 'daily-set', name: 'Full set', desc: 'Finish all five Daily Set puzzles in one day.', icon: '⭐', earned: (p) => anyDay(p, (d) => DAILY_SET.every((g) => d[g])) },
   { id: 'streak-3', name: 'Warming up', desc: 'Reach a 3-day streak.', icon: '🔥', earned: (p, t) => streakInfo(p, t).best >= 3 },

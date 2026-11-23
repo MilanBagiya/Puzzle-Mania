@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+const updated = 'November 22, 2026';
+---
+<Base title="Terms of use" description="The terms for playing Wild Daily." active="">
+  <PageHead title="Terms of use" lead={`Last updated ${updated}.`} />
+  <main class="wrap body">
+    <div class="game">
+      <div class="stack">
+        <section class="card stack"><h2 class="h-m">Playing</h2><p style="margin:0">Wild Daily is free to play for personal enjoyment. Please don’t try to disrupt the site, copy it wholesale, or use automated tools that put heavy load on it.</p></section>
+        <section class="card stack"><h2 class="h-m">Our content</h2><p style="margin:0">The games, puzzles, illustrations and text on this site belong to Wild Daily. You’re welcome to share your results and link to any page.</p></section>
+        <section class="card stack"><h2 class="h-m">Animal facts</h2><p style="margin:0">The animal guides are written for fun and learning and are based on published wildlife sources. Please don’t rely on them for safety decisions in the wild.</p></section>
+        <section class="card stack"><h2 class="h-m">No guarantees</h2><p style="margin:0">We work to keep every puzzle fair and the site running, but it is provided as it is, without guarantees. Progress is stored in your browser and can be lost if browser data is cleared.</p></section>
+        <section class="card stack"><h2 class="h-m">Changes</h2><p style="margin:0">We may update these terms. The date at the top shows the latest version.</p></section>
+      </div>
+      <aside class="side"><div class="card stack"><h2 class="h-s">Related</h2><a class="btn btn-w" href="/privacy">Privacy</a><a class="btn btn-w" href="/about">About Wild Daily</a></div></aside>
+    </div>
+  </main>
+</Base>

@@ -1,0 +1,13 @@
+{
+  "name": "@wild-daily/qa",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "qa": "node run.mjs",
+    "qa:nobuild": "node run.mjs --no-build"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

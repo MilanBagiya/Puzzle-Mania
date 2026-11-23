@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import PortalHead from '../../components/PortalHead.astro';
+import { CATS, byCat, type Category } from '../../data/catalog';
+import { tileHtml } from '../../scripts/tiles';
+export function getStaticPaths() { return CATS.map((c) => ({ params: { cat: c.id }, props: { c } })); }
+const { c } = Astro.props as { c: Category };
+const list = byCat(c.id);
+---
+<Base title={c.title} description={`${c.blurb} ${list.length} free daily games.`} active={`cat-${c.id}`}>
+  <main class="wrap portal">
+    <PortalHead crumbs={[['Games', '/games'], [c.name]]} title={c.title} blurb={c.blurb} more={c.more} />
+    <nav class="jump" aria-label="Other categories">{CATS.filter((x) => x.id !== c.id).map((x) => <a href={`/games/${x.id}`}>{x.name}</a>)}<a href="/games">All games</a></nav>
+    <div class="tiles" data-grid set:html={list.map((e) => tileHtml(e)).join('')} />
+    <p class="card" id="grid-empty" hidden>No games match your search.</p>
+  </main>
+</Base>
