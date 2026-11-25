@@ -60,8 +60,8 @@ const def: GameDef<WhoPuzzle> = {
     const t = clock(ctx);
     const render = (): void => {
       const rows = ANIMALS.map((a, i) => `<div class="card tight stack" style="gap:8px"><b class="display" style="font-size:19px">${a}</b>
-<div class="chips">${SNACKS.map((s, k) => `<button type="button" class="tab" style="flex:0 0 auto; padding:6px 12px; min-height:40px" aria-selected="${pick.snack[i] === k}" data-g="snack:${i}-${k}">${s}</button>`).join('')}</div>
-<div class="chips">${PLACES.map((pl, k) => `<button type="button" class="tab" style="flex:0 0 auto; padding:6px 12px; min-height:40px" aria-selected="${pick.place[i] === k}" data-g="place:${i}-${k}">${pl.replace('the ', '')}</button>`).join('')}</div></div>`).join('');
+<div class="chips">${SNACKS.map((s, k) => `<button type="button" class="tab" style="flex:0 0 auto; padding:6px 12px" aria-selected="${pick.snack[i] === k}" data-g="snack:${i}-${k}">${s}</button>`).join('')}</div>
+<div class="chips">${PLACES.map((pl, k) => `<button type="button" class="tab" style="flex:0 0 auto; padding:6px 12px" aria-selected="${pick.place[i] === k}" data-g="place:${i}-${k}">${pl.replace('the ', '')}</button>`).join('')}</div></div>`).join('');
       const text2 = done ? 'Case closed! Every snack is accounted for.' : msg ?? 'Each animal ate one snack in one place, and no two match. Use the clues, then tap Check.';
       root.innerHTML = `<div class="card stack"><b>Clues</b><ol style="margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px">${p.text.map((c) => `<li>${c}</li>`).join('')}</ol></div>${coach(text2, done ? 'good' : kind)}<div class="stack" style="gap:12px">${rows}</div>${tools(btn('clear', 'Clear', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done), btn('check', 'Check', 'btn-p', done))}`;
     };

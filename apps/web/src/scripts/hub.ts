@@ -63,3 +63,14 @@ if (week) week.innerHTML = [...Array(7).keys()].map((i) => {
   return `<div class="stack" style="gap:4px; align-items:center"><span class="muted" style="font-size:12px; font-weight:800">${formatDate(d, { weekday: 'narrow' })}</span><span style="width:100%; height:34px; border-radius:3px; display:grid; place-items:center; font-size:11px; font-weight:800; background:${on ? 'var(--fox-t)' : snow ? 'var(--rabbit-t)' : 'var(--soft)'}; box-shadow:0 3px 0 ${on ? 'var(--fox-e)' : snow ? 'var(--rabbit-e)' : 'var(--soft-e)'}${d === today ? '; outline:2px solid var(--coral)' : ''}" aria-label="${formatDate(d)}${on ? ', played' : snow ? ', Snow Day' : ''}">${on ? print('fox', 16) : snow ? '❄' : ''}</span></div>`;
 }).join('');
 startCountdowns();
+
+// Rails that scroll sideways get a fade at the right edge (removed at the end), so players see there is more.
+function railFade(): void {
+  document.querySelectorAll<HTMLElement>('.rail').forEach((r) => {
+    const update = (): void => { r.classList.toggle('can-scroll', r.scrollWidth > r.clientWidth + 2); r.classList.toggle('at-end', r.scrollLeft + r.clientWidth >= r.scrollWidth - 4); };
+    if (!r.dataset.fade) { r.dataset.fade = '1'; r.addEventListener('scroll', update, { passive: true }); }
+    update();
+  });
+}
+railFade();
+window.addEventListener('resize', railFade);

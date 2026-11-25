@@ -104,7 +104,7 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
     const dis = S.done ? ' disabled' : '';
     root.innerHTML = `<div class="cards" role="group" aria-label="Animals">${cards}</div>
 <p class="coach ${kind}" role="status">${escapeHtml(msg)}</p>
-<div class="boardwrap"><div class="board" role="grid" aria-label="Snowfield, ${n} by ${n}" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 86}px">${[...Array(n * n).keys()].map(cell).join('')}</div></div>
+<div class="boardwrap" style="--bmax:${n * 86}px"><div class="board" role="grid" aria-label="Snowfield, ${n} by ${n}" style="grid-template-columns:repeat(${n},1fr); max-width:var(--bcap)">${[...Array(n * n).keys()].map(cell).join('')}</div></div>
 <div class="tools"><button type="button" class="btn btn-w" data-fs="undo"${dis}>Undo</button><button type="button" class="btn btn-w" data-fs="clear"${dis}>Clear</button><button type="button" class="btn btn-y" data-fs="hint"${dis}>Hint</button><button type="button" class="btn btn-p" data-fs="check"${dis}>Check</button></div>`;
     if (focus != null) (root.querySelector(`[data-i="${focus}"]`) as HTMLElement | null)?.focus({ preventScroll: true });
     syncAnimals();

@@ -23,7 +23,7 @@ export function createStonesGame(root: HTMLElement, opts: StonesOptions): { dest
     if (done) coach = `Made it across in ${route.length - 1} jumps! The best route takes ${p.best}.`;
     root.innerHTML = `<div class="row" style="justify-content:space-between"><span class="pill p-w">Jumps: ${route.length - 1}</span><span class="pill p-w">Best possible: ${p.best}</span></div>
 <p class="coach ${done ? 'good' : stuck ? 'bad' : kind}" role="status">${escapeHtml(coach)}</p>
-<div class="pond"><div class="board" role="grid" aria-label="Pond, ${n} by ${n}" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 80}px">${cells}</div></div>
+<div class="pond" style="--bmax:${n * 80}px"><div class="board" role="grid" aria-label="Pond, ${n} by ${n}" style="grid-template-columns:repeat(${n},1fr); max-width:var(--bcap)">${cells}</div></div>
 <div class="tools" style="grid-template-columns:repeat(3,minmax(0,1fr))"><button class="btn btn-w" data-st-act="undo"${done || route.length < 2 ? ' disabled' : ''}>Undo</button><button class="btn btn-w" data-st-act="restart"${done ? ' disabled' : ''}>Restart</button><button class="btn btn-y" data-st-act="hint"${done ? ' disabled' : ''}>Hint</button></div>`;
     syncFrog();
   }

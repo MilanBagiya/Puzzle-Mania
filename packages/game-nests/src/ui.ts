@@ -26,7 +26,7 @@ export function createNestsGame(root: HTMLElement, opts: NestsOptions): { destro
     if (done) { coach = 'Every nest is found! The birds are safe.'; kind = 'good'; }
     root.innerHTML = `<div class="row" style="justify-content:space-between"><span class="pill p-w">Nests placed: ${chk.placed} of ${p.nests}</span><span class="pill p-w">${p.trees.length} trees</span></div>
 <p class="coach ${done ? 'good' : kind}" role="status">${escapeHtml(coach)}</p>
-<div class="boardwrap"><div class="board" role="grid" aria-label="Meadow, ${n} by ${n}" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 80}px">${cells}</div></div>
+<div class="boardwrap" style="--bmax:${n * 80}px"><div class="board" role="grid" aria-label="Meadow, ${n} by ${n}" style="grid-template-columns:repeat(${n},1fr); max-width:var(--bcap)">${cells}</div></div>
 <div class="tools"><button class="btn btn-w" data-nb-act="clear"${done ? ' disabled' : ''}>Clear</button><button class="btn btn-w" data-nb-act="dots"${done ? ' disabled' : ''}>Fill dots</button><button class="btn btn-y" data-nb-act="hint"${done ? ' disabled' : ''}>Hint</button><button class="btn btn-p" data-nb-act="check"${done ? ' disabled' : ''}>Check</button></div>`;
   }
   function onClick(e: Event): void {

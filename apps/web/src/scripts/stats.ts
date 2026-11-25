@@ -4,6 +4,8 @@ import { TREK_STAGE_COUNT } from '@wild-daily/game-fresh-snow/engine';
 import { today } from './daily';
 
 const p = loadProgress();
+// First visit: show a friendly start card instead of a wall of zeros.
+if (!Object.keys(p.days).length && !Object.keys(p.trek ?? {}).length) document.getElementById('s-empty')?.removeAttribute('hidden');
 const s = streakInfo(p, today);
 const set = (id: string, v: string): void => { const el = document.getElementById(id); if (el) el.textContent = v; };
 set('s-cur', String(s.current)); set('s-best', String(s.best));

@@ -27,7 +27,7 @@ export function createRingsGame(root: HTMLElement, opts: RingsOptions): { destro
     if (failed) coach = 'Out of guesses. The glowing square is where the spore landed; tomorrow’s ring is a fresh chance.';
     root.innerHTML = `<div class="row" style="justify-content:space-between"><span class="pill p-w">Night ${p.nights}</span><span class="pill p-w">Guesses left: ${3 - guesses.length}</span></div>
 <p class="coach ${done ? 'good' : failed ? 'bad' : kind}" role="status">${escapeHtml(coach)}</p>
-<div class="boardwrap"><div class="board" role="grid" aria-label="Forest floor, ${n} by ${n}" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 72}px">${cells}</div></div>
+<div class="boardwrap" style="--bmax:${n * 72}px"><div class="board" role="grid" aria-label="Forest floor, ${n} by ${n}" style="grid-template-columns:repeat(${n},1fr); max-width:var(--bcap)">${cells}</div></div>
 <div class="tools" style="grid-template-columns:1fr 1fr"><button class="btn btn-y" data-mr-act="hint"${done || failed ? ' disabled' : ''}>Hint: lift a leaf</button><button class="btn btn-w" data-mr-act="clear"${done || failed || !ghost.size ? ' disabled' : ''}>Hide ghost ring</button></div>`;
   }
   function onClick(e: Event): void {

@@ -70,7 +70,7 @@ export const btn = (act: string, label: string, cls = 'btn-w', disabled = false)
   `<button type="button" class="btn ${cls}" data-g="${act}"${disabled ? ' disabled' : ''}>${label}</button>`;
 export const tools = (...b: string[]): string => `<div class="tools" style="grid-template-columns:repeat(${b.length},minmax(0,1fr))">${b.join('')}</div>`;
 export const grid = (n: number, cells: string, label: string, max = 80, wrap = 'boardwrap'): string =>
-  `<div class="${wrap}"><div class="board" role="grid" aria-label="${label}" style="grid-template-columns:repeat(${n},1fr); max-width:${n * max}px">${cells}</div></div>`;
+  `<div class="${wrap}" style="--bmax:${n * max}px"><div class="board" role="grid" aria-label="${label}" style="grid-template-columns:repeat(${n},1fr); max-width:var(--bcap)">${cells}</div></div>`;
 export const pills = (...p: string[]): string => `<div class="row" style="justify-content:space-between">${p.map((x) => `<span class="pill p-w">${x}</span>`).join('')}</div>`;
 
 /** Light scrambling for guess games whose answer must live in the browser (like any word-guess game). */

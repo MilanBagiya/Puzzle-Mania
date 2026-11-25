@@ -859,7 +859,7 @@ footer a{text-decoration-color:rgba(255,255,255,.35)}
 .shelf-note{margin:-6px 0 0; font-size:14px}
 .rail{display:grid; grid-auto-flow:column; grid-auto-columns:clamp(210px,calc((100% - 48px) / 4),280px); gap:16px; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; padding:10px 4px 26px; margin:-6px -4px -12px; scrollbar-width:thin; scrollbar-color:var(--edge2) transparent}
 .rail > .tile{scroll-snap-align:start}
-@media (min-width:721px){ .rail:not(:has(> .tile:nth-child(4))){grid-auto-columns:clamp(210px,calc((100% - 32px) / 3),420px)} }
+/* (every rail uses one card width; short rails no longer stretch to 3 big columns) */
 .setbar{height:10px; border-radius:var(--r-full); background:var(--soft); overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,.08)}
 .setbar > div{width:0; height:100%; background:linear-gradient(90deg,#2F7D5B,#56B08A); border-radius:var(--r-full); transition:width .4s ease}
 .hub-cards{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px}
@@ -960,3 +960,155 @@ a.btn-w:hover, a.btn-w:focus-visible{color:var(--ink)}
 :root{--link-hover:#A23E22}
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--link-hover:#FFA389} }
 :root[data-theme="dark"]{--link-hover:#FFA389}
+
+/* ======================================================================
+   Layout pass: shell and home (2026-11-25)
+   ====================================================================== */
+/* Sections: one rhythm (24px, 20px on phones). Rails keep room for card shadows without adding height. */
+.home{gap:24px}
+main.home{padding-bottom:40px}
+.rail{padding:10px 4px 22px; margin:-6px -4px -22px; scroll-padding-inline:4px}
+/* Rails show a slice of the next card (and fade at the edge) so it is clear there is more to scroll. */
+@media (min-width:721px){ .rail{grid-auto-columns:clamp(200px,calc((100% - 48px) / 4.35),280px)} }
+.rail.can-scroll{-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent); mask-image:linear-gradient(90deg,#000 90%,transparent)}
+.rail.can-scroll.at-end{-webkit-mask-image:none; mask-image:none}
+/* Section headings in the display font, like every other heading. */
+.shelf-title{font-family:var(--font-display); font-variation-settings:"SOFT" 100; font-weight:700; letter-spacing:-0.01em}
+/* Trail Trek / Your week / Journal: 24px gap and 16px card padding; two columns between phone and desktop. */
+.hub-cards{gap:24px}
+.hub-cards .card{padding:16px}
+@media (min-width:721px) and (max-width:1099px){ .hub-cards{grid-template-columns:repeat(2,minmax(0,1fr))} .hub-cards > .card:first-child{grid-column:1 / -1} }
+/* Daily Set stays five across from 900px (cards ~186px, as at 1280) instead of 3 + 2 with a gap. */
+@media (min-width:900px) and (max-width:1100px){ .tiles-5{grid-template-columns:repeat(5,minmax(0,1fr))} }
+/* Wide screens: use more of the width. */
+@media (min-width:1500px){ .wrap{max-width:1240px} }
+/* Footer matches the sidebar navy, with a hairline in dark mode so it separates from the page. */
+footer{background:var(--shell)}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) footer{border-top:1px solid rgba(255,255,255,.08)} }
+:root[data-theme="dark"] footer{border-top:1px solid rgba(255,255,255,.08)}
+/* Sidebar fits a 900px-high window. */
+.sidenav{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+.sidenav a{padding:9px 12px}
+/* Phones: 44px tap targets, a shorter hero, and a search placeholder that fits. */
+.shelf-link{display:inline-flex; align-items:center; min-height:44px; margin-block:-11px}
+@media (max-width:720px){
+  .home{gap:20px}
+  .tb-btn, .tb-icon{width:44px; height:44px}
+  footer .row{gap:0 18px !important}
+  footer .row a{display:inline-flex; align-items:center; min-height:44px}
+}
+@media (max-width:400px){
+  #hub-streak{display:none}
+  .hub-hero .row > .btn{flex:1 1 0; padding-inline:12px}
+  .hub-hero .btn.big{font-size:17px}
+  .tb-search input{padding-right:38px}
+  .tb-search-ic{right:12px}
+}
+
+/* ======================================================================
+   Layout pass: content pages and dialogs (2026-11-25)
+   ====================================================================== */
+/* Spacing rhythm: 24px between sections and cards (20px on phones), 16px inside cards. */
+.section{margin-top:24px}
+.card{padding:16px}
+.statrow{gap:24px}
+.grid3, .grid2, .grid4{gap:24px}
+@media (max-width:640px){ .section{margin-top:20px} .statrow{gap:20px} .grid3, .grid2, .grid4{gap:20px} }
+@media (max-width:560px){ .statrow{gap:10px} .statrow .card{padding:12px 8px} }
+/* Long text reads at 60-75 characters per line (About, Privacy, Terms, guides were 90-125). */
+.game > .stack p, .game > article p, .game > article li{max-width:68ch}
+/* Options dialog: the title and close button stay visible while the options scroll; 44px buttons. */
+.dlg-head{position:sticky; top:calc(var(--s4) * -1); z-index:1; background:var(--paper); padding-block:8px}
+.opts .tab{min-height:44px}
+@media (max-width:420px){
+  .dlg{padding:16px}
+  .dlg-head{top:-16px}
+  .opts .seg5{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .opts .seg5 .tab{font-size:13px}
+}
+/* Stats table on phones: numbers stay on one line, the game name takes the room. */
+@media (max-width:560px){
+  .section table th, .section table td{padding:8px 6px !important; white-space:nowrap}
+  .section table th:first-child, .section table td:first-child{white-space:normal; width:45%}
+}
+/* Animal guide index: the size pill no longer wraps under the name on some cards only. */
+.guidecard .row{flex-wrap:nowrap; align-items:baseline}
+.guidecard .row > :first-child{min-width:0}
+.guidecard .row .pill{flex:none}
+.chips .tab{min-width:44px; padding:6px 12px}
+/* Guide pages: "More guides" as a grid of buttons when the side panel drops below the guide. */
+@media (max-width:880px){ .guide-more{display:grid !important; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px} .guide-more > h2{grid-column:1 / -1} }
+/* 404: a smaller fox on phones so the heading is visible straight away. */
+@media (max-width:640px){ .nf-art svg{width:110px !important; height:auto !important} }
+
+/* ======================================================================
+   Layout pass: game pages (2026-11-25)
+   ====================================================================== */
+/* Boards: the paper card hugs the board (no empty margins on desktop), and on desktop the board is capped to the
+   window height so the controls stay on screen. --bmax is set per game; --bcap is the size actually used. */
+.boardwrap, .pond{--bcap:var(--bmax, 100%)}
+@media (min-width:881px){ .boardwrap, .pond{--bcap:max(320px, min(var(--bmax, 9999px), calc(100svh - 440px)))} }
+.boardwrap[style*="--bmax"], .pond[style*="--bmax"]{max-width:calc(var(--bcap) + 20px); margin-inline:auto; width:100%}
+/* Header: 44px back and help buttons; long names wrap instead of being cut off. */
+.gamehead .btn.iconbtn, .gamehead > .row:first-child > .btn{width:44px; min-height:44px}
+.gamehead h1{white-space:normal; font-size:clamp(22px,6.4vw,32px); line-height:1.05; text-wrap:balance}
+/* Help and Options dialogs fit the real screen height (mobile browser bars). */
+.dlg{max-height:calc(100dvh - 48px)}
+/* Card-based games (clues, quizzes): the card's paper edge no longer eats the gap below it. */
+#pk-game > .card{margin-bottom:8px}
+/* Moose Crossing: four arrows in one row. */
+.dpad-row{grid-template-columns:repeat(4,minmax(0,1fr)); max-width:480px}
+/* Egg Match: bigger slots, eggs to pick in one row. */
+.eggslot{width:36px; height:46px}
+/* Dark mode: empty egg slots and word tiles need a visible edge (was 1.3:1). */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .eggslot, :root:not([data-theme="light"]) .wtile:not(.g):not(.y):not(.x){border-color:var(--ink-mute)} }
+:root[data-theme="dark"] .eggslot, :root[data-theme="dark"] .wtile:not(.g):not(.y):not(.x){border-color:var(--ink-mute)}
+/* Phones: the board and its controls fit on one screen. */
+@media (max-width:720px){
+  body:has(.gamehead) .topbar{position:static}
+  .game > .stack{gap:12px}
+}
+@media (max-width:560px){
+  .acard{flex-direction:row; justify-content:flex-start; text-align:left; gap:6px; min-height:48px; padding:4px 8px}
+  .acard svg{width:36px; height:36px}
+  .coach{min-height:0; font-size:14.5px; padding:8px 12px}
+  #fs-banner > svg, #fs-banner .muted{display:none}
+  #fs-banner{flex-wrap:wrap; gap:10px}
+  #fs-banner > .row{flex:1 1 100%}
+  #fs-banner .btn{min-height:44px; flex:1; white-space:nowrap}
+}
+
+/* ======================================================================
+   Layout pass: game lists and search (2026-11-25)
+   ====================================================================== */
+.tiles{gap:24px}
+@media (max-width:720px){ .tiles{gap:20px 16px} }
+/* Page header to chips to grid: 24px rhythm (20px on phones); 44px chips. */
+.portal-head{margin-bottom:24px}
+.portal-row{align-items:center}
+.jump{margin-bottom:14px}
+.jump a{min-height:44px; display:inline-flex; align-items:center; padding:0 16px}
+@media (max-width:720px){
+  .portal-head{margin-bottom:20px}
+  .jump{margin-bottom:10px; margin-inline:-16px; padding-inline:16px; scroll-padding-inline:16px; -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent); mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+  /* A lone last card becomes a wide strip instead of half a row of empty space. */
+  .tiles[data-grid] > .tile:last-child:nth-child(odd){grid-column:1 / -1; flex-direction:row}
+  .tiles[data-grid] > .tile:last-child:nth-child(odd) .tile-art{flex:0 0 40%; aspect-ratio:auto; margin:8px 0 8px 8px}
+}
+/* Small sets on wide screens keep normal card widths instead of stretching. */
+.tiles[data-grid]:not(:has(> .tile:nth-child(5))){grid-template-columns:repeat(auto-fit,minmax(230px,300px))}
+/* "Show more" passes AA (was 3.65:1). */
+.portal-blurb .more-btn{color:var(--link-hover); text-decoration:underline; text-underline-offset:3px}
+/* Sort box: visible edge, and a chevron that shows in dark mode. */
+.sortbox select{border-color:var(--edge1)}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .sortbox select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23EAF0FF' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")} }
+:root[data-theme="dark"] .sortbox select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23EAF0FF' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
+/* Empty states: a readable card, not a full-width slab. */
+#recent-empty, #grid-empty{max-width:560px}
+#recent-empty .btn{align-self:flex-start}
+/* Short pages keep the footer at the bottom of the window. */
+main.portal{min-height:calc(100dvh - 300px)}
+/* Search: full-width results on phones, no doubled clear button, 44px "See all results". */
+.tb-search input::-webkit-search-cancel-button{display:none}
+.tb-all{min-height:44px; display:flex; align-items:center}
+@media (max-width:720px){ .tb-results{position:fixed; left:12px; right:12px; top:60px} .tb-hit small{white-space:nowrap} }
