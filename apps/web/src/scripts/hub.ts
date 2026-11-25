@@ -21,7 +21,7 @@ if (n === DAILY_SET.length) $('hub-setdone')?.removeAttribute('hidden');
 const row = (g: GameKey): void => {
   const el = document.querySelector<HTMLElement>(`#hub-levels .tile[data-keys="${g}"]`); if (!el) return;
   const r = p.days[today]?.[g]; if (!r) return;
-  const small = el.querySelector('.tile-name small'); if (small) small.innerHTML = `${paws(r.stars, 14)} ${formatTime(r.time)}`;
+  const small = el.querySelector('.tile-time'); if (small) small.innerHTML = `${paws(r.stars, 14)} ${formatTime(r.time)}`;
 };
 
 const tz = (): string => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch { return ''; } };

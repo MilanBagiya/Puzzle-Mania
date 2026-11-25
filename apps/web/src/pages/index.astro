@@ -10,7 +10,7 @@ const ld = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Wild D
 const LEVEL: Record<string, string> = { morning: 'Morning', noon: 'Noon', night: 'Night' };
 const SUB: Record<string, string> = { morning: '2 animals · 1–2 min', noon: '3 animals · 3–5 min', night: 'Hardest · 8–12 min', nests: '2–4 min', dawn: '1–3 min' };
 const dailyTiles = DAILY_SET.map((g) => {
-  if (LEVEL[g]) return tileHtml(entryById('fresh-snow')!, { label: `Fresh Snow · ${LEVEL[g]}`, sub: SUB[g], href: GAMES[g].href, key: g });
+  if (LEVEL[g]) return tileHtml(entryById('fresh-snow')!, { label: `Fresh Snow <span class="tile-level">${LEVEL[g]}</span>`, sub: SUB[g], href: GAMES[g].href, key: g });
   return tileHtml(entryById(g)!, { sub: SUB[g] ?? GAMES[g].note, key: g });
 }).join('');
 const rail = (ids: string[]): string => ids.map((id) => entryById(id)).filter(Boolean).map((e) => tileHtml(e!)).join('');

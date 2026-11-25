@@ -661,7 +661,7 @@ dialog, .dlg{border-radius:var(--r-xl)}
 .cell:focus-visible, .gcell:focus-visible, .st-cell:focus-visible, .ncell:focus-visible{outline-offset:1px; border-radius:var(--r-s)}
 
 /* ---- links ---- */
-a:not(.btn):not(.card):not(.logo):not(.tab):not(.jump a){text-underline-offset:3px; text-decoration-thickness:2px; transition:color .14s ease, text-decoration-color .14s ease}
+a:not(.btn):not(.card):not(.logo):not(.tab):not(.tile):not(.jump a){text-underline-offset:3px; text-decoration-thickness:2px; transition:color .14s ease, text-decoration-color .14s ease}
 footer a{text-decoration-color:rgba(255,255,255,.35)}
 
 /* ---- hover: only on devices with a real pointer (no sticky hovers on phones) ---- */
@@ -679,9 +679,9 @@ footer a{text-decoration-color:rgba(255,255,255,.35)}
   .lvrow:hover{transform:translateY(-1px); background:var(--paper-h)}
   button.cell:hover, button.gcell:hover, .st-cell:hover, .pcard:not(.up):hover, a.day:hover, button.day:hover{transform:translateY(-3px); filter:brightness(1.03)}
   .tabbar a:not([aria-current="page"]):hover{background:var(--soft); color:var(--ink)}
-  a:not(.btn):not(.card):not(.logo):not(.tab):hover{color:var(--coral-e1)}
+  a:not(.btn):not(.card):not(.logo):not(.tab):not(.tile):hover{color:var(--coral-e1)}
   footer a:hover{color:#fff; text-decoration-color:var(--mustard)}
-  .logo:hover svg{transform:rotate(-6deg) scale(1.05); transition:transform .2s ease}
+  .logo:hover svg{transform:rotate(-6deg); transition:transform .2s ease}
 }
 @media (prefers-reduced-motion: reduce){
   .btn:hover, .tab:hover, a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover, .lvrow:hover, button.cell:hover, button.gcell:hover, .st-cell:hover, .jump a:hover, .nav a:hover, .btn:active{transform:none !important}
@@ -779,32 +779,65 @@ footer a{text-decoration-color:rgba(255,255,255,.35)}
 .grid-count{margin:0; font-weight:700; font-size:14px}
 .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
 /* tiles */
-.tiles{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:18px}
+.tiles{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:22px 18px}
 .tiles-5{grid-template-columns:repeat(5,minmax(0,1fr))}
-.tile{position:relative; display:block; aspect-ratio:16/10; border-radius:var(--r-l); overflow:hidden; background:var(--shell-2); text-decoration:none; color:#fff; box-shadow:0 10px 22px -12px var(--shade-strong); transition:transform .18s ease, box-shadow .18s ease; isolation:isolate}
-.tile-art{position:absolute; inset:0}
-.tile-art .cover{width:100%; height:100%; aspect-ratio:auto; border-radius:0; transition:transform .35s ease}
-.tile-badges{position:absolute; top:10px; left:10px; max-width:calc(100% - 64px); display:flex; gap:6px; flex-wrap:wrap; z-index:2}
-.tbadge{font-size:11px; font-weight:800; line-height:1; padding:5px 9px; border-radius:var(--r-full); background:#fff; color:#233142; box-shadow:0 2px 6px rgba(0,0,0,.15)}
+/* Game card: a sheet of paper with the cover printed on it. Layers of edge show under the sheet;
+   hover lifts it off the stack, pressing pushes it back down. */
+.tile{--lift:0px; position:relative; display:flex; flex-direction:column; container-type:inline-size; background:var(--paper); color:var(--ink); text-decoration:none; border-radius:10px; box-shadow:0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 16px 24px -12px var(--shade-strong); transform:translateY(var(--lift)) rotate(var(--tilt,0deg)); transition:transform .32s cubic-bezier(.16,1,.3,1), box-shadow .32s cubic-bezier(.16,1,.3,1)}
+.tile-art{position:relative; display:block; margin:7px 7px 0; aspect-ratio:16/9; border-radius:6px; overflow:hidden; isolation:isolate}
+.tile-art::after{content:""; position:absolute; inset:0; border-radius:inherit; box-shadow:inset 0 0 0 1px rgba(35,49,66,.1), inset 0 -10px 18px -12px rgba(35,49,66,.35); pointer-events:none}
+.tile-art .cover{display:block; width:100%; height:100%; aspect-ratio:auto; border-radius:0; transform-origin:50% 80%; transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.tile-badges{position:absolute; top:8px; left:8px; right:8px; display:flex; gap:5px; flex-wrap:wrap; z-index:2}
+.tbadge{font-size:11px; font-weight:800; line-height:1; padding:5px 9px; border-radius:var(--r-full); background:#fff; color:#233142; box-shadow:0 1px 0 rgba(35,49,66,.25), 0 3px 8px -2px rgba(35,49,66,.3)}
 .tbadge.daily{background:#2F7D5B; color:#fff}
 .tbadge.new{background:#F6C445; color:#233142}
 .tbadge.season{display:none; background:#F2704D; color:#233142}
 :root[data-season="spring"] .tile[data-season="spring"] .tbadge.season, :root[data-season="summer"] .tile[data-season="summer"] .tbadge.season, :root[data-season="autumn"] .tile[data-season="autumn"] .tbadge.season, :root[data-season="winter"] .tile[data-season="winter"] .tbadge.season{display:inline-block}
-.tbadge.solved{background:#fff; color:#22604A}
-.tile-name{position:absolute; left:0; right:0; bottom:0; z-index:2; display:flex; flex-direction:column; gap:2px; padding:44px 14px 12px; background:linear-gradient(to top, rgba(14,20,38,.92), rgba(14,20,38,.72) 50%, rgba(14,20,38,0))}
-.tile-name b{font-size:16px; font-weight:800; line-height:1.15; text-shadow:0 1px 3px rgba(0,0,0,.55)}
-.tile-name small{font-size:12.5px; font-weight:700; color:rgba(255,255,255,.88); display:flex; align-items:center; gap:4px}
-.tile-name small .paws svg{width:13px; height:13px}
-.tile-play{position:absolute; z-index:2; top:10px; right:10px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.92); color:#2F7D5B; display:grid; place-items:center; opacity:0; transform:scale(.7); transition:opacity .18s ease, transform .18s ease; box-shadow:0 8px 20px rgba(0,0,0,.25)}
-.tile.done{box-shadow:0 0 0 3px #2F7D5B, 0 10px 22px -12px var(--shade-strong)}
+.tbadge.solved{display:inline-flex; align-items:center; gap:4px; background:#fff; color:#22604A}
+.tile-body{display:flex; flex-direction:column; flex:1; gap:6px; padding:12px 14px 14px}
+.tile-title{font-family:var(--font-display); font-variation-settings:"SOFT" 100; font-weight:700; font-size:21px; line-height:1.08; letter-spacing:-0.01em; text-wrap:balance}
+.tile-hook{font-size:14px; line-height:1.42; color:var(--ink-soft); text-wrap:pretty; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden}
+.tile-foot{margin-top:auto; padding-top:10px; display:flex; align-items:center; justify-content:space-between; gap:8px; border-top:1.5px dashed var(--paper-line)}
+.tile-info{display:flex; flex-direction:column; align-items:flex-start; gap:3px; min-width:0; font-size:12.5px; font-weight:800; line-height:1.2; color:var(--ink-soft)}
+.tile-cat{display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700}
+.tile-cat svg{flex:none; color:var(--pine)}
+.nw{white-space:nowrap}
+.tile-level{display:block; color:var(--pine)}
+:root[data-theme="dark"] .tile-cat svg, :root[data-theme="dark"] .tile-level{color:#7FCFA4}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .tile-cat svg, :root:not([data-theme="light"]) .tile-level{color:#7FCFA4} }
+.tile-time{display:block; font-variant-numeric:tabular-nums}
+.tile-time .paws{display:inline-flex; vertical-align:-2px; margin-right:4px}
+.tile-time .paws svg{width:13px; height:13px}
+.tile-go{flex:none; display:inline-flex; align-items:center; gap:5px; padding:6px 11px 6px 12px; border-radius:var(--r-full); background:var(--pine); color:var(--on-pine); font-size:13px; font-weight:800; box-shadow:0 2px 0 var(--pine-e1); transition:background-color .2s ease, box-shadow .2s ease, transform .32s cubic-bezier(.16,1,.3,1)}
+.tile-go svg{transition:transform .32s cubic-bezier(.16,1,.3,1)}
+.tile.done{box-shadow:0 0 0 3px var(--pine), 0 6px 0 var(--edge1), 0 9px 0 var(--edge2), 0 18px 24px -12px var(--shade-strong)}
+.go-again{display:none}
+.tile.done .go-play{display:none} .tile.done .go-again{display:inline}
+.tile.done .tile-go{background:transparent; color:var(--ink); box-shadow:inset 0 0 0 2px var(--pine)}
 .tile[hidden]{display:none}
-.tile:focus-visible{outline:3px solid var(--focus); outline-offset:3px}
+.tile:focus-visible{outline:3px solid var(--focus); outline-offset:4px}
 @media (hover:hover) and (pointer:fine){
-  .tile:hover{transform:translateY(-5px); box-shadow:0 22px 34px -14px var(--shade-strong)}
-  .tile:hover .tile-art .cover{transform:scale(1.06)}
-  .tile:hover .tile-play{opacity:1; transform:scale(1)}
+  .tile:hover{--lift:-5px; --tilt:-.6deg; box-shadow:0 4px 0 var(--edge1), 0 9px 0 var(--edge2), 0 28px 34px -16px var(--shade-strong)}
+  .tile.done:hover{box-shadow:0 0 0 3px var(--pine), 0 7px 0 var(--edge1), 0 12px 0 var(--edge2), 0 30px 34px -16px var(--shade-strong)}
+  .tile:hover{color:var(--ink)}
+  .tile:hover .tile-go{background:var(--pine-e1); color:var(--on-pine); box-shadow:0 3px 0 var(--pine-e2)}
+  .tile:hover .tile-go svg{transform:translateX(3px)}
 }
-@media (prefers-reduced-motion: reduce){ .tile:hover{transform:none} .tile:hover .tile-art .cover{transform:none} }
+.tile:active{--lift:2px; --tilt:0deg; box-shadow:0 1px 0 var(--edge1), 0 2px 0 var(--edge2), 0 6px 10px -8px var(--shade-strong); transition-duration:.08s}
+@media (prefers-reduced-motion: reduce){ .tile, .tile-art .cover, .tile-go, .tile-go svg{transition:none} .tile:hover{--lift:0px; --tilt:0deg} .tile:hover .tile-go svg{transform:none} }
+/* Narrow cards (five-up Daily Set, two-up phone grids): drop the hook, keep name, time and Play. */
+@container (max-width:215px){
+  .tile-body{gap:4px; padding:10px 11px 12px}
+  .tile-title{font-size:17px}
+  .tile-hook{font-size:13px; line-height:1.36; -webkit-line-clamp:3}
+  .tiles-5 .tile-hook{display:none}
+  .tile-foot{padding-top:8px; gap:10px}
+  .tile-time .sep{display:none}
+  .tile-time .nw{display:block}
+  .tile-cat svg{display:none}
+  .tile-go{padding:6px 9px}
+  .go-play, .tile.done .go-again{display:none}
+}
 /* shelves (home rows) */
 .home{display:flex; flex-direction:column; gap:34px}
 .shelf{display:flex; flex-direction:column; gap:12px}
@@ -812,8 +845,9 @@ footer a{text-decoration-color:rgba(255,255,255,.35)}
 .shelf-title{font-family:var(--font-ui); font-weight:800; font-size:clamp(20px,2.4vw,26px); letter-spacing:-0.01em; font-variation-settings:normal}
 .shelf-link{font-weight:800; font-size:14px; white-space:nowrap}
 .shelf-note{margin:-6px 0 0; font-size:14px}
-.rail{display:grid; grid-auto-flow:column; grid-auto-columns:clamp(210px,calc((100% - 48px) / 4),280px); gap:16px; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; padding:4px 2px 14px; margin:0 -2px; scrollbar-width:thin}
+.rail{display:grid; grid-auto-flow:column; grid-auto-columns:clamp(210px,calc((100% - 48px) / 4),280px); gap:16px; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; padding:10px 4px 26px; margin:-6px -4px -12px; scrollbar-width:thin; scrollbar-color:var(--edge2) transparent}
 .rail > .tile{scroll-snap-align:start}
+@media (min-width:721px){ .rail:not(:has(> .tile:nth-child(4))){grid-auto-columns:clamp(210px,calc((100% - 32px) / 3),420px)} }
 .setbar{height:10px; border-radius:var(--r-full); background:var(--soft); overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,.08)}
 .setbar > div{width:0; height:100%; background:linear-gradient(90deg,#2F7D5B,#56B08A); border-radius:var(--r-full); transition:width .4s ease}
 .hub-cards{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px}
@@ -822,10 +856,9 @@ footer a{text-decoration-color:rgba(255,255,255,.35)}
 @media (max-width:720px){
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
   .tiles-5{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .tile-name{padding:34px 10px 9px}
-  .tile-name b{font-size:14px}
-  .tile-name small{font-size:11.5px}
-  .tile-badges{top:7px; left:7px; gap:4px}
+  /* odd fifth Daily Set card spans the row as a wide strip: print on the left, text on the right */
+  .tiles-5 > .tile:last-child:nth-child(odd){grid-column:1 / -1; flex-direction:row}
+  .tiles-5 > .tile:last-child:nth-child(odd) .tile-art{flex:0 0 40%; aspect-ratio:auto; margin:7px 0 7px 7px}
   .tbadge{font-size:10px; padding:4px 7px}
   .rail{grid-auto-columns:62%}
   .hub-cards{grid-template-columns:1fr}
@@ -841,6 +874,3 @@ footer a{text-decoration-color:rgba(255,255,255,.35)}
 .scene.hub + main.portal{margin-top:0; padding-top:28px}
 .portal-blurb details{background:none; box-shadow:none; padding:0; border:0}
 .portal-blurb details summary{padding:0; background:none; box-shadow:none}
-.tile-name b{color:#fff}
-.tile-name small{color:rgba(255,255,255,.9)}
-a.tile:hover{color:#fff}

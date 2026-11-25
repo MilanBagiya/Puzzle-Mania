@@ -133,7 +133,7 @@ export function checkFooterGap(min) {
 
 /** 5. Contrast (WCAG AA) for buttons, tabs, pills, labels, links and muted text. */
 export function checkContrast() {
-  const SEL = 'a, button, [role="tab"], .tab, .pill, .tbadge, .chip, label, .muted, small, summary, .btn, .sn-head, .crumbs, th, .optlabel, .grid-count, .tb-chip, .tile-name b, .tile-name small';
+  const SEL = 'a, button, [role="tab"], .tab, .pill, .tbadge, .chip, label, .muted, small, summary, .btn, .sn-head, .crumbs, th, .optlabel, .grid-count, .tb-chip, .tile-title, .tile-time, .tile-go';
   const parse = (c) => {
     const m = c.match(/rgba?\(([^)]+)\)/);
     if (!m) return null;
