@@ -14,7 +14,8 @@ export interface GameHandle { destroy(): void }
 
 interface State {
   paths: Record<string, number[]>;
-  hist: AnimalId[];
+  /** Trails and selection before each change, so Undo restores exactly (taps back and hints change many steps). */
+  hist: { paths: Record<string, number[]>; sel: AnimalId }[];
   sel: AnimalId;
   hints: number;
   t0: number;
@@ -134,13 +135,15 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
     wrongTimer = window.setTimeout(() => { S.wrong = -1; S.oops = null; S.msg = null; S.kind = ''; render(); }, 1500);
   }
 
+  const snapshot = (): void => { S.hist.push({ paths: Object.fromEntries(Object.entries(S.paths).map(([k, v]) => [k, v.slice()])), sel: S.sel }); };
+
   function tapCell(i: number): void {
     if (S.done) return;
     const a = S.sel;
     const path = pathOf(a);
-    if (path.includes(i)) { path.length = path.indexOf(i) + (i === path[path.length - 1] ? 0 : 1); S.msg = null; render(i); return; }
+    if (path.includes(i)) { snapshot(); path.length = path.indexOf(i) + (i === path[path.length - 1] ? 0 : 1); S.msg = null; render(i); return; }
     if (S.next.includes(i)) {
-      path.push(i); S.hist.push(a); S.msg = null;
+      snapshot(); path.push(i); S.msg = null;
       if (homes.has(i)) {
         const other = p.animals.find((b) => b !== a && pathOf(b)[pathOf(b).length - 1] === i);
         if (other) { S.msg = `The ${other} is already in that burrow. Each burrow fits one animal.`; S.kind = 'bad'; }
@@ -169,7 +172,7 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
       let k = 0;
       while (k < cur.length && cur[k] === sol[k]) k++;
       if (k === sol.length && cur.length === sol.length) continue;
-      S.paths[a] = sol.slice(0, k + 1); S.sel = a; S.hints++; S.hist.push(a);
+      snapshot(); S.paths[a] = sol.slice(0, k + 1); S.sel = a; S.hints++;
       S.msg = k < cur.length ? `Hint: part of the ${a}’s trail was off track. Here’s the next correct step.` : `Hint: here’s the ${a}’s next step.`;
       S.kind = '';
       render(sol[k]); return;
@@ -196,10 +199,10 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
     if (act === 'cell') tapCell(Number(t.dataset.i));
     else if (act === 'sel') { S.sel = t.dataset.a as AnimalId; S.msg = null; render(); mover.hop(S.sel); }
     else if (act === 'undo') {
-      const a = S.hist.pop();
-      if (a && pathOf(a).length) { pathOf(a).pop(); S.sel = a; }
+      const prev = S.hist.pop();
+      if (prev) { S.paths = prev.paths; S.sel = prev.sel; }
       S.msg = null; render();
-    } else if (act === 'clear') { p.animals.forEach((a) => { S.paths[a] = []; }); S.hist = []; S.sel = first; S.msg = null; render(); }
+    } else if (act === 'clear') { snapshot(); p.animals.forEach((a) => { S.paths[a] = []; }); S.sel = first; S.msg = null; render(); } // Undo can bring a cleared board back
     else if (act === 'hint') hint();
     else if (act === 'check') check();
   }
