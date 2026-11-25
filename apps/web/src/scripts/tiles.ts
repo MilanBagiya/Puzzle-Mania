@@ -2,9 +2,12 @@
 // A papercraft card: the cover print on top, then the name, the game's one-line hook, and a footer
 // with the category, time and a Play tab ("Again" once solved today).
 import { cover } from '@wild-daily/ui';
-import { CATS, ICON, type Entry } from '../data/catalog';
+import { CATS, ICON, type CatId, type Entry } from '../data/catalog';
 
-export interface TileOpts { label?: string; sub?: string; hook?: string; href?: string; coverId?: string; key?: string }
+/** Short chip names where the category name is long. */
+const CHIP_NAME: Partial<Record<CatId, string>> = { path: 'Paths', order: 'Clues', quick: 'Quick' };
+
+export interface TileOpts { label?: string; sub?: string; hook?: string; href?: string; coverId?: string; key?: string; /** Chip text (defaults to the category) and its colour class (defaults to cat-<category>). */ chip?: string; chipKind?: string }
 
 const svg = (d: string, size: number): string =>
   `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"></path></svg>`;
@@ -20,12 +23,16 @@ export function tileHtml(e: Entry, o: TileOpts = {}): string {
     e.isNew ? '<span class="tbadge new">New</span>' : '',
     '<span class="tbadge season">In season</span>',
   ].join('');
+  // A chip under the name: the given one (e.g. a Fresh Snow level), else the category with its icon.
+  const chipText = o.chip ?? (cat ? CHIP_NAME[cat.id] ?? cat.name : '');
+  const chip = chipText ? `<span class="tile-chip ${o.chipKind ?? `cat-${e.cat}`}">${o.chip || !cat ? '' : svg(ICON[cat.icon] ?? '', 13)}${chipText}</span>` : '';
   return `<a class="tile" href="${o.href ?? e.href}" data-id="${e.id}" data-keys="${(o.key ? [o.key] : e.keys).join(' ')}" data-season="${e.season}" data-cat="${e.cat}" data-min="${e.minutes}" data-feat="${e.featured}" data-new="${e.isNew ? 1 : 0}" data-name="${e.name}">
 <span class="tile-art">${cover(o.coverId ?? e.id, e.name)}<span class="tile-badges">${badges}<span class="tbadge solved" hidden>${CHECK}Solved</span></span></span>
 <span class="tile-body">
 <b class="tile-title">${o.label ?? e.name}</b>
+${chip}
 <span class="tile-hook">${o.hook ?? e.hook ?? e.blurb}</span>
-<span class="tile-foot"><span class="tile-info">${cat ? `<span class="tile-cat">${svg(ICON[cat.icon] ?? '', 14)}${cat.name}</span>` : ''}<span class="tile-time">${keepTogether(o.sub ?? e.time)}</span></span><span class="tile-go" aria-hidden="true"><span class="go-play">Play</span><span class="go-again">Again</span><svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5v14l11-7z" fill="currentColor"></path></svg></span></span>
+<span class="tile-foot"><span class="tile-info"><span class="tile-time">${keepTogether(o.sub ?? e.time)}</span></span><span class="tile-go" aria-hidden="true"><span class="go-play">Play</span><span class="go-again">Again</span><svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5v14l11-7z" fill="currentColor"></path></svg></span></span>
 </span>
 </a>`;
 }

@@ -918,44 +918,35 @@ a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover, .lvrow:hover, .st
 }
 
 /* ======================================================================
-   Daily Set cards (2026-11-25): level chip, two clean detail lines, full-width Play
+   Game cards (2026-11-25): one design everywhere. A chip under the name (category, or the Fresh Snow level in the
+   Daily Set), the hook where there is room, details as soft pills, and a full-width Play.
    ====================================================================== */
-.tiles-5 .tile-body{gap:8px}
-.tiles-5 .tile-title{display:flex; flex-direction:column; align-items:flex-start; gap:7px}
-/* Fresh Snow level as a chip, so the three levels read apart at a glance (sun, sky, night). */
-.tiles-5 .tile-level{display:inline-flex; align-items:center; padding:5px 10px; border-radius:var(--r-full); font-family:var(--font-ui); font-variation-settings:normal; font-size:12px; font-weight:800; line-height:1; letter-spacing:.02em; color:#233142; background:#FFE7A3}
-.tiles-5 .tile-level.lv-noon{background:#D3ECFA}
-.tiles-5 .tile-level.lv-night{background:#233142; color:#FFFFFF; box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
-/* Fixed ink on the light chips in both themes (the dark theme's green level text would fail on yellow and blue). */
-.tiles-5 .tile-title .tile-level:not(.lv-night){color:#233142}
-.tiles-5 .tile-title .tile-level.lv-night{color:#FFFFFF}
-/* The category is the same idea as the set itself here; drop it and keep the facts that differ. */
-.tiles-5 .tile-cat{display:none}
-.tiles-5 .tile-foot{flex-direction:column; align-items:stretch; gap:12px; padding-top:0; border-top:0}
-.tiles-5 .tile-info{min-height:0; gap:4px}
-.tiles-5 .tile-time{font-size:12.5px; font-weight:800; color:var(--ink-soft)}
-.tiles-5 .tile-time .sep{display:none}
-.tiles-5 .tile-time .nw{display:flex; align-items:center; gap:5px}
-.tiles-5 .tile-time .nw:last-child::before{content:""; flex:none; width:13px; height:13px; background:currentColor;
+.tile{border-radius:14px; box-shadow:0 0 0 1px var(--paper-line), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -16px var(--shade-strong)}
+.tile-art{margin:8px 8px 0; border-radius:10px}
+.tile-body{gap:10px; padding:12px 14px 14px}
+.tile-title{line-height:1.1}
+/* Chips: light tints with fixed dark ink in both themes (all 10:1 or better); Night is navy with white text. */
+.tile-chip{align-self:flex-start; display:inline-flex; align-items:center; gap:5px; padding:5px 10px; border-radius:var(--r-full); font-size:12px; font-weight:800; line-height:1; letter-spacing:.02em; color:#233142; background:#E6EDF3}
+.tile-chip svg{flex:none; width:13px; height:13px}
+.tile-chip.cat-snow{background:#DCEBFA} .tile-chip.cat-logic{background:#DDF2E5} .tile-chip.cat-path{background:#F6E3C8}
+.tile-chip.cat-order{background:#E9E1F6} .tile-chip.cat-guess{background:#FADCE4} .tile-chip.cat-quick{background:#FFEDB8}
+.tile-chip.lv-morning{background:#FFE7A3} .tile-chip.lv-noon{background:#D3ECFA}
+.tile-chip.lv-night{background:#233142; color:#FFFFFF; box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.tile-foot{flex-direction:column; align-items:stretch; gap:12px; padding-top:0; border-top:0}
+.tile-info{min-height:0; gap:4px}
+.tile-time{display:flex; flex-wrap:wrap; gap:5px; font-size:12px; font-weight:800; color:var(--ink-soft)}
+.tile-time .sep{display:none}
+.tile-time .nw{display:flex; align-items:center; gap:5px; padding:4px 8px; border-radius:var(--r-full); background:var(--soft); box-shadow:inset 0 0 0 1px var(--soft-e); line-height:1.1}
+.tile-time .nw:last-child::before{content:""; flex:none; width:12px; height:12px; background:currentColor;
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7.5V12l3 2'/%3E%3C/svg%3E") center/contain no-repeat;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7.5V12l3 2'/%3E%3C/svg%3E") center/contain no-repeat}
-/* A clear, full-width Play (easy to hit with a thumb); "Again" once solved today. Buttons line up across the row. */
-.tiles-5 .tile-go{justify-content:center; width:100%; min-height:38px; padding:8px 12px; font-size:14px}
-.tiles-5 .go-play{display:inline}
-.tiles-5 .tile.done .go-play{display:none}
-.tiles-5 .tile.done .go-again{display:inline}
-
-/* Daily Set polish: every card gets a chip (level or category), details as soft pills, a crisper paper card. */
-.tiles-5 .tile{border-radius:14px; box-shadow:0 0 0 1px var(--paper-line), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -16px var(--shade-strong)}
-.tiles-5 .tile-art{margin:8px 8px 0; border-radius:10px}
-.tiles-5 .tile-body{gap:10px; padding:12px 12px 14px}
-.tiles-5 .tile-title{font-size:18px; line-height:1.1}
-.tiles-5 .tile-level.lv-cat{background:#DDF2E5; color:#1E4D3A}
-.tiles-5 .tile-title .tile-level.lv-cat{color:#1E4D3A}
-.tiles-5 .tile-time{display:flex; flex-wrap:wrap; gap:5px; font-size:12px}
-.tiles-5 .tile-time .nw{padding:4px 8px; border-radius:var(--r-full); background:var(--soft); box-shadow:inset 0 0 0 1px var(--soft-e); line-height:1.1}
-.tiles-5 .tile-time .nw:last-child::before{width:12px; height:12px}
-.tiles-5 .tile-go{min-height:36px; border-radius:12px}
+/* Full-width Play: easy to hit with a thumb, lines up across a row; "Again" once solved today. */
+.tile-go{justify-content:center; width:100%; min-height:38px; padding:8px 12px; border-radius:12px; font-size:14px}
+.go-play{display:inline}
+.tile.done .go-play{display:none}
+.tile.done .go-again{display:inline}
 @media (hover:hover) and (pointer:fine){
-  .tiles-5 .tile:hover{box-shadow:0 0 0 2px var(--pine), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -14px var(--shade-strong)}
+  .tile:hover{box-shadow:0 0 0 2px var(--pine), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -14px var(--shade-strong)}
 }
+/* Wide side-by-side card (last odd card in the phone Daily Set): keep the art on the left, details on the right. */
+.tiles-5 > .tile:last-child:nth-child(odd) .tile-art{margin:8px 0 8px 8px}

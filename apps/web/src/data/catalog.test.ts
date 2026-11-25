@@ -17,4 +17,11 @@ describe('card hooks', () => {
     expect(tileHtml({ ...e, hook: undefined })).toContain(`<span class="tile-hook">${e.blurb}</span>`);
     expect(tileHtml(e, { hook: 'Custom' })).toContain('<span class="tile-hook">Custom</span>');
   });
+  it('every card shows a chip: the category by default, or a given chip such as a Fresh Snow level', () => {
+    const nests = CATALOG.find((g) => g.id === 'nests')!, dawn = CATALOG.find((g) => g.id === 'dawn')!;
+    expect(tileHtml(nests)).toMatch(/<span class="tile-chip cat-logic"><svg[^]*?<\/svg>Logic<\/span>/);
+    expect(tileHtml(dawn)).toContain('>Clues</span>');
+    expect(tileHtml(nests, { chip: 'Morning', chipKind: 'lv-morning' })).toContain('<span class="tile-chip lv-morning">Morning</span>');
+    expect(tileHtml(nests)).not.toContain('tile-cat');
+  });
 });
