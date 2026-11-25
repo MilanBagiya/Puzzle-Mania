@@ -11,7 +11,7 @@ export function generate(seed: string): PairsPuzzle {
 const def: GameDef<PairsPuzzle> = {
   id: 'feather-pairs', generate,
   mount(root, p, ctx) {
-    const found = new Set<number>(); let open: number[] = [], flips = 0, done = false, lock = false;
+    const found = new Set<number>(); let open: number[] = [], flips = 0, done = false, lock = false, flipBack: ReturnType<typeof setTimeout> | undefined;
     const t = clock(ctx);
     const render = (): void => {
       const cells = p.cards.map((f, i) => { const up = found.has(i) || open.includes(i); return `<button type="button" class="pcard${up ? ' up' : ''}${found.has(i) ? ' found' : ''}" data-g="flip:${i}" aria-label="${up ? 'Card showing' : 'Hidden card'}">${up ? FACES[f]!() : '<span class="pback"></span>'}</button>`; }).join('');
@@ -24,12 +24,13 @@ const def: GameDef<PairsPuzzle> = {
       if (open.length === 2) {
         const [a, b] = open as [number, number];
         if (p.cards[a] === p.cards[b]) { found.add(a); found.add(b); open = []; if (found.size === 16) { done = true; const time = t.stop(); render(); ctx.onSolved({ time, hints: 0, moves: flips, stars: flips <= 26 ? 3 : flips <= 36 ? 2 : 1 }); return; } }
-        else { lock = true; render(); setTimeout(() => { open = []; lock = false; render(); }, 800); return; }
+        else { lock = true; render(); flipBack = setTimeout(() => { flipBack = undefined; open = []; lock = false; render(); }, 800); return; }
       }
       render();
     });
     render();
-    return { destroy: () => { off(); t.kill(); } };
+    // Cancel a pending flip-back, or it would redraw this board after the game was torn down.
+    return { destroy: () => { off(); t.kill(); clearTimeout(flipBack); } };
   },
 };
 export default def;
