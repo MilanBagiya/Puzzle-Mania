@@ -911,7 +911,6 @@ a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover, .lvrow:hover, .st
 @media (hover:hover) and (pointer:fine){
   .tile:hover{box-shadow:0 0 0 2px var(--pine), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -14px var(--shade-strong)}
   .tile.done:hover{box-shadow:0 0 0 3px var(--pine-e1), 0 6px 0 var(--edge1), 0 9px 0 var(--edge2), 0 18px 26px -14px var(--shade-strong)}
-  .tile:hover .tile-title{text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:3px; text-decoration-color:var(--pine)}
   a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover{box-shadow:0 0 0 2px var(--pine), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -14px var(--shade-strong)}
   .tab:not([aria-selected="true"]):hover, .jump a:hover, .nav a:not([aria-current="page"]):hover{box-shadow:0 0 0 2px var(--pine), 0 4px 0 var(--edge1)}
   button.cell:not(:disabled):not(.blocked):hover, button.gcell:not(:disabled):hover, button.nb-cell:not(.tree):hover, button.mr-cell:not(.stump):hover,
@@ -945,5 +944,18 @@ a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover, .lvrow:hover, .st
 .tiles-5 .go-play{display:inline}
 .tiles-5 .tile.done .go-play{display:none}
 .tiles-5 .tile.done .go-again{display:inline}
-/* The level chip sits inside the title, so the hover underline would cross it: the ring and the darker Play are enough. */
-@media (hover:hover) and (pointer:fine){ .tiles-5 .tile:hover .tile-title{text-decoration:none} }
+
+/* Daily Set polish: every card gets a chip (level or category), details as soft pills, a crisper paper card. */
+.tiles-5 .tile{border-radius:14px; box-shadow:0 0 0 1px var(--paper-line), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -16px var(--shade-strong)}
+.tiles-5 .tile-art{margin:8px 8px 0; border-radius:10px}
+.tiles-5 .tile-body{gap:10px; padding:12px 12px 14px}
+.tiles-5 .tile-title{font-size:18px; line-height:1.1}
+.tiles-5 .tile-level.lv-cat{background:#DDF2E5; color:#1E4D3A}
+.tiles-5 .tile-title .tile-level.lv-cat{color:#1E4D3A}
+.tiles-5 .tile-time{display:flex; flex-wrap:wrap; gap:5px; font-size:12px}
+.tiles-5 .tile-time .nw{padding:4px 8px; border-radius:var(--r-full); background:var(--soft); box-shadow:inset 0 0 0 1px var(--soft-e); line-height:1.1}
+.tiles-5 .tile-time .nw:last-child::before{width:12px; height:12px}
+.tiles-5 .tile-go{min-height:36px; border-radius:12px}
+@media (hover:hover) and (pointer:fine){
+  .tiles-5 .tile:hover{box-shadow:0 0 0 2px var(--pine), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -14px var(--shade-strong)}
+}
