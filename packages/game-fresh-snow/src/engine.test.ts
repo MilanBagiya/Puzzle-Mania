@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  LEVELS, TREK_STAGE_COUNT, checkPaths, countSolutions, generatePuzzle, generateTrekStage, hint, isBorder, isSolved, legalNextCells,
+  LEVELS, checkPaths, countSolutions, generatePuzzle, hint, isBorder, isSolved, legalNextCells,
   rawMoves, solve, type LevelId, type PlayerPaths, type Puzzle,
 } from './engine.js';
 
