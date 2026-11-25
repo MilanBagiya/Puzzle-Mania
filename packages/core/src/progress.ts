@@ -73,17 +73,43 @@ export interface Progress {
 }
 export const STORAGE_KEY = 'wilddaily:v1';
 
+const isObj = (x: unknown): x is Record<string, unknown> => !!x && typeof x === 'object' && !Array.isArray(x);
+const isNum = (x: unknown): x is number => typeof x === 'number' && Number.isFinite(x);
+const isResult = (r: unknown): r is GameResult => isObj(r) && isNum(r.time) && isNum(r.hints) && isNum(r.stars);
+const ISO = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * Read saved progress. A damaged entry (one bad day, one bad result) is dropped on its own,
+ * so it can never cost the player the rest of their history.
+ */
 export function loadProgress(storage: Pick<Storage, 'getItem'> | null = safeStorage()): Progress {
+  let data: Record<string, unknown>;
   try {
     const raw = storage?.getItem(STORAGE_KEY);
-    const data = raw ? (JSON.parse(raw) as Progress) : { days: {} };
-    if (!data.days || typeof data.days !== 'object') data.days = {};
-    // v1 stored Dawn Chorus as { at }; upgrade it to a normal result.
-    for (const d of Object.values(data.days)) { const x = d.dawn as unknown as { at?: number; time?: number } | undefined; if (x && x.time === undefined) d.dawn = { time: 0, hints: 0, stars: 2 }; }
-    return data;
+    const parsed: unknown = raw ? JSON.parse(raw) : {};
+    data = isObj(parsed) ? parsed : {};
   } catch {
     return { days: {} };
   }
+  const days: Progress['days'] = {};
+  if (isObj(data.days)) {
+    for (const [date, day] of Object.entries(data.days)) {
+      if (!ISO.test(date) || !isObj(day)) continue;
+      const rec: DayRecord = {};
+      for (const [g, r] of Object.entries(day)) {
+        // v1 stored Dawn Chorus as { at }; upgrade it to a normal result.
+        if (g === 'dawn' && isObj(r) && r.time === undefined) { rec.dawn = { time: 0, hints: 0, stars: 2 }; continue; }
+        if (isResult(r)) rec[g as GameKey] = r;
+      }
+      days[date] = rec;
+    }
+  }
+  const out = { ...data, days } as Progress;
+  if (isObj(data.trek)) out.trek = Object.fromEntries(Object.entries(data.trek).filter(([, r]) => isResult(r))) as Progress['trek'];
+  else delete out.trek;
+  if (Array.isArray(data.badges)) out.badges = data.badges.filter((b): b is string => typeof b === 'string');
+  else delete out.badges;
+  return out;
 }
 export function saveProgress(p: Progress, storage: Pick<Storage, 'setItem'> | null = safeStorage()): void {
   try { storage?.setItem(STORAGE_KEY, JSON.stringify(p)); } catch { /* storage full or blocked: keep progress for this visit */ }

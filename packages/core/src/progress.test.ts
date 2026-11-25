@@ -93,6 +93,33 @@ describe('results, stars, trek, badges', () => {
     store['wilddaily:v1'] = '{not json';
     expect(loadProgress(s)).toEqual({ days: {} });
   });
+  it('drops only the damaged entries, never the rest of the history', () => {
+    const good = { time: 60, hints: 0, stars: 3, live: true };
+    const raw = {
+      theme: 'dark',
+      days: {
+        [T]: { morning: good, noon: null, night: { time: 'x', hints: 0, stars: 1 } },
+        '2027-01-26': null,
+        '2027-01-25': 'oops',
+        'not-a-date': { morning: good },
+        '2027-01-24': { nests: good, dawn: { at: 5 } },
+      },
+      trek: { '1': good, '2': 7 },
+      badges: ['first-tracks', 3, null],
+    };
+    const s = { getItem: () => JSON.stringify(raw) };
+    const p = loadProgress(s);
+    expect(p.theme).toBe('dark');
+    expect(Object.keys(p.days).sort()).toEqual(['2027-01-24', T]);
+    expect(p.days[T]).toEqual({ morning: good });
+    expect(p.days['2027-01-24']?.nests).toEqual(good);
+    expect(p.days['2027-01-24']?.dawn?.stars).toBe(2);
+    expect(p.trek).toEqual({ '1': good });
+    expect(p.badges).toEqual(['first-tracks']);
+  });
+  it('treats non-object saved data as empty progress', () => {
+    for (const v of ['null', '[]', '42', '"text"', '{"days":[]}']) expect(loadProgress({ getItem: () => v }).days).toEqual({});
+  });
   it('counts down to midnight', () => {
     expect(msUntilMidnight(new Date(2027, 0, 1, 23, 0))).toBe(3600000);
     expect(formatCountdown(3 * 3600000 + 5 * 60000)).toBe('3h 5m');
