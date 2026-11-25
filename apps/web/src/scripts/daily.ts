@@ -1,7 +1,7 @@
 // Shared logic for every daily game page: which date, loading the puzzle file, recording the result,
 // paws, badges, Journal cards, streak, countdown and the "next in your Daily Set" step.
 import {
-  DAILY_SET, GAMES, JOURNAL, daysPlayed, formatCountdown, formatDate, formatTime, isIsoDate, loadProgress, msUntilMidnight,
+  addDays, DAILY_SET, GAMES, JOURNAL, daysPlayed, formatCountdown, formatDate, formatTime, isIsoDate, loadProgress, msUntilMidnight,
   nextInSet, recordGame, saveProgress, setCount, streakInfo, takeNewBadges, todayIso, type Badge, type GameKey, type GameResult, type JournalCard,
 } from '@wild-daily/core';
 import { bird, character, paws, print } from '@wild-daily/ui';
@@ -35,14 +35,35 @@ export interface Finish { game: GameKey; date: string; time: number; hints: numb
 export interface Recorded { result: GameResult; card: JournalCard | null; badges: Badge[]; streak: number; setDone: boolean }
 /** Save a solve and work out everything it unlocked. */
 export function recordFinish(f: Finish): Recorded {
-  const p = loadProgress();
-  const { firstPlayOfDay, result } = recordGame(p, f.date, f.game, { time: f.time, hints: f.hints, live: f.date === today, ...(f.moves !== undefined ? { moves: f.moves } : {}), ...(f.stars !== undefined ? { stars: f.stars } : {}) });
+  const p = loadProgress(), now = todayIso(); // the page may have stayed open past midnight
+  // A puzzle started on its own day still counts as live when it is finished just after midnight (the next day only).
+  const live = f.date === now || (f.date === today && addDays(today, 1) === now);
+  const { firstPlayOfDay, result } = recordGame(p, f.date, f.game, { time: f.time, hints: f.hints, live, ...(f.moves !== undefined ? { moves: f.moves } : {}), ...(f.stars !== undefined ? { stars: f.stars } : {}) });
   const count = daysPlayed(p);
   const card = firstPlayOfDay && count <= JOURNAL.length ? JOURNAL[count - 1] ?? null : null;
-  const badges = takeNewBadges(p, today);
+  const badges = takeNewBadges(p, now);
   saveProgress(p);
-  return { result, card, badges, streak: streakInfo(p, today).current, setDone: setCount(p, f.date) === DAILY_SET.length };
+  return { result, card, badges, streak: streakInfo(p, now).current, setDone: setCount(p, f.date) === DAILY_SET.length };
 }
+
+/** Pages show the day they were opened. When local midnight passes, offer today's puzzles (once). */
+function watchMidnight(): void {
+  if (params().get('date')) return; // archive play: a new day changes nothing here
+  const check = (): boolean => {
+    if (todayIso() === today || document.querySelector('.newday')) return false;
+    const el = document.createElement('div');
+    el.className = 'toast newday'; el.setAttribute('role', 'status');
+    el.innerHTML = '<span>Fresh snow has fallen: today’s puzzles are ready.</span><button type="button" class="btn btn-c">Load today</button>';
+    el.querySelector('button')!.addEventListener('click', () => location.reload());
+    document.body.appendChild(el);
+    return true;
+  };
+  const wait = (): void => { window.setTimeout(() => { if (!check()) wait(); }, msUntilMidnight() + 1000); };
+  wait();
+  // Timers pause while a laptop sleeps or a tab is hidden, so check again whenever the page comes back.
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
+}
+watchMidnight();
 
 export interface ResultView {
   el: HTMLElement; title: string; subtitle: string; art: string;
