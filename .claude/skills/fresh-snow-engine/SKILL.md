@@ -5,11 +5,12 @@ description: Exact rules and the proven reference implementation of the Fresh Sn
 
 # Fresh Snow engine
 
-A tested JavaScript version already exists: `references/engine-reference.js`
-(from the playable prototype; 180 generated puzzles all had exactly one solution).
-When building packages/game-fresh-snow, PORT this code to strict TypeScript and keep its
-behaviour identical. Do not redesign the algorithm unless the owner asks.
-`references/engine-test-reference.js` shows the checks to turn into Vitest tests.
+The engine is implemented in `packages/game-fresh-snow/src/engine.ts` (rules, generator, solver
+`solve`/`countSolutions`, validator `checkPaths`, seeded `rngFrom`, Trail Trek profiles) with tests in
+`engine.test.ts`; the board UI is `src/ui.ts`. The original prototype logic is kept in
+`references/engine-reference.js` (+ `engine-test-reference.js`) as the behavioural reference:
+the TypeScript engine must keep the same rules. Don't redesign the algorithm unless the owner asks,
+and run `pnpm gen` after any engine change (it re-checks uniqueness for every day and Trek stage).
 
 ## Board
 - Square grid, n x n. Cell index i = row * n + col.

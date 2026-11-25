@@ -1,21 +1,33 @@
 ---
 name: code-review
-description: Strict self-review checklist for the Puzzle-Mania / Fresh Snow project. Use it after finishing any code change, before reporting a task as done, and whenever asked to "review", "check" or "double-check" code, a diff or a pull request.
+description: Strict review checklist for the Puzzle-Mania / Wild Daily repo. Use it on your own diff before reporting a task done, and whenever asked to review, check or audit code, a diff, a branch or the whole repo.
 ---
 
-# Code review checklist
+# Code review
 
-Review the change as a strict senior engineer. List problems first, then fix only the
-real ones (ask before larger fixes).
+Review like a strict senior engineer: find real problems, verify each one, rank by severity.
+Prefer evidence (run the code, run a probe, read the caller) over suspicion.
 
-1. **Spec**: does it match the task and the docs/ section exactly? Anything missing or extra?
-2. **Hard rules** in CLAUDE.md: exactly one solution per puzzle, no solutions sent to the
-   browser, no invented data, no hard-coded domain, no unapproved dependency.
-3. **Tests**: every new function tested? Edge cases: empty input, board edges, time zones
-   (midnight, travel), offline, very small and very large boards.
-4. **Purity**: engine code has no DOM access and no unseeded randomness.
-5. **Accessibility**: keyboard works, labels exist, colour is never the only signal.
-6. **Performance**: no large library added; no work repeated on every render.
-7. **Files**: only expected files changed (`git status`); nothing written outside the project.
+## Checklist
+1. **Correctness:** does it do what the task asked, including edge cases — empty input, board edges,
+   smallest and largest boards, local midnight, daylight-saving days, players crossing time zones,
+   offline, first visit with empty storage, old saved progress?
+2. **Hard rules** (see AGENTS.md): uniqueness checked by a solver in tests and the generator;
+   no answers in puzzle files; no invented data; no hard-coded domain; no unapproved dependency;
+   no ads near the board; performance budget.
+3. **Purity:** engine code has no DOM, `Date.now()` or unseeded `Math.random()`.
+4. **Tests:** every new or changed exported function is tested; bug fixes have a regression test;
+   tests would actually fail if the code were wrong.
+5. **Accessibility:** keyboard works, controls have labels, focus is visible, colour is never the only signal,
+   reduced motion respected.
+6. **Performance:** nothing heavy in the initial bundle; no repeated work per render or per tick.
+7. **Scope:** `git status` shows only intended files; no formatting churn; nothing written outside the repo;
+   no large binaries or generated output committed.
+8. **Checks:** `pnpm lint`, `pnpm typecheck`, `pnpm test` pass (plus `pnpm gen` / `pnpm build` / `pnpm qa`
+   when relevant).
 
-Report: `REVIEW: <n> problems found` then a numbered list (file, line, problem, fix).
+## Report
+`REVIEW: <n> problems found`, then a numbered list ordered by severity:
+file:line, the problem, a concrete failure scenario, and the fix.
+Group as **must fix** (bugs, rule breaks), **should fix**, **needs owner decision**.
+Also list what was checked and found clean, and any check you could not run (and why).

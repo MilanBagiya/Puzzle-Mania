@@ -1,7 +1,9 @@
-# Wild Daily — full site (Astro + all games)
+# Wild Daily — release notes and setup (Astro + all games)
 
-Drop-in code for `D:/Projects/Puzzle-Mania`. Installed, type-checked (strict), unit-tested (77 tests),
-built (47 pages + 4,920 puzzle files) and every game played end to end in a browser before packaging.
+Release notes for the site packages v3–v6, plus install, deploy and "where to change things" notes.
+For the project overview and everyday commands see [README.md](README.md). When v6 was packaged it was
+type-checked (strict), unit-tested (77 tests at the time), built (47 pages + 4,920 puzzle files) and
+every game was played end to end in a browser.
 
 ## Portal (v6)
 
@@ -75,8 +77,10 @@ Add a game: create `packages/game-pack/src/games/<id>.ts` (export a `GameDef`), 
 map in `apps/web/src/scripts/pack.ts`. The registry test fails until all four agree.
 Not built yet (need more design): Ant Trail, Den Packing, Sandy Shores, Food Chain.
 
-Puzzle files never contain answers. The browser checks moves against the rules, and hints come from
-solvers that work on the visible puzzle only.
+Puzzle files contain no answers, except for the guessing games above (a guess game has to check guesses
+somewhere, so the answer is scrambled in the file) and Feather Pairs (the card layout). The browser checks
+moves against the rules, and hints come from solvers that work on the visible puzzle only.
+These exceptions, and the "solvable" (not unique) move games, await an owner decision: see AGENTS.md.
 
 ## What keeps players coming back
 
@@ -137,7 +141,7 @@ Expected: `game-pack exists: True` and `pack games: 20`.
 5. Run:
    ```
    pnpm install
-   pnpm -r run test                          # 77 tests
+   pnpm test                                 # all unit tests
    pnpm --filter @wild-daily/web puzzles     # writes 4,920 puzzle files (about 45 seconds)
    pnpm --filter @wild-daily/web dev         # http://localhost:4321
    ```
