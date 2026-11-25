@@ -6,6 +6,7 @@ const PAGES = ['/', '/games', '/fresh-snow', '/play/frog-pond', '/stats', '/abou
 for (const scheme of ['light', 'dark']) {
   for (const url of PAGES) {
     test(`hover contrast ${scheme} ${url}`, async ({ page }, info) => {
+      test.setTimeout(240_000); // hovers every control; the home and /games pages have hundreds
       info.annotations.push({ type: 'qa-ran', description: 'hover' });
       await page.emulateMedia({ colorScheme: scheme });
       await page.setViewportSize({ width: 1280, height: 900 });
