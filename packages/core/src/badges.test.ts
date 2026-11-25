@@ -84,12 +84,16 @@ describe('badge conditions (each just below and at its threshold)', () => {
     expect(has(trek(10, 2), 'paws-30')).toBe(false);
     expect(has(trek(10, 3), 'paws-30')).toBe(true);
   });
-  it('archive-5: five days older than yesterday', () => {
-    const old = (n: number): Progress => prog(Object.fromEntries(Array.from({ length: n }, (_, k) => [addDays(T, -2 - k), ['morning'] as GameKey[]])));
-    expect(has(old(4), 'archive-5')).toBe(false);
-    expect(has(old(5), 'archive-5')).toBe(true);
-    // today and yesterday don't count
-    expect(has(prog({ ...old(4).days, [T]: ['morning'], [addDays(T, -1)]: ['morning'] }), 'archive-5')).toBe(false);
+  it('archive-5: five days played from the archive (not live)', () => {
+    const arch = (n: number, live: boolean): Progress => prog(Object.fromEntries(Array.from({ length: n }, (_, k) => [addDays(T, -2 - k), { morning: res({ live }) }])));
+    expect(has(arch(4, false), 'archive-5')).toBe(false);
+    expect(has(arch(5, false), 'archive-5')).toBe(true);
+    // playing five past days when they were today is not time travel
+    expect(has(arch(30, true), 'archive-5')).toBe(false);
+    // a day with any archive replay counts, even if another game that day was live
+    const mixed = arch(4, false);
+    mixed.days[addDays(T, -20)] = { morning: res({ live: true }), noon: res({ live: false }) };
+    expect(has(mixed, 'archive-5')).toBe(true);
   });
   it('explorer: 10 different games, on any days', () => {
     const games: GameKey[] = ['morning', 'noon', 'night', 'nests', 'dawn', 'stones', 'rings', ...PACK_KEYS.slice(0, 3)];
