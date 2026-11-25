@@ -34,6 +34,13 @@ export function applySeason(): void {
   document.dispatchEvent(new CustomEvent('wd:season', { detail: s }));
 }
 const openDialog = (id: string): void => { const d = document.getElementById(id) as HTMLDialogElement | null; d?.showModal?.(); };
+/** "Erase my progress" asks for a second tap; closing Options (Done, ✕ or Escape) cancels that. */
+function disarmReset(): void {
+  const b = document.getElementById('resetbtn');
+  if (!b || !b.dataset.armed) return;
+  delete b.dataset.armed; b.textContent = 'Erase my progress'; b.classList.replace('btn-c', 'btn-w');
+}
+document.getElementById('optsdlg')?.addEventListener('close', disarmReset);
 
 document.addEventListener('click', (e) => {
   const t = (e.target as HTMLElement).closest<HTMLElement>('[data-act]');
