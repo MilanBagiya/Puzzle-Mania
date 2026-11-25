@@ -3,10 +3,10 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { QA_DIR } from './lib/site.mjs';
 
-const ORDER = ['links', 'overflow', 'clipping', 'overlap', 'footer-gap', 'contrast', 'console', 'smoke-play', 'seo'];
+const ORDER = ['links', 'overflow', 'clipping', 'overlap', 'footer-gap', 'contrast', 'console', 'smoke-play', 'seo', 'focus'];
 const TITLE = {
   links: '1 Links', overflow: '2 Overflow (360/390/1280)', clipping: '2 Clipped button/tab/pill text', overlap: '3 Overlap',
-  'footer-gap': '4 Footer gap >= 24px', contrast: '5 Contrast AA (light+dark)', console: '6 Console errors', 'smoke-play': '7 Smoke play', seo: '8 Sitemap and robots',
+  'footer-gap': '4 Footer gap >= 24px', contrast: '5 Contrast AA (light+dark)', console: '6 Console errors', 'smoke-play': '7 Smoke play', seo: '8 Sitemap and robots', focus: '9 Keyboard focus on boards',
 };
 
 export default class SummaryReporter {
