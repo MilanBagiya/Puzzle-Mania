@@ -53,6 +53,7 @@ const SCENES: Record<string, { s: Season; items: Item[]; extra?: string; extraTo
   'feather-pairs': { s: 'spring', items: [['n-bird', 66, 94, 32, 'color:#E2594A'], ['n-bird', 214, 94, 32, 'color:#E2594A'], ['n-bird', 140, 104, 32, 'color:#3F86D3']], extraTop: '', extra: card(60, 80, -8) + card(136, 90, 2) + card(208, 80, 8) },
   'leaf-pile': { s: 'autumn', items: [['n-leaf', 110, 140, 30], ['n-leaf', 140, 130, 30], ['n-leaf', 170, 142, 30], ['n-leaf', 126, 114, 28], ['n-leaf', 158, 110, 28], ['n-leaf', 196, 124, 28], ['n-leaf', 92, 120, 26], ['n-leaf', 60, 60, 22], ['n-leaf', 250, 72, 20], ['i3-tree', 250, 96, 40]] },
   'who-was-here': { s: 'spring', items: [['ch:deer:idle', 110, 82, 100], ['n-daisy', 30, 150, 22], ['n-tulip', 284, 148, 18]], extraTop: '<g><circle cx="200" cy="100" r="34" fill="#fff" fill-opacity=".25" stroke="#233142" stroke-width="7"></circle><path d="M224 124 L258 158" stroke="#233142" stroke-width="10" stroke-linecap="round"></path></g>' },
+  'nut-sort': { s: 'autumn', items: [['n-stump', 40, 120, 70], ['n-acorn', 120, 92, 30], ['n-acorn', 150, 100, 30], ['n-mush', 196, 96, 40], ['n-leaf', 246, 104, 28], ['n-daisy', 276, 92, 24]], extraTop: '' },
 };
 export const COVER_IDS = Object.keys(SCENES);
 

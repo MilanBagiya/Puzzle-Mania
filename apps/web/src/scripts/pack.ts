@@ -25,6 +25,7 @@ const LOADERS: Record<string, () => Promise<{ default: GameDef<unknown> }>> = {
   'feather-pairs': () => import('@wild-daily/game-pack/games/feather-pairs') as never,
   'leaf-pile': () => import('@wild-daily/game-pack/games/leaf-pile') as never,
   'who-was-here': () => import('@wild-daily/game-pack/games/who-was-here') as never,
+  'nut-sort': () => import('@wild-daily/game-pack/games/nut-sort') as never,
 };
 const root = document.getElementById('pk-game') as HTMLElement;
 const id = root.getAttribute('data-game') ?? '';

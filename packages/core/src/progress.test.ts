@@ -129,7 +129,7 @@ describe('results, stars, trek, badges', () => {
 describe('game pack', () => {
   it('has 20 pack games with names and par times, and 3 distinct daily picks', async () => {
     const { GAMES, PACK_KEYS, todaysPicks } = await import('./progress.js');
-    expect(PACK_KEYS).toHaveLength(20);
+    expect(PACK_KEYS).toHaveLength(21);
     for (const k of PACK_KEYS) { expect(GAMES[k].href).toBe(`/play/${k}`); expect(GAMES[k].par).toBeGreaterThan(0); }
     const a = todaysPicks('2027-01-18'), b = todaysPicks('2027-01-19');
     expect(new Set(a).size).toBe(3); expect(a).toEqual(todaysPicks('2027-01-18')); expect(a).not.toEqual(b);

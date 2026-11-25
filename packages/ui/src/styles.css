@@ -1112,3 +1112,22 @@ main.portal{min-height:calc(100dvh - 300px)}
 .tb-search input::-webkit-search-cancel-button{display:none}
 .tb-all{min-height:44px; display:flex; align-items:center}
 @media (max-width:720px){ .tb-results{position:fixed; left:12px; right:12px; top:60px} .tb-hit small{white-space:nowrap} }
+
+/* ======================================================================
+   New games (2026-11-25)
+   ====================================================================== */
+/* Nut Sort: six baskets, filled from the bottom. */
+.nbaskets{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px; padding:4px}
+.nbasket{display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:4px; padding:8px 4px 10px; border:0; border-radius:12px 12px 20px 20px; background:var(--tile); color:var(--ink);
+  box-shadow:inset 0 -6px 0 var(--tile-e1), 0 3px 0 var(--tile-e2); cursor:pointer; transition:transform .15s ease, background-color .2s ease}
+.nslot{display:grid; place-items:center; aspect-ratio:1; border-radius:8px; background:color-mix(in srgb, var(--tile-e1) 35%, transparent)}
+.nitem{display:grid; place-items:center; width:100%; height:100%}
+.nitem svg{width:78%; height:78%}
+.nbasket.sel{transform:translateY(-6px); box-shadow:0 0 0 3px var(--pine), inset 0 -6px 0 var(--tile-e1)}
+.nbasket.full{background:var(--good)}
+.nbasket.hint-from{box-shadow:0 0 0 3px var(--mustard), inset 0 -6px 0 var(--tile-e1)}
+.nbasket.hint-to{box-shadow:0 0 0 3px var(--mustard-e1), inset 0 -6px 0 var(--tile-e1); outline:2px dashed var(--mustard-e1); outline-offset:3px}
+.nbasket:active{transform:translateY(2px)}
+.nbasket:focus-visible{outline:3px solid var(--focus); outline-offset:3px}
+@media (prefers-reduced-motion: reduce){ .nbasket{transition:none} .nbasket.sel{transform:none} }
+@media (max-width:420px){ .nbaskets{gap:6px; padding:2px} .nbasket{padding:6px 3px 8px} }
