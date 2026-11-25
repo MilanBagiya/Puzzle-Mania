@@ -7,6 +7,12 @@ describe('registry', () => {
     expect(PACK.map((g) => g.id).sort()).toEqual(files);
     expect(PACK).toHaveLength(20);
   });
+  it('every game has a card hook of at most 60 characters', () => {
+    for (const g of PACK) {
+      expect(g.hook.length, g.id).toBeGreaterThan(0);
+      expect(g.hook.length, `${g.id}: "${g.hook}"`).toBeLessThanOrEqual(60);
+    }
+  });
 });
 import { PACK_META } from '@wild-daily/core';
 import { ALL_GAMES } from '../all.js';

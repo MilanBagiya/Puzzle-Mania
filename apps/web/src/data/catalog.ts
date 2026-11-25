@@ -5,7 +5,7 @@ import type { GameKey } from '@wild-daily/core';
 export type CatId = 'snow' | 'logic' | 'path' | 'order' | 'guess' | 'quick';
 export interface Category { id: CatId; name: string; title: string; blurb: string; more: string; icon: string }
 export interface Entry {
-  id: string; name: string; href: string; cat: CatId; blurb: string; time: string; minutes: number;
+  id: string; name: string; href: string; cat: CatId; blurb: string; /** Short card text (at most 60 characters); cards fall back to blurb. */ hook?: string; time: string; minutes: number;
   daily: boolean; isNew: boolean; season: string; featured: number;
   /** Progress keys that count as "solved today" for this game. */
   keys: GameKey[];
@@ -44,16 +44,16 @@ export const CATS: Category[] = [
 const minutesOf = (t: string): number => { const m = t.match(/(\d+)/); return m ? Number(m[1]) : 3; };
 const KIND_TO_CAT: Record<string, CatId> = { logic: 'logic', path: 'path', order: 'order', guess: 'guess', quick: 'quick' };
 const MAIN: Entry[] = [
-  { id: 'fresh-snow', name: 'Fresh Snow', href: '/fresh-snow', cat: 'snow', blurb: 'Follow animal footprints through the snow and guide each one home.', time: '1–12 min', minutes: 1, daily: true, isNew: false, season: 'winter', featured: 1, keys: ['morning', 'noon', 'night'] },
-  { id: 'trek', name: 'Trail Trek', href: '/trek', cat: 'snow', blurb: 'A 60-stage Fresh Snow campaign. Earn three paws on every stage.', time: 'Any time', minutes: 2, daily: false, isNew: false, season: 'winter', featured: 2, keys: [] },
-  { id: 'nests', name: 'Nests', href: '/nests', cat: 'logic', blurb: 'Each tree’s number is how many nests it can see along its row and column.', time: '2–4 min', minutes: 2, daily: true, isNew: false, season: 'spring', featured: 3, keys: ['nests'] },
-  { id: 'dawn', name: 'Dawn Chorus', href: '/dawn-chorus', cat: 'order', blurb: 'Read the clues and put five birds in the order they sang at sunrise.', time: '1–3 min', minutes: 1, daily: true, isNew: false, season: 'spring', featured: 4, keys: ['dawn'] },
-  { id: 'stones', name: 'Stepping Stones', href: '/stepping-stones', cat: 'path', blurb: 'Help the frog across the pond: each lily pad says exactly how far to jump.', time: '1–4 min', minutes: 1, daily: true, isNew: false, season: 'summer', featured: 5, keys: ['stones'] },
-  { id: 'rings', name: 'Mushroom Rings', href: '/mushroom-rings', cat: 'guess', blurb: 'Read a ring of mushrooms and find where the spore landed, in three guesses.', time: 'About 1 min', minutes: 1, daily: true, isNew: false, season: 'autumn', featured: 6, keys: ['rings'] },
+  { id: 'fresh-snow', name: 'Fresh Snow', href: '/fresh-snow', cat: 'snow', blurb: 'Follow animal footprints through the snow and guide each one home.', hook: 'Follow the tracks and guide every animal home.', time: '1–12 min', minutes: 1, daily: true, isNew: false, season: 'winter', featured: 1, keys: ['morning', 'noon', 'night'] },
+  { id: 'trek', name: 'Trail Trek', href: '/trek', cat: 'snow', blurb: 'A 60-stage Fresh Snow campaign. Earn three paws on every stage.', hook: '60 Fresh Snow stages. Earn three paws on each.', time: 'Any time', minutes: 2, daily: false, isNew: false, season: 'winter', featured: 2, keys: [] },
+  { id: 'nests', name: 'Nests', href: '/nests', cat: 'logic', blurb: 'Each tree’s number is how many nests it can see along its row and column.', hook: 'Each tree counts the nests it can see.', time: '2–4 min', minutes: 2, daily: true, isNew: false, season: 'spring', featured: 3, keys: ['nests'] },
+  { id: 'dawn', name: 'Dawn Chorus', href: '/dawn-chorus', cat: 'order', blurb: 'Read the clues and put five birds in the order they sang at sunrise.', hook: 'Put five birds in the order they sang.', time: '1–3 min', minutes: 1, daily: true, isNew: false, season: 'spring', featured: 4, keys: ['dawn'] },
+  { id: 'stones', name: 'Stepping Stones', href: '/stepping-stones', cat: 'path', blurb: 'Help the frog across the pond: each lily pad says exactly how far to jump.', hook: 'Each lily pad says how far the frog jumps.', time: '1–4 min', minutes: 1, daily: true, isNew: false, season: 'summer', featured: 5, keys: ['stones'] },
+  { id: 'rings', name: 'Mushroom Rings', href: '/mushroom-rings', cat: 'guess', blurb: 'Read a ring of mushrooms and find where the spore landed, in three guesses.', hook: 'Find where the spore landed in three guesses.', time: 'About 1 min', minutes: 1, daily: true, isNew: false, season: 'autumn', featured: 6, keys: ['rings'] },
 ];
 export const CATALOG: Entry[] = [
   ...MAIN,
-  ...PACK.map((g, k) => ({ id: g.id, name: g.name, href: `/play/${g.id}`, cat: KIND_TO_CAT[g.kind] ?? 'quick', blurb: g.blurb, time: g.time, minutes: minutesOf(g.time), daily: true, isNew: true, season: g.season, featured: 10 + k, keys: [g.id as GameKey] })),
+  ...PACK.map((g, k) => ({ id: g.id, name: g.name, href: `/play/${g.id}`, cat: KIND_TO_CAT[g.kind] ?? 'quick', blurb: g.blurb, hook: g.hook, time: g.time, minutes: minutesOf(g.time), daily: true, isNew: true, season: g.season, featured: 10 + k, keys: [g.id as GameKey] })),
 ];
 export const byCat = (c: CatId): Entry[] => CATALOG.filter((e) => e.cat === c).sort((a, b) => a.featured - b.featured);
 export const entryById = (id: string): Entry | undefined => CATALOG.find((e) => e.id === id);

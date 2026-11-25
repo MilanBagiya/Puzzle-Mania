@@ -24,7 +24,7 @@ export function tileHtml(e: Entry, o: TileOpts = {}): string {
 <span class="tile-art">${cover(o.coverId ?? e.id, e.name)}<span class="tile-badges">${badges}<span class="tbadge solved" hidden>${CHECK}Solved</span></span></span>
 <span class="tile-body">
 <b class="tile-title">${o.label ?? e.name}</b>
-<span class="tile-hook">${o.hook ?? e.blurb}</span>
+<span class="tile-hook">${o.hook ?? e.hook ?? e.blurb}</span>
 <span class="tile-foot"><span class="tile-info">${cat ? `<span class="tile-cat">${svg(ICON[cat.icon] ?? '', 14)}${cat.name}</span>` : ''}<span class="tile-time">${keepTogether(o.sub ?? e.time)}</span></span><span class="tile-go" aria-hidden="true"><span class="go-play">Play</span><span class="go-again">Again</span><svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5v14l11-7z" fill="currentColor"></path></svg></span></span>
 </span>
 </a>`;
