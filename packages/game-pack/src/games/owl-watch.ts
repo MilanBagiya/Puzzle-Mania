@@ -14,7 +14,9 @@ function diagView(n: number, blocked: Set<number>, t: number): number[] {
 }
 export function generate(seed: string): CountPuzzle {
   const rng = rngFrom('owl:' + seed), n = 6, N = n * n;
-  for (let a = 0; a < 500; a++) {
+  // 500 tries was too few for a few dates (e.g. 2028-11-17); more tries keep the same random stream,
+  // so every date that already generated keeps exactly the same puzzle.
+  for (let a = 0; a < 5000; a++) {
     const blocked = new Set(shuffle(rng, range(N)).slice(0, 6 + Math.floor(rng() * 3)));
     const items = new Set<number>();
     for (const i of shuffle(rng, range(N).filter((x) => !blocked.has(x)))) { if (items.size >= 5) break; if (nb8(n, i).every((j) => !items.has(j))) items.add(i); }
