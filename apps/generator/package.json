@@ -7,7 +7,8 @@
     "generate": "tsx src/index.ts --back 60 --days 120 --out ../web/public/puzzles",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "lint": "eslint src"
   },
   "dependencies": {
     "@wild-daily/core": "workspace:*",

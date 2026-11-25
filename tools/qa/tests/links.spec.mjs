@@ -2,6 +2,8 @@
 import { test } from '@playwright/test';
 import { checkLinks } from '../lib/links.mjs';
 
+// Playwright reads fixtures from the first argument, so it must be an object pattern even when empty.
+// eslint-disable-next-line no-empty-pattern
 test('links', async ({}, info) => {
   const r = checkLinks();
   info.annotations.push({ type: 'qa-ran', description: 'links' });

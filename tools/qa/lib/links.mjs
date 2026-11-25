@@ -1,7 +1,7 @@
 // 1. Links: every internal href in the built HTML must resolve to a built file. Also scans built JS for
 // page paths (links made by scripts) and lists orphan pages that nothing links to.
 import { readFileSync } from 'node:fs';
-import { join, relative, sep } from 'node:path';
+import { relative, sep } from 'node:path';
 import { DIST, pages, resolvePath, walk } from './site.mjs';
 
 const ORIGIN = 'http://qa.local';

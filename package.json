@@ -10,7 +10,7 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,json,md,css,html}\"",
-    "gen": "pnpm --filter generator run gen",
+    "gen": "pnpm --filter @wild-daily/generator run generate",
     "qa": "pnpm --filter @wild-daily/qa run qa"
   },
   "devDependencies": {

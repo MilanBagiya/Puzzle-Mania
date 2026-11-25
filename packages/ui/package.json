@@ -8,6 +8,6 @@
     "./styles.css": "./src/styles.css",
     "./sprite.svg": "./src/sprite.svg"
   },
-  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json", "test": "vitest run --passWithNoTests" },
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json", "test": "vitest run --passWithNoTests", "lint": "eslint src" },
   "devDependencies": { "typescript": "5.6.3", "vitest": "2.1.9" }
 }

@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "qa": "node run.mjs",
-    "qa:nobuild": "node run.mjs --no-build"
+    "qa:nobuild": "node run.mjs --no-build",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@playwright/test": "1.63.0"
