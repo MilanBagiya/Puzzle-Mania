@@ -78,7 +78,11 @@ export function generateDawn(seed: string): DawnPuzzle {
       const rest = clues.filter((_, j) => j !== i);
       if (all.filter((p) => rest.every((c) => clueHolds(c, p))).length === 1) clues = rest;
     }
-    if (clues.length >= 3 && clues.length <= 6) return { birds: shuffle(rng, pool.slice()), answer, clues, text: clues.map(clueText) };
+    if (clues.length < 3 || clues.length > 6) continue;
+    // The tray must not start already in the answer order (reshuffling only changes the days where it did).
+    let birds = shuffle(rng, pool.slice());
+    while (birds.every((b, i) => b === answer[i])) birds = shuffle(rng, birds);
+    return { birds, answer, clues, text: clues.map(clueText) };
   }
   throw new Error(`Could not generate a Dawn Chorus puzzle for ${seed}`);
 }
