@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { addDays, todayIso, isIsoDate, LEVELS } from '@wild-daily/core';
 import { countSolutions, generatePuzzle, generateTrekStage, TREK_STAGE_COUNT } from '@wild-daily/game-fresh-snow';
 import { generateNests, solveNests } from '@wild-daily/game-nests';
-import { generateDawn, solveDawn, toPublic } from '@wild-daily/game-dawn-chorus';
+import { generateDawn, orderFits, permutations, toPublic } from '@wild-daily/game-dawn-chorus';
 import { generateStones } from '@wild-daily/game-stepping-stones';
 import { candidates, generateRings } from '@wild-daily/game-mushroom-rings';
 import { ALL_GAMES } from '@wild-daily/game-pack/all';
@@ -38,7 +38,7 @@ for (let k = 0; k < back + days; k++) {
   if (solveNests(nests, 2).length !== 1) fail(`Nests ${date} is not unique`);
   write(`nests/${date}.json`, nests); files++;
   const dawn = toPublic(date, generateDawn(date));
-  if (!solveDawn(dawn)) fail(`Dawn Chorus ${date} has no answer`);
+  if (permutations(dawn.birds).filter((o) => orderFits(dawn, o)).length !== 1) fail(`Dawn Chorus ${date} is not unique`);
   write(`dawn/${date}.json`, dawn); files++;
   write(`stones/${date}.json`, generateStones(date)); files++;
   const rings = generateRings(date).puzzle;
