@@ -45,7 +45,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0; background:var(--sky); color:var(--ink); font-family:var(--font-ui); font-weight:500; -webkit-font-smoothing:antialiased}
 body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:30; background:var(--paper)}
 h1,h2,h3,.display{font-family:var(--font-display); font-weight:700; font-variation-settings:"SOFT" 100; margin:0; line-height:1.08; letter-spacing:-0.01em}
-a{color:var(--ink)} a:hover{color:var(--coral-e1)}
+a{color:var(--ink)}
 button{font:inherit; color:inherit}
 :focus-visible{outline:3px solid var(--coral); outline-offset:2px}
 .wrap{max-width:1080px; margin:0 auto; padding:0 18px}
@@ -624,7 +624,7 @@ body{line-height:1.55; -webkit-font-smoothing:antialiased; text-rendering:optimi
   --r-s:8px; --r-m:12px; --r-l:18px; --r-xl:24px; --r-full:999px;
   --shade:rgba(30,40,62,.22); --shade-strong:rgba(30,40,62,.32);
   --focus:#2F6FC0;
-  --pine-h:#358C66; --coral-h:#F5835F; --mustard-h:#F9CF5E; --paper-h:#F6FAFD;
+  --pine-h:#276B4E; /* darker than pine on hover so white text keeps 6:1 */ --coral-h:#F5835F; --mustard-h:#F9CF5E; --paper-h:#F6FAFD;
   --lift:-2px;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --shade:rgba(0,0,0,.45); --shade-strong:rgba(0,0,0,.6); --focus:#8EB8FF; --paper-h:#1C2A57 } }
@@ -691,7 +691,7 @@ footer a{text-decoration-color:rgba(255,255,255,.35)}
   .lvrow:hover{transform:translateY(-1px); background:var(--paper-h)}
   button.cell:hover, button.gcell:hover, .st-cell:hover, .pcard:not(.up):hover, a.day:hover, button.day:hover{transform:translateY(-3px); filter:brightness(1.03)}
   .tabbar a:not([aria-current="page"]):hover{background:var(--soft); color:var(--ink)}
-  a:not(.btn):not(.card):not(.logo):not(.tab):not(.tile):hover{color:var(--coral-e1)}
+  a:not(.btn, .card, .logo, .tab, .tile, .tb-btn, .tstage, .tb-hit, .day):not(.sidenav a, .topbar a, .jump a, .nav a, .tabbar a, .tabs a, footer a):hover{color:var(--link-hover)}
   footer a:hover{color:#fff; text-decoration-color:var(--mustard)}
   .logo:hover svg{transform:rotate(-6deg); transition:transform .2s ease}
 }
@@ -950,3 +950,13 @@ a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover, .lvrow:hover, .st
 }
 /* Wide side-by-side card (last odd card in the phone Daily Set): keep the art on the left, details on the right. */
 .tiles-5 > .tile:last-child:nth-child(odd) .tile-art{margin:8px 0 8px 8px}
+/* Buttons that are links keep their own text colour on hover: the plain-link hover (coral text, line 48) is more
+   specific than .btn-p etc., and turned "Play Morning" coral on green. */
+a.btn-p:hover, a.btn-p:focus-visible{color:var(--on-pine)}
+a.btn-c:hover, a.btn-y:hover, a.btn-c:focus-visible, a.btn-y:focus-visible{color:#233142}
+a.btn-w:hover, a.btn-w:focus-visible{color:var(--ink)}
+
+/* Plain-link hover colour that passes AA on the page in both themes (coral-e1 was 3.65:1 light, 3.90:1 dark). */
+:root{--link-hover:#A23E22}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--link-hover:#FFA389} }
+:root[data-theme="dark"]{--link-hover:#FFA389}
