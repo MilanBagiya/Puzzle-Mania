@@ -1143,3 +1143,15 @@ main.portal{min-height:calc(100dvh - 300px)}
 .vcell:focus-visible{outline:3px solid var(--focus); outline-offset:1px; z-index:3}
 .vcell:active{transform:scale(.97)}
 @media (prefers-reduced-motion: reduce){ .vcell:active{transform:none} }
+/* Spot the Change: two scenes (stacked on phones, side by side from 720px), a button over every thing. */
+.spot-scenes{display:grid; grid-template-columns:1fr; gap:12px}
+@media (min-width:720px){ .spot-scenes{grid-template-columns:1fr 1fr; gap:16px} }
+.spot-pane{position:relative; aspect-ratio:16/10; border-radius:var(--r-l); overflow:hidden; box-shadow:0 0 0 1px var(--paper-line), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2)}
+.spot-pane svg{display:block; width:100%; height:100%}
+.spot-rings circle{fill:none; stroke-width:3}
+.spot-rings circle.got{stroke:#2F7D5B; stroke-width:3.5}
+.spot-rings circle.hint{stroke:#C99A1E; stroke-dasharray:6 5}
+.spot-hit{position:absolute; border:0; padding:0; border-radius:50%; background:transparent; cursor:pointer}
+.spot-hit:focus-visible{outline:3px solid var(--focus); outline-offset:2px}
+.spot-hit:active{background:rgba(35,49,66,.12)}
+@media (hover:hover) and (pointer:fine){ .spot-hit:not(.got):hover{box-shadow:inset 0 0 0 2px rgba(35,49,66,.35)} }

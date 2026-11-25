@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import nutSort, { CAP, KINDS, canMove, isSorted, solveSort } from '../games/nut-sort.js';
 import vineLinks, { solveVines } from '../games/vine-links.js';
+import spot, { THINGS, changesOf, same } from '../games/spot-the-change.js';
 
 // Real seeds are 'YYYY-MM-DD' dates.
 const dates = (n: number, from = Date.UTC(2026, 0, 1)): string[] => Array.from({ length: n }, (_, d) => new Date(from + d * 86_400_000 * 5).toISOString().slice(0, 10));
@@ -62,5 +63,30 @@ describe('Vine Links', () => {
   it('generates quickly', () => {
     const t = Date.now(); for (const d of dates(20, Date.UTC(2027, 0, 1))) vineLinks.generate(d);
     expect(Date.now() - t).toBeLessThan(5000);
+  });
+});
+
+describe('Spot the Change', () => {
+  it('generates 120 days with exactly five changes, each a visible kind', () => {
+    for (const d of dates(120)) {
+      const p = spot.generate(d), c = changesOf(p);
+      expect(c, d).toHaveLength(5);
+      expect(p.left).toHaveLength(p.right.length);
+      for (const i of c) {
+        const a = p.left[i]!, b = p.right[i];
+        const visible = !b || a.t !== b.t || Math.abs(a.w - b.w) >= 8 || a.c !== b.c;
+        expect(visible, `${d} #${i}`).toBe(true);
+      }
+      for (const it of [...p.left, ...p.right]) if (it) { expect(THINGS[it.t], d).toBeTruthy(); expect(it.x).toBeGreaterThanOrEqual(-10); expect(it.x + it.w).toBeLessThanOrEqual(330); }
+    }
+  });
+  it('things that did not change are identical in both scenes', () => {
+    const p = spot.generate('2026-11-25'), c = new Set(changesOf(p));
+    p.left.forEach((it, i) => { if (!c.has(i)) expect(same(it, p.right[i])).toBe(true); });
+  });
+  it('is deterministic and fast', () => {
+    expect(spot.generate('2026-12-01')).toEqual(spot.generate('2026-12-01'));
+    const t = Date.now(); for (const d of dates(100, Date.UTC(2027, 0, 1))) spot.generate(d);
+    expect(Date.now() - t).toBeLessThan(2000);
   });
 });
