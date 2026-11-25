@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import nutSort, { CAP, KINDS, canMove, isSorted, solveSort } from '../games/nut-sort.js';
 import vineLinks, { solveVines } from '../games/vine-links.js';
 import spot, { THINGS, changesOf, same } from '../games/spot-the-change.js';
+import berry, { BERRIES, N as BN, adjacent, canSwap, greedy, matchesOf, play, search, startState, swapsOf } from '../games/berry-match.js';
 
 // Real seeds are 'YYYY-MM-DD' dates.
 const dates = (n: number, from = Date.UTC(2026, 0, 1)): string[] => Array.from({ length: n }, (_, d) => new Date(from + d * 86_400_000 * 5).toISOString().slice(0, 10));
@@ -88,5 +89,50 @@ describe('Spot the Change', () => {
     expect(spot.generate('2026-12-01')).toEqual(spot.generate('2026-12-01'));
     const t = Date.now(); for (const d of dates(100, Date.UTC(2027, 0, 1))) spot.generate(d);
     expect(Date.now() - t).toBeLessThan(2000);
+  });
+});
+
+describe('Berry Match', () => {
+  it('generates 30 days of fair boards whose goal is proven reachable within the swaps', () => {
+    for (const d of dates(30)) {
+      const p = berry.generate(d);
+      expect(p.board).toHaveLength(BN * BN);
+      expect(p.board.every((k) => k >= 0 && k < BERRIES.length)).toBe(true);
+      expect(matchesOf(p.board).size, d).toBe(0); // no free lines at the start
+      expect(swapsOf(p.board).length, d).toBeGreaterThan(0);
+      expect(p.goal, d).toBeGreaterThanOrEqual(13);
+      // Replay the greedy line with the real rules: every swap is legal and the goal is met within the par.
+      const g = greedy(p); let s = startState(p), reached = 0;
+      for (const sw of g.line) { const r = play(p, s, sw); expect(r, `${d} ${sw}`).not.toBeNull(); s = r!.state; reached++; if (s.got[p.target]! >= p.goal) break; }
+      expect(s.got[p.target]!, d).toBeGreaterThanOrEqual(p.goal);
+      expect(reached, d).toBe(p.best);
+      expect(p.best, d).toBeLessThanOrEqual(p.swaps);
+    }
+  });
+  it('is deterministic per date and differs between dates', () => {
+    expect(berry.generate('2026-11-25')).toEqual(berry.generate('2026-11-25'));
+    expect(berry.generate('2026-11-25')).not.toEqual(berry.generate('2026-11-26'));
+  });
+  it('only allows swaps between neighbours that make a line, then settles with refills from the queue', () => {
+    const p = berry.generate('2026-11-25');
+    expect(adjacent(0, 1)).toBe(true); expect(adjacent(6, 7)).toBe(false); expect(adjacent(0, BN)).toBe(true); expect(adjacent(0, BN + 1)).toBe(false);
+    for (const [a, c] of swapsOf(p.board)) expect(canSwap(p.board, a, c)).toBe(true);
+    expect(play(p, startState(p), [0, 2])).toBeNull();
+    const [sw] = swapsOf(p.board), r = play(p, startState(p), sw!)!;
+    expect(r.state.board.every((k) => k >= 0)).toBe(true);
+    expect(matchesOf(r.state.board).size).toBe(0); // fully settled
+    const picked = r.picked.reduce((a, b) => a + b, 0);
+    expect(picked).toBeGreaterThanOrEqual(3);
+    expect(r.state.ptr.reduce((a, b) => a + b, 0)).toBe(picked); // one new berry per berry picked
+    expect(play(p, startState(p), sw!)).toEqual(r); // same swap, same result for everyone
+  });
+  it('the hint search finds a legal first swap', () => {
+    const p = berry.generate('2026-12-01'), r = search(p, startState(p), 3, 6);
+    expect(r.line.length).toBeGreaterThan(0);
+    expect(canSwap(p.board, ...r.line[0]!)).toBe(true);
+  });
+  it('generates a puzzle quickly', () => {
+    const t = Date.now(); for (const d of dates(10, Date.UTC(2027, 0, 1))) berry.generate(d);
+    expect(Date.now() - t).toBeLessThan(5000);
   });
 });

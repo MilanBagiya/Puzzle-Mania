@@ -20,6 +20,7 @@ export const PACK_META = [
   ['nut-sort', 'Nut Sort', 180, 'autumn'],
   ['vine-links', 'Vine Links', 200, 'spring'],
   ['spot-the-change', 'Spot the Change', 120, 'any'],
+  ['berry-match', 'Berry Match', 180, 'summer'],
 ] as const;
 export type PackKey = (typeof PACK_META)[number][0];
 export const PACK_KEYS: readonly PackKey[] = PACK_META.map((m) => m[0]);

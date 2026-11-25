@@ -1155,3 +1155,18 @@ main.portal{min-height:calc(100dvh - 300px)}
 .spot-hit:focus-visible{outline:3px solid var(--focus); outline-offset:2px}
 .spot-hit:active{background:rgba(35,49,66,.12)}
 @media (hover:hover) and (pointer:fine){ .spot-hit:not(.got):hover{box-shadow:inset 0 0 0 2px rgba(35,49,66,.35)} }
+/* Berry Match: a 7 x 7 board of berries; swipe or tap two neighbours to swap. */
+.bgrid{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; padding:6px; border-radius:16px; background:var(--tile-e1); max-width:var(--bcap); margin:0 auto; touch-action:none}
+.bcell{display:grid; place-items:center; aspect-ratio:1; padding:0; border:0; border-radius:10px; background:var(--tile); cursor:pointer; transition:transform .12s ease, box-shadow .12s ease}
+.bcell svg{width:80%; height:80%; pointer-events:none}
+.bcell.sel{box-shadow:0 0 0 3px var(--pine); transform:scale(.92)}
+.bcell.hint{box-shadow:0 0 0 3px var(--mustard-e1); outline:2px dashed var(--mustard-e1); outline-offset:1px}
+.bcell.fresh{animation:berry-drop .28s ease-out both}
+.bcell:active{transform:scale(.9)}
+.bcell:focus-visible{outline:3px solid var(--focus); outline-offset:2px; z-index:1}
+@media (hover:hover) and (pointer:fine){ .bcell:hover{box-shadow:inset 0 0 0 2px var(--pine)} }
+.bgoal{display:inline-flex; align-items:center; gap:6px}
+.bgoal svg{width:22px; height:22px}
+@keyframes berry-drop{from{transform:translateY(-30%); opacity:.2} to{transform:none; opacity:1}}
+@media (prefers-reduced-motion: reduce){ .bcell{transition:none} .bcell.fresh{animation:none} .bcell.sel{transform:none} }
+@media (max-width:420px){ .bgrid{gap:3px; padding:4px} .bcell{border-radius:8px} }
