@@ -23,6 +23,12 @@ describe('formatTime', () => {
     expect(formatTime(3599)).toBe('59:59');
     expect(formatTime(3600)).toBe('60:00');
   });
+  it('rounds fractions and never goes negative', () => {
+    expect(formatTime(61.5)).toBe('1:02');
+    expect(formatTime(59.6)).toBe('1:00');
+    expect(formatTime(-5)).toBe('0:00');
+    expect(formatTime(Number.NaN)).toBe('0:00');
+  });
 });
 
 describe('isIsoDate', () => {
@@ -34,6 +40,12 @@ describe('isIsoDate', () => {
     for (const s of [null, undefined, '', '2026-1-5', '26-11-25', '2026/11/25', '2026-11-25T00:00', ' 2026-11-25', 'today']) {
       expect(isIsoDate(s)).toBe(false);
     }
+  });
+  it('rejects dates that do not exist on the calendar', () => {
+    for (const s of ['2026-13-01', '2026-00-10', '2026-02-29', '2026-02-30', '2026-04-31', '2026-11-00', '2026-13-45']) {
+      expect(isIsoDate(s)).toBe(false);
+    }
+    expect(isIsoDate('2028-02-29')).toBe(true);
   });
 });
 
