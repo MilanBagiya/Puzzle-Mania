@@ -18,6 +18,23 @@ describe('streaks with Snow Days', () => {
     recordLevel(p, addDays(T, -1), 'morning', r);
     expect(streak(p, T)).toBe(1);
   });
+  it('keeps the streak alive before today is played when yesterday was missed but a Snow Day can bridge it', () => {
+    const p: Progress = { days: {} };
+    [2, 3].forEach((k) => recordLevel(p, addDays(T, -k), 'morning', r)); // played Mon and Sun, missed Tue (yesterday)
+    expect(streakInfo(p, T)).toEqual({ current: 2, best: 2, snowDays: [addDays(T, -1)] });
+    recordLevel(p, T, 'morning', r); // playing today keeps it: same Snow Day, one more day
+    expect(streakInfo(p, T)).toEqual({ current: 3, best: 3, snowDays: [addDays(T, -1)] });
+  });
+  it('a pending Snow Day still follows the rules: one per week, and never for two missed days in a row', () => {
+    const F = '2027-01-29'; // a Friday
+    const p: Progress = { days: {} };
+    [2, 4].forEach((k) => recordLevel(p, addDays(F, -k), 'morning', r)); // played Mon and Wed, missed Tue and Thu (yesterday)
+    // Thursday can only be bridged by this week's Snow Day, so Tuesday stays a break: the live streak is Wednesday alone.
+    expect(streakInfo(p, F)).toEqual({ current: 1, best: 2, snowDays: [addDays(F, -1)] }); // best: Mon + Wed with Tue as that week's Snow Day
+    const two: Progress = { days: {} };
+    recordLevel(two, addDays(F, -3), 'morning', r); // missed yesterday and the day before
+    expect(streak(two, F)).toBe(0);
+  });
   it('forgives one missed day per week as a Snow Day', () => {
     const p: Progress = { days: {} };
     [0, 1, 3, 4].forEach((k) => recordLevel(p, addDays(T, -k), 'morning', r)); // missed T-2 (Monday)

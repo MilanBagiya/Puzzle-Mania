@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { BADGES, earnedBadges, takeNewBadges } from './badges.js';
 import { addDays } from './dates.js';
+import { SEASONS } from './season.js';
 import { DAILY_SET, PACK_KEYS, todaysPicks, type GameKey, type GameResult, type Progress } from './progress.js';
 
 const T = '2027-01-27'; // a Wednesday
@@ -94,17 +95,24 @@ describe('badge conditions (each just below and at its threshold)', () => {
     const mixed = arch(4, false);
     mixed.days[addDays(T, -20)] = { morning: res({ live: true }), noon: res({ live: false }) };
     expect(has(mixed, 'archive-5')).toBe(true);
+    // older saves without the live flag never count as archive play
+    expect(has(prog({ ...arch(4, false).days, [addDays(T, -30)]: { noon: res({ live: undefined }) } }), 'archive-5')).toBe(false);
   });
   it('explorer: 10 different games, on any days', () => {
     const games: GameKey[] = ['morning', 'noon', 'night', 'nests', 'dawn', 'stones', 'rings', ...PACK_KEYS.slice(0, 3)];
     expect(has(prog({ [T]: games.slice(0, 9) }), 'explorer')).toBe(false);
     expect(has(prog({ [T]: games.slice(0, 5), [addDays(T, -1)]: games.slice(5) }), 'explorer')).toBe(true);
   });
-  it("picks: all three of that day's picks", () => {
+  it("picks: all three of that day's picks, as shown for the player's season", () => {
     const picks = todaysPicks(T);
     expect(picks).toHaveLength(3);
     expect(has(prog({ [T]: picks.slice(0, 2) }), 'picks')).toBe(false);
-    expect(has(prog({ [T]: picks }), 'picks')).toBe(true);
+    // The home page leads with a seasonal game, so the picks it shows can differ from the unseasoned list.
+    for (const season of SEASONS) {
+      const shown = todaysPicks(T, 3, season);
+      expect(has(prog({ [T]: shown }), 'picks'), season).toBe(true);
+      expect(has(prog({ [T]: shown.slice(1) }), 'picks'), season).toBe(false);
+    }
   });
   it('arcade: every pack game at least once', () => {
     expect(has(prog({ [T]: PACK_KEYS.slice(1) }), 'arcade')).toBe(false);

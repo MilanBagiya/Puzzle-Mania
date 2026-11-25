@@ -144,23 +144,24 @@ const weekKey = (iso: string): string => { const d = fromIso(iso); d.setDate(d.g
 export interface StreakInfo { current: number; best: number; snowDays: string[] }
 /**
  * Streak with Snow Days: one missed day per calendar week (Mon–Sun) is forgiven automatically,
- * as long as the days on both sides were played. Today never breaks a streak before it ends.
+ * as long as the days on both sides were played. Today never breaks a streak before it ends, and neither
+ * does a missed yesterday that today's play can still bridge with that week's Snow Day.
  */
 export function streakInfo(p: Progress, today: string): StreakInfo {
   const played = (d: string): boolean => Object.values(p.days[d] ?? {}).some((r) => r && r.live !== false);
-  const walk = (end: string): { len: number; snow: string[] } => {
+  // `pending`: the day after `end` (today) is still to play, so a missed `end` may become a Snow Day.
+  const walk = (end: string, pending = false): { len: number; snow: string[] } => {
     let d = end, len = 0;
     const snow: string[] = [], usedWeeks = new Set<string>();
     for (;;) {
       if (played(d)) { len++; d = addDays(d, -1); continue; }
       const prev = addDays(d, -1);
-      if (len > 0 && played(prev) && !usedWeeks.has(weekKey(d))) { usedWeeks.add(weekKey(d)); snow.push(d); d = prev; continue; }
+      if ((len > 0 || (pending && d === end)) && played(prev) && !usedWeeks.has(weekKey(d))) { usedWeeks.add(weekKey(d)); snow.push(d); d = prev; continue; }
       break;
     }
     return { len, snow };
   };
-  const start = played(today) ? today : addDays(today, -1);
-  const cur = walk(start);
+  const cur = played(today) ? walk(today) : walk(addDays(today, -1), true);
   let best = cur.len;
   const dates = Object.keys(p.days).filter(played).sort();
   for (const d of dates) { if (played(addDays(d, 1))) continue; best = Math.max(best, walk(d).len); }

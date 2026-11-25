@@ -1,6 +1,6 @@
 // Badges: earned from progress (nothing extra to store except which ones the player has already seen).
 import { JOURNAL } from './journal.js';
-import { seasonFor } from './season.js';
+import { SEASONS, seasonFor } from './season.js';
 import { DAILY_SET, PACK_KEYS, daysPlayed, playedDay, streakInfo, todaysPicks, trekStars, type GameKey, type Progress } from './progress.js';
 
 export interface Badge { id: string; name: string; desc: string; icon: string; earned: (p: Progress, today: string) => boolean }
@@ -25,9 +25,10 @@ export const BADGES: readonly Badge[] = [
   { id: 'trek-3', name: 'Deep Drifts', desc: 'Finish Trail Trek chapter 3.', icon: '🌨️', earned: (p) => trekDone(p, 45) },
   { id: 'trek-4', name: 'Night Forest', desc: 'Finish all 60 Trail Trek stages.', icon: '🌲', earned: (p) => trekDone(p, 60) },
   { id: 'paws-30', name: 'Paw collector', desc: 'Earn 30 paws in Trail Trek.', icon: '🏅', earned: (p) => trekStars(p) >= 30 },
+  // Archive plays are the results saved with live: false (older saves have no flag, so they never count).
   { id: 'archive-5', name: 'Time traveller', desc: 'Play 5 days from the archive.', icon: '📅', earned: (p) => Object.values(p.days).filter((d) => Object.values(d).some((r) => r?.live === false)).length >= 5 },
   { id: 'explorer', name: 'Explorer', desc: 'Solve 10 different games.', icon: '🧭', earned: (p) => new Set(Object.values(p.days).flatMap((d) => Object.keys(d))).size >= 10 },
-  { id: 'picks', name: 'Pick of the day', desc: 'Solve all three of Today’s picks in one day.', icon: '🎯', earned: (p) => Object.entries(p.days).some(([date, d]) => todaysPicks(date).every((g) => d[g as GameKey])) },
+  { id: 'picks', name: 'Pick of the day', desc: 'Solve all three of Today’s picks in one day.', icon: '🎯', earned: (p) => Object.entries(p.days).some(([date, d]) => SEASONS.some((season) => todaysPicks(date, 3, season).every((g) => d[g as GameKey]))) },
   { id: 'arcade', name: 'Arcade master', desc: 'Solve every game in the pack at least once.', icon: '🏆', earned: (p) => PACK_KEYS.every((g) => Object.values(p.days).some((d) => d[g])) },
   { id: 'four-seasons', name: 'Four seasons', desc: 'Play in spring, summer, autumn and winter.', icon: '🍂', earned: (p) => new Set(Object.keys(p.days).filter((d) => playedDay(p, d)).map((d) => seasonFor(d, p.hemisphere === 'south' ? 'south' : 'north'))).size === 4 },
   { id: 'journal-6', name: 'Naturalist', desc: 'Collect 6 Forest Journal cards.', icon: '📔', earned: (p) => Math.min(daysPlayed(p), JOURNAL.length) >= 6 },
