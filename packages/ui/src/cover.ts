@@ -70,7 +70,9 @@ export function cover(id: string, label = ''): string {
   const sc = SCENES[id]; if (!sc) return '';
   const p = SKY[sc.s], g = `cv-${id}`;
   const night = sc.s === 'night';
-  return `<svg class="cover" viewBox="0 0 320 200" role="img" aria-label="${label || id}" preserveAspectRatio="xMidYMid slice">
+  // Trees only wear snow in winter scenes (--snowcap is read by the i3-tree sprite's snow layers).
+  const snow = sc.s === 'winter' ? '' : ' style="--snowcap:0"';
+  return `<svg class="cover" viewBox="0 0 320 200" role="img" aria-label="${label || id}" preserveAspectRatio="xMidYMid slice"${snow}>
 <defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.a}"></stop><stop offset="1" stop-color="${p.b}"></stop></linearGradient></defs>
 <rect width="320" height="200" fill="url(#${g})"></rect>
 ${night ? [24, 70, 120, 200, 260, 300, 46, 160, 230].map((x, k) => star(x, 18 + ((k * 23) % 60))).join('') : ''}

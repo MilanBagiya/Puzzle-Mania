@@ -29,4 +29,12 @@ describe('cover art', () => {
   it('finds the Track Word letter tiles (so the rule above is really checked)', () => {
     expect(textBottoms(cover('track-word', 'Track Word'))).toHaveLength(5);
   });
+  it('shows snow on trees only in winter scenes', () => {
+    expect(cover('fresh-snow')).not.toContain('--snowcap:0'); // winter
+    expect(cover('nests')).toContain('--snowcap:0');          // spring
+    expect(cover('owl-watch')).toContain('--snowcap:0');      // night
+  });
+  it('returns nothing for an unknown id', () => {
+    expect(cover('no-such-game')).toBe('');
+  });
 });

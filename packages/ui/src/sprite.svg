@@ -17,11 +17,11 @@
 <g class="sway">
 <rect x="28" y="52" width="8" height="13" rx="1" fill="url(#g3-trunk)"></rect>
 <path d="M32 22 L55 56 Q32 63 9 56 Z" fill="url(#g3-pine)"></path>
-<path d="M13 53 Q22 49 32 53 Q42 49 51 53 L53 56 Q32 62 11 56 Z" fill="url(#g3-snow)"></path>
+<path d="M13 53 Q22 49 32 53 Q42 49 51 53 L53 56 Q32 62 11 56 Z" fill="url(#g3-snow)" style="opacity:var(--snowcap,1)"></path>
 <path d="M32 12 L49 41 Q32 46 15 41 Z" fill="url(#g3-pine)"></path>
-<path d="M18 38 Q25 34 32 38 Q39 34 46 38 L48 41 Q32 46 16 41 Z" fill="url(#g3-snow)"></path>
+<path d="M18 38 Q25 34 32 38 Q39 34 46 38 L48 41 Q32 46 16 41 Z" fill="url(#g3-snow)" style="opacity:var(--snowcap,1)"></path>
 <path d="M32 3 L43 25 Q32 29 21 25 Z" fill="url(#g3-pine)"></path>
-<path d="M32 3 L37.5 14 Q34.5 16.5 32 14.5 Q29.5 16.5 26.5 14 Z" fill="url(#g3-snow)"></path>
+<path d="M32 3 L37.5 14 Q34.5 16.5 32 14.5 Q29.5 16.5 26.5 14 Z" fill="url(#g3-snow)" style="opacity:var(--snowcap,1)"></path>
 <path d="M32 3 L21 25 Q24 26 26 26.5 Z" fill="#FFFFFF" fill-opacity="0.18"></path>
 </g>
 </symbol>
