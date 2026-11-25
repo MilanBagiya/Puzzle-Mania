@@ -179,7 +179,9 @@ footer a{color:#fff}
 
 .stats{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; width:100%; max-width:480px}
 
-html,body{overflow-x:hidden}
+/* clip, not hidden: hidden turns body into a scroll container, which breaks the sticky top bar (it scrolled away and
+   left a gap above the fixed sidebar). clip still stops sideways scrolling without creating a scroll container. */
+html,body{overflow-x:clip}
 .game > *, .stack > *{min-width:0}
 @media (max-width:560px){
  .acard{flex-direction:column; justify-content:center; text-align:center; gap:2px; padding:6px 4px; min-height:0}
@@ -884,3 +886,34 @@ footer a{text-decoration-color:rgba(255,255,255,.35)}
 .scene.hub + main.portal{margin-top:0; padding-top:28px}
 .portal-blurb details{background:none; box-shadow:none; padding:0; border:0}
 .portal-blurb details summary{padding:0; background:none; box-shadow:none}
+
+/* ======================================================================
+   Spacing and calm hover (2026-11-25)
+   ====================================================================== */
+/* Board cards draw a 12px paper edge below their box, so the controls under a board looked glued to it (4px).
+   Add the edge depth back so the visible gap is the 16px card rhythm. */
+.boardwrap{margin-bottom:12px}
+/* With overflow-x:clip the window (not body) scrolls, so lock the page behind the open drawer on the root element. */
+:root[data-drawer]{overflow:hidden}
+/* Narrow cards (Daily Set): the category and each detail sit on their own line, so footers had 2 or 3 lines and the
+   divider and Play button jumped between cards. Reserve three lines and pin Play to the bottom so a row lines up. */
+@container (max-width:215px){
+  .tile-info{min-height:calc(3 * 1.2em + 6px); justify-content:flex-start}
+  .tile-foot{align-items:flex-end}
+}
+/* Calm hover: nothing moves, tilts or scales on hover. Hover changes colour, shadow and a ring only.
+   The pressed (:active) state still nudges down, so a tap or click is felt. */
+.btn:hover, .tab:hover, .cell:hover, .day:hover, .nb-cell:hover, .mr-cell:hover, .tstage:hover, button.gcell:hover,
+a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover, .lvrow:hover, .st-cell:hover, .pcard:hover,
+.jump a:hover, .nav a:hover, .logo:hover svg{transform:none !important}
+.tile:hover{--lift:0px; --tilt:0deg}
+.tile:hover .tile-go svg{transform:none}
+@media (hover:hover) and (pointer:fine){
+  .tile:hover{box-shadow:0 0 0 2px var(--pine), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -14px var(--shade-strong)}
+  .tile.done:hover{box-shadow:0 0 0 3px var(--pine-e1), 0 6px 0 var(--edge1), 0 9px 0 var(--edge2), 0 18px 26px -14px var(--shade-strong)}
+  .tile:hover .tile-title{text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:3px; text-decoration-color:var(--pine)}
+  a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover{box-shadow:0 0 0 2px var(--pine), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -14px var(--shade-strong)}
+  .tab:not([aria-selected="true"]):hover, .jump a:hover, .nav a:not([aria-current="page"]):hover{box-shadow:0 0 0 2px var(--pine), 0 4px 0 var(--edge1)}
+  button.cell:not(:disabled):not(.blocked):hover, button.gcell:not(:disabled):hover, button.nb-cell:not(.tree):hover, button.mr-cell:not(.stump):hover,
+  .st-cell:hover, a.day:hover, button.day:hover, .tstage:not(.locked):hover{outline:2px solid var(--pine); outline-offset:-2px; filter:none}
+}
