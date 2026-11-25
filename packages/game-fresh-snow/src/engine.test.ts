@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  LEVELS, checkPaths, countSolutions, generatePuzzle, hint, isBorder, isSolved, legalNextCells,
+  LEVELS, TREK_STAGE_COUNT, checkPaths, countSolutions, generatePuzzle, generateTrekStage, hint, isBorder, isSolved, legalNextCells,
   rawMoves, solve, type LevelId, type PlayerPaths, type Puzzle,
 } from './engine.js';
 
@@ -59,6 +59,16 @@ describe('generator', () => {
   it('the puzzle object contains no solution data', () => {
     const { puzzle } = generatePuzzle('night', '2027-01-18');
     expect(Object.keys(puzzle).sort()).toEqual(['animals', 'covered', 'homes', 'level', 'n', 'prints', 'seed', 'terrain']);
+  });
+  it('never publishes the prints hidden under a drift (daily levels and Trek stages)', () => {
+    const puzzles = [
+      ...LEVEL_IDS.flatMap((l) => Array.from({ length: 40 }, (_, d) => generatePuzzle(l, `2027-01-${String(d + 1).padStart(2, '0')}`).puzzle)),
+      ...Array.from({ length: TREK_STAGE_COUNT }, (_, s) => generateTrekStage(s + 1).puzzle),
+    ];
+    expect(puzzles.reduce((n, p) => n + p.covered.length, 0)).toBeGreaterThan(500); // the check is not vacuous
+    for (const p of puzzles) {
+      for (const i of p.covered) expect(p.prints[i], `${p.seed}/${p.level} cell ${i}`).toEqual([]);
+    }
   });
   it.each(LEVEL_IDS)('%s: 300 puzzles all have exactly 1 solution, and it passes the validator', (level) => {
     for (let d = 0; d < 300; d++) {

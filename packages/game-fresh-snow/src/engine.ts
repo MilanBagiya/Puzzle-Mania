@@ -377,7 +377,8 @@ export function generateWithProfile(L: LevelProfile, rngKey: string, level: Leve
       seed,
       terrain: d.terrain,
       homes: d.homes,
-      prints: d.prints,
+      // Prints under a drift are part of the answer: the published puzzle never carries them.
+      prints: d.prints.map((cell, i) => (covered.has(i) ? [] : cell)),
       animals: d.animals,
       covered: [...covered].sort((x, y) => x - y),
     },
