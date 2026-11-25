@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import nutSort, { CAP, KINDS, canMove, isSorted, solveSort } from '../games/nut-sort.js';
+import vineLinks, { solveVines } from '../games/vine-links.js';
 
 // Real seeds are 'YYYY-MM-DD' dates.
 const dates = (n: number, from = Date.UTC(2026, 0, 1)): string[] => Array.from({ length: n }, (_, d) => new Date(from + d * 86_400_000 * 5).toISOString().slice(0, 10));
@@ -34,5 +35,32 @@ describe('Nut Sort', () => {
   it('generates a puzzle in well under a second', () => {
     const t = Date.now(); for (const d of dates(20, Date.UTC(2027, 0, 1))) nutSort.generate(d);
     expect(Date.now() - t).toBeLessThan(3000);
+  });
+});
+
+describe('Vine Links', () => {
+  it('generates 40 days of puzzles, each with exactly one solution that covers every square', () => {
+    for (const d of dates(40)) {
+      const p = vineLinks.generate(d);
+      const ends = p.pairs.flat();
+      expect(new Set(ends).size, d).toBe(ends.length); // no square holds two flowers
+      const sols = solveVines(p, 3);
+      expect(sols, d).toHaveLength(1);
+      const cells = sols[0]!.flat();
+      expect(new Set(cells).size, d).toBe(p.n * p.n); // every square covered exactly once
+      expect(cells.length, d).toBe(p.n * p.n);
+      sols[0]!.forEach((path, c) => { expect([path[0], path[path.length - 1]].sort(), d).toEqual([...p.pairs[c]!].sort()); });
+    }
+  });
+  it('the puzzle file holds only the flowers (no vines)', () => {
+    expect(Object.keys(vineLinks.generate('2026-11-25')).sort()).toEqual(['n', 'pairs', 'seed']);
+  });
+  it('the solver rejects a meadow with two answers', () => {
+    // 2x... in a 3x3 with one pair in opposite corners and nothing else, many snake paths cover it.
+    expect(solveVines({ seed: 'x', n: 3, pairs: [[0, 8]] }, 2).length).toBe(2);
+  });
+  it('generates quickly', () => {
+    const t = Date.now(); for (const d of dates(20, Date.UTC(2027, 0, 1))) vineLinks.generate(d);
+    expect(Date.now() - t).toBeLessThan(5000);
   });
 });

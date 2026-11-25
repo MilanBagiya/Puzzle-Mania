@@ -18,6 +18,7 @@ export const PACK_META = [
   ['who-ate', 'Who Ate the Berries?', 300, 'any'], ['freshest-track', 'Freshest Track', 150, 'winter'], ['egg-match', 'Egg Match', 180, 'spring'], ['track-word', 'Track Word', 180, 'any'],
   ['whose-print', 'Whose Print?', 90, 'any'], ['feather-pairs', 'Feather Pairs', 120, 'spring'], ['leaf-pile', 'Leaf Pile', 150, 'autumn'], ['who-was-here', 'Who Was Here?', 90, 'any'],
   ['nut-sort', 'Nut Sort', 180, 'autumn'],
+  ['vine-links', 'Vine Links', 200, 'spring'],
 ] as const;
 export type PackKey = (typeof PACK_META)[number][0];
 export const PACK_KEYS: readonly PackKey[] = PACK_META.map((m) => m[0]);
