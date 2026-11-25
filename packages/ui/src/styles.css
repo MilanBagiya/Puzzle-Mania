@@ -515,15 +515,25 @@ section[id]{scroll-margin-top:90px}
 .optgroup{display:flex; flex-direction:column; gap:14px; padding-top:16px; border-top:2px solid var(--paper-line)}
 .optgroup-title{margin:0; font-family:var(--font-ui); font-size:19px; font-weight:800}
 .optrow{display:flex; flex-direction:column; gap:8px}
+.optrow[hidden]{display:none}
 .optlabel{font-weight:800; font-size:15px}
 .optlabel small{font-weight:700; font-size:13px; margin-left:4px}
 .optpair{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px}
-.opts .seg{gap:8px}
+/* Choice rows are one inset track; the chosen option is a raised pine chip (same green as Done). */
+.opts .seg{gap:4px; padding:4px; border-radius:14px; background:var(--soft); box-shadow:inset 0 1px 2px rgba(20,30,50,.1), inset 0 0 0 1px var(--soft-e)}
 .opts .seg5{grid-template-columns:repeat(5,minmax(0,1fr))}
 .opts .seg2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.opts .tab{min-height:42px; font-size:14px; padding:4px 2px}
-.opts .tab[aria-selected="true"]{transform:none; box-shadow:0 3px 0 var(--coral-e1)}
-.optrow.dim{opacity:.55}
+.opts .tab{min-height:40px; font-size:14px; padding:4px 2px; border-radius:10px; background:transparent; color:var(--ink-soft); box-shadow:none; transform:none; transition:background-color .16s ease, color .16s ease, box-shadow .16s ease}
+.opts .tab:hover, .opts .tab:not([aria-selected="true"]):hover{transform:none; box-shadow:none; background:var(--paper); color:var(--ink)}
+.opts .tab[aria-selected="true"], .opts .tab[aria-selected="true"]:hover{transform:none; background:var(--pine); color:var(--on-pine); box-shadow:0 2px 0 var(--pine-e1), 0 4px 10px -4px rgba(23,67,51,.45)}
+.opts .tab:focus-visible{outline:3px solid var(--focus); outline-offset:2px}
+.optlabel small{color:var(--ink-soft)}
+.opts .btn-erase{background:transparent; color:var(--coral-e2); box-shadow:inset 0 0 0 2px var(--wrong-e1); display:inline-flex; align-items:center; justify-content:center; gap:8px}
+.opts .btn-erase:hover{background:var(--wrong); transform:none}
+:root[data-theme="dark"] .opts .btn-erase{color:#FFAA91}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .opts .btn-erase{color:#FFAA91} }
+.opts .btn-erase.btn-c{background:var(--coral); color:#233142; box-shadow:0 3px 0 var(--coral-e1)}
+.opts .iconbtn svg{display:block; margin:auto}
 @media (max-width:420px){ .opts .seg5 .tab{font-size:12px} }
 
 /* ======================================================================

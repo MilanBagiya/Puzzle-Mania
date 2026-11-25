@@ -29,8 +29,8 @@ export function applySeason(): void {
   document.querySelectorAll<HTMLElement>('[data-act="hemi"]').forEach((b) => { const on = String(b.dataset.v === (p.hemisphere ?? 'auto')); b.setAttribute('aria-checked', on); b.setAttribute('aria-selected', on); });
   const auto = !p.season || p.season === 'auto';
   const now = document.getElementById('season-now'); if (now) now.textContent = auto ? `· showing ${SEASON_INFO[s].name.toLowerCase()}` : '';
-  const row = document.getElementById('hemi-row'); if (row) row.classList.toggle('dim', !auto);
-  const note = document.getElementById('hemi-note'); if (note) note.textContent = auto ? '· used to pick your season' : '· only used when Season is Auto';
+  const row = document.getElementById('hemi-row'); if (row) row.hidden = !auto; // only matters while Season is Auto
+  const note = document.getElementById('hemi-note'); if (note) note.textContent = '· used to pick your season';
   document.dispatchEvent(new CustomEvent('wd:season', { detail: s }));
 }
 const openDialog = (id: string): void => { const d = document.getElementById(id) as HTMLDialogElement | null; d?.showModal?.(); };

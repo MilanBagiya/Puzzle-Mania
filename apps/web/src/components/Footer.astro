@@ -18,7 +18,7 @@ const hemis = [['auto', 'Auto-detect'], ['north', 'North'], ['south', 'South']] 
 </footer>
 <dialog id="optsdlg" aria-labelledby="optstitle">
   <div class="dlg opts">
-    <div class="dlg-head"><h2 class="h-m" id="optstitle">Options</h2><button class="btn btn-w iconbtn" data-act="closedlg" aria-label="Close">✕</button></div>
+    <div class="dlg-head"><h2 class="h-m" id="optstitle">Options</h2><button class="btn btn-w iconbtn" data-act="closedlg" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
 
     <section class="optgroup" aria-labelledby="opt-look">
       <h3 id="opt-look" class="optgroup-title">Look</h3>
@@ -53,7 +53,7 @@ const hemis = [['auto', 'Auto-detect'], ['north', 'North'], ['south', 'South']] 
     <section class="optgroup" aria-labelledby="opt-data">
       <h3 id="opt-data" class="optgroup-title">Your progress</h3>
       <p class="muted" style="margin:0; font-size:14px">Streaks, solved puzzles, Journal cards and the tutorial are saved in this browser only. Erasing them can’t be undone.</p>
-      <button class="btn btn-w" data-act="reset" id="resetbtn">Erase my progress</button>
+      <button class="btn btn-w btn-erase" data-act="reset" id="resetbtn">Erase my progress</button>
     </section>
 
     <button class="btn btn-p" data-act="closedlg">Done</button>
