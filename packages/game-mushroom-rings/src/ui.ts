@@ -40,7 +40,7 @@ export function createRingsGame(root: HTMLElement, opts: RingsOptions): { destro
       guesses.push(i);
       if (candidates(p).includes(i)) { done = true; secs = Math.round((Date.now() - t0) / 1000); ghost = new Set(); render(); tick(); opts.onSolved?.({ time: secs, hints, guesses: guesses.length }); return; }
       ghost = ringOf(n, stumps, i, p.nights);
-      if (guesses.length >= 3) { failed = true; ghost = new Set(); render(); opts.onFailed?.(); return; }
+      if (guesses.length >= 3) { failed = true; secs = Math.round((Date.now() - t0) / 1000); ghost = new Set(); render(); tick(); opts.onFailed?.(); return; } // the clock stops on a loss too
       msg = 'Not there. The dashed squares show the ring that spot would have made. Compare it with the real mushrooms.'; kind = 'bad';
     } else if (t.dataset.mrAct === 'hint') {
       const hidden = p.leaves.filter((x) => !revealed.has(x));
@@ -49,7 +49,7 @@ export function createRingsGame(root: HTMLElement, opts: RingsOptions): { destro
     } else if (t.dataset.mrAct === 'clear') ghost = new Set();
     render();
   }
-  function tick(): void { if (!opts.timerEl) return; const s = done ? secs : Math.round((Date.now() - t0) / 1000); opts.timerEl.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
+  function tick(): void { if (!opts.timerEl) return; const s = done || failed ? secs : Math.round((Date.now() - t0) / 1000); opts.timerEl.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
   root.addEventListener('click', onClick);
   const iv = window.setInterval(tick, 1000);
   render(); tick();
