@@ -1,6 +1,7 @@
 // "Game juice": sounds, little pops on taps, and a proper celebration when a puzzle is solved.
 // Works for every game without changing the games: it watches taps, the coach message and the result panel.
 import { buzz, play } from './sound';
+import { BOARD_ROOT, selectorFor } from './focus';
 
 const reduced = (): boolean => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const TAP = '[data-fs],[data-g],[data-nb],[data-nb-act],[data-st],[data-st-act],[data-mr],[data-mr-act],[data-in],[data-out],[data-check],[data-hint],[data-clear],#tut [data-i]';
@@ -13,21 +14,13 @@ function hop(el: Element | null): void {
   if (!el || reduced() || !(el as HTMLElement).animate) return;
   (el as HTMLElement).animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-14px)' }, { transform: 'translateY(0)' }, { transform: 'translateY(-5px)' }, { transform: 'translateY(0)' }], { duration: 520, easing: 'ease-out' });
 }
-/** Selector that finds the "same" button again after the game re-draws its board. */
-function selectorFor(el: HTMLElement): string | null {
-  for (const a of ['data-fs', 'data-g', 'data-nb', 'data-st', 'data-mr', 'data-in', 'data-out', 'data-i']) {
-    const v = el.getAttribute(a);
-    if (v !== null) { const extra = a === 'data-fs' && el.getAttribute('data-i') ? `[data-i="${el.getAttribute('data-i')}"]` : ''; return `[${a}="${CSS.escape(v)}"]${extra}`; }
-  }
-  return null;
-}
 const homes = (): number => document.querySelectorAll('.acard .home').length;
 const coachBad = (root: Element): boolean => !!root.querySelector('.coach.bad');
 
 document.addEventListener('click', (e) => {
   const el = (e.target as HTMLElement).closest<HTMLElement>(TAP);
   if (!el || el.hasAttribute('disabled')) return;
-  const root = el.closest('[id$="-game"], #dc, #tut, #hx') ?? document.body;
+  const root = el.closest(BOARD_ROOT) ?? document.body;
   const sel = selectorFor(el), act = `${el.getAttribute('data-g') ?? ''}${el.getAttribute('data-fs') ?? ''}${el.getAttribute('data-nb-act') ?? ''}${el.getAttribute('data-st-act') ?? ''}${el.getAttribute('data-mr-act') ?? ''}${el.hasAttribute('data-hint') ? 'hint' : ''}`;
   const snowy = el.getAttribute('data-fs') === 'cell' || !!el.closest('#tut');
   const homesBefore = homes(), badBefore = coachBad(root);
