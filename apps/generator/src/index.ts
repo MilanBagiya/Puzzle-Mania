@@ -3,7 +3,7 @@
 // Fresh Snow, Nests and Mushroom Rings have exactly one answer; Dawn Chorus exactly one order;
 // Stepping Stones is solvable in 6–10 jumps. Also writes the 60 Trail Trek stages.
 // Usage: tsx src/index.ts --back 60 --days 120 --out ../web/public/puzzles [--from 2027-01-18]
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { addDays, todayIso, isIsoDate, LEVELS } from '@wild-daily/core';
 import { countSolutions, generatePuzzle, generateTrekStage, TREK_STAGE_COUNT } from '@wild-daily/game-fresh-snow';
@@ -26,6 +26,9 @@ const write = (rel: string, data: unknown): void => { const f = join(out, rel); 
 const fail = (msg: string): never => { throw new Error(msg); };
 
 const t0 = Date.now();
+// Start clean: files from days that left the window (or from older generator versions) must not linger.
+// Only the folders this script writes are removed, never anything else under --out.
+for (const owned of ['fresh-snow', 'nests', 'dawn', 'stones', 'rings', 'pack', 'trek', 'index.json']) rmSync(join(out, owned), { recursive: true, force: true });
 let files = 0;
 for (let k = 0; k < back + days; k++) {
   const date = addDays(from, k);
