@@ -24,6 +24,19 @@ export function bestRoute(p: Pick<MoosePuzzle, 'n' | 'trees' | 'lake'>, start: n
   }
   return null;
 }
+/**
+ * A hint for the moose's slides so far: the direction to slide next, or, when the lake can no longer be reached
+ * from here, how many slides to undo to get back to a square that can still reach it.
+ */
+export function mooseHint(p: Pick<MoosePuzzle, 'n' | 'trees' | 'lake'>, path: readonly number[]): { dir: number } | { undo: number } | null {
+  for (let back = 0; back < path.length; back++) {
+    const at = path[path.length - 1 - back]!, r = bestRoute(p, at);
+    if (!r || r[1] === undefined) continue;
+    if (back) return { undo: back };
+    return { dir: [0, 1, 2, 3].find((x) => slide(p, at, x) === r[1])! };
+  }
+  return null;
+}
 export function generate(seed: string): MoosePuzzle {
   const rng = rngFrom('moose:' + seed), n = 8;
   for (let a = 0; a < 3000; a++) {
@@ -57,11 +70,12 @@ const def: GameDef<MoosePuzzle> = {
         const j = slide(p, at, Number(arg));
         if (j === at) { msg = 'Bump! A tree or the edge is right there.'; kind = 'bad'; render(); mover.shake('moose'); return; }
         else { at = j; path.push(j); if (at === p.lake) { done = true; const time = t.stop(); render(); const moves = path.length - 1; ctx.onSolved({ time, hints, moves, stars: hints === 0 && moves === p.best ? 3 : moves <= p.best + 2 ? 2 : 1 }); return; } }
-      } else if (act === 'undo') { path.pop(); at = path[path.length - 1]!; }
+      } else if (act === 'undo') { if (path.length > 1) { path.pop(); at = path[path.length - 1]!; } } // never undo past the start
       else if (act === 'restart') { at = p.start; path = [p.start]; }
       else if (act === 'hint') {
-        const r = bestRoute(p, at);
-        if (r && r[1] !== undefined) { const d = [0, 1, 2, 3].find((x) => slide(p, at, x) === r[1])!; hints++; msg = `Hint: slide ${D[d]![2]}.`; }
+        const h = mooseHint(p, path);
+        if (h && 'dir' in h) { hints++; msg = `Hint: slide ${D[h.dir]![2]}.`; }
+        else if (h) { hints++; msg = `The lake can’t be reached from here. Undo ${h.undo === 1 ? 'your last slide' : `${h.undo} slides`}, then ask again.`; kind = 'bad'; }
       }
       render();
     });

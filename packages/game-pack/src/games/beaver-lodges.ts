@@ -95,6 +95,7 @@ const def: GameDef<LodgePuzzle> = {
         else rects.push(r);
       } else if (act === 'clear') { rects = []; first = null; }
       else if (act === 'hint') {
+        first = null; // a half-tapped corner would otherwise pair with the next tap
         const sol = solveLodges(p, 1)[0] ?? [];
         rects = rects.filter((r) => sol.some((s) => s.join() === r.join()));
         const add = sol.find((s) => !rects.some((r) => r.join() === s.join()));

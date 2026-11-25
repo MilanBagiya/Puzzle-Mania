@@ -31,7 +31,7 @@ ${done || lost ? '' : `<div class="answers">${range(CAST.length).map((k) => btn(
     const off = onAct(root, (act, arg) => {
       if (done || lost || act !== 'guess') return;
       const k = Number(arg);
-      if (k === ans) { done = true; const time = t.stop(); render(); const g = wrong.length + 1; ctx.onSolved({ time, hints: 0, moves: g, stars: g <= 2 ? 3 : g <= 4 ? 2 : 1 }); return; }
+      if (k === ans) { done = true; const time = t.stop(); render(); const g = wrong.length + 1; ctx.onSolved({ time, hints: 0, moves: g, score: { value: String(g), label: g === 1 ? 'guess' : 'guesses' }, stars: g <= 2 ? 3 : g <= 4 ? 2 : 1 }); return; }
       wrong.push(k); if (wrong.length >= 6) { lost = true; t.stop(); }
       render();
     });

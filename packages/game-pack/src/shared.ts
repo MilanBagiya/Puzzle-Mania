@@ -38,7 +38,8 @@ export function nbHex(n: number, i: number): number[] {
 export const cellLabel = (n: number, i: number): string => `Row ${rowOf(n, i) + 1}, column ${colOf(n, i) + 1}`;
 
 // ---------- game contract ----------
-export interface Solved { time: number; hints: number; moves?: number; stars?: number }
+/** score: what the result screen shows for games where "moves" is the wrong word (e.g. 4 of 5 correct, 3 guesses). */
+export interface Solved { time: number; hints: number; moves?: number; stars?: number; score?: { value: string; label: string } }
 export interface Ctx { timerEl?: HTMLElement | null; onSolved: (s: Solved) => void }
 export interface Mounted { destroy(): void }
 export interface GameDef<P> { id: string; generate: (seed: string) => P; mount: (root: HTMLElement, p: P, ctx: Ctx) => Mounted }

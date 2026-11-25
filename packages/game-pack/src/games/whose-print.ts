@@ -41,7 +41,7 @@ const def: GameDef<QuizPuzzle> = {
     const off = onAct(root, (act, arg) => {
       if (done || act !== 'ans') return;
       picked.push(Number(arg));
-      if (picked.length === 5) { done = true; const time = t.stop(); render(); const right = picked.filter((x, i) => x === ans[i]).length; ctx.onSolved({ time, hints: 0, moves: right, stars: right === 5 ? 3 : right >= 3 ? 2 : 1 }); return; }
+      if (picked.length === 5) { done = true; const time = t.stop(); render(); const right = picked.filter((x, i) => x === ans[i]).length; ctx.onSolved({ time, hints: 0, score: { value: `${right} of 5`, label: 'correct' }, stars: right === 5 ? 3 : right >= 3 ? 2 : 1 }); return; }
       render();
     });
     render();

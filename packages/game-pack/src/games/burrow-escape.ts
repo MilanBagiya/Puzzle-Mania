@@ -27,8 +27,8 @@ export function movesOf(n: number, ps: Piece[]): { k: number; to: Piece }[] {
 }
 export function solveBurrow(p: BurrowPuzzle | { n: number; pieces: Piece[] }, cap = 30000): Piece[][] | null {
   const { n } = p, start = p.pieces, prev = new Map<string, string | null>([[key(start), null]]), states = new Map<string, Piece[]>([[key(start), start]]), q = [start];
-  while (q.length && prev.size < cap) {
-    const s = q.shift()!;
+  for (let head = 0; head < q.length && prev.size < cap; head++) { // index, not shift(): shift is slow on long queues
+    const s = q[head]!;
     if (s[0]!.c + s[0]!.len === n) { const out: Piece[][] = []; let k: string | null = key(s); while (k) { out.unshift(states.get(k)!); k = prev.get(k) ?? null; } return out; }
     for (const m of movesOf(n, s)) { const ns = s.map((x, i) => (i === m.k ? m.to : x)); const kk = key(ns); if (!prev.has(kk)) { prev.set(kk, key(s)); states.set(kk, ns); q.push(ns); } }
   }
@@ -55,6 +55,8 @@ export function generate(seed: string): BurrowPuzzle {
   }
   throw new Error('burrow-escape: generation failed for ' + seed);
 }
+/** Hints search much further than the generator: a scrambled board can need far more states than a fresh one. */
+export const HINT_CAP = 400_000;
 const LOGS = ['#C9915E', '#B07A51', '#D9AE7E', '#A86E43', '#C08A5A', '#9A6A42'];
 const def: GameDef<BurrowPuzzle> = {
   id: 'burrow-escape', generate,
@@ -94,11 +96,12 @@ const def: GameDef<BurrowPuzzle> = {
         if (g[i]! >= 0) { sel = g[i]!; render(); return; }
         const m = movesOf(n, ps).find((x) => x.k === sel && (x.to.horiz ? Math.floor(i / n) === x.to.r && i % n >= x.to.c && i % n < x.to.c + x.to.len : i % n === x.to.c && Math.floor(i / n) >= x.to.r && Math.floor(i / n) < x.to.r + x.to.len) && ((x.to.horiz && (i % n === x.to.c || i % n === x.to.c + x.to.len - 1)) || (!x.to.horiz && (Math.floor(i / n) === x.to.r || Math.floor(i / n) === x.to.r + x.to.len - 1))));
         if (m) { if (apply(m.k, m.to)) return; } else { msg = 'That piece can’t slide there. Pieces only move along their length.'; kind = 'bad'; }
-      } else if (act === 'undo') { const h = hist.pop(); if (h) { ps = h; moves++; } }
-      else if (act === 'restart') { ps = p.pieces.map((x) => ({ ...x })); hist = []; }
+      } else if (act === 'undo') { const h = hist.pop(); if (h) { ps = h; moves = hist.length; } } // undo takes the move back
+      else if (act === 'restart') { ps = p.pieces.map((x) => ({ ...x })); hist = []; moves = 0; }
       else if (act === 'hint') {
-        const sol = solveBurrow({ n, pieces: ps });
+        const sol = solveBurrow({ n, pieces: ps }, HINT_CAP);
         if (sol && sol[1]) { const k = sol[1].findIndex((x, i) => x.r !== ps[i]!.r || x.c !== ps[i]!.c); hints++; sel = k; if (apply(k, sol[1][k]!)) return; msg = 'Hint: one piece slid for you.'; }
+        else { msg = 'This position is too tangled for a hint: try Undo or Restart.'; kind = 'bad'; }
       }
       render();
     });

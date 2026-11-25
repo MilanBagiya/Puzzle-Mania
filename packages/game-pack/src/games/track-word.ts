@@ -52,7 +52,7 @@ const def: GameDef<WordPuzzle> = {
       else if (act === 'enter') {
         if (cur.length < 5) { msg = 'Five letters, please.'; kind = 'bad'; }
         else if (!WORDS.some((x) => x.w === cur)) { msg = `“${cur}” isn’t on our animal list. Try another animal.`; kind = 'bad'; }
-        else { rows.push(cur); const won = cur === ans; cur = ''; if (won) { done = true; const time = t.stop(); render(); const n = rows.length; ctx.onSolved({ time, hints, moves: n, stars: n <= 3 && !hints ? 3 : n <= 5 ? 2 : 1 }); return; } if (rows.length >= 6) { lost = true; t.stop(); } }
+        else { rows.push(cur); const won = cur === ans; cur = ''; if (won) { done = true; const time = t.stop(); render(); const n = rows.length; ctx.onSolved({ time, hints, moves: n, score: { value: String(n), label: n === 1 ? 'guess' : 'guesses' }, stars: n <= 3 && !hints ? 3 : n <= 5 ? 2 : 1 }); return; } if (rows.length >= 6) { lost = true; t.stop(); } }
       }
       render();
     });

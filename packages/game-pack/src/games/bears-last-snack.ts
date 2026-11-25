@@ -31,6 +31,13 @@ export function checkRoute(p: BearPuzzle, route: number[]): boolean {
 export function solveBear(p: BearPuzzle, prefix: number[]): number[] | null {
   const N = p.n * p.n, path = prefix.slice(), seen = new Set(path), want = new Map(Object.entries(p.given).map(([c, k]) => [k, Number(c)]));
   const cellStep = new Map(Object.entries(p.given).map(([c, k]) => [Number(c), k]));
+  // The route so far must keep the rules too (it used to be trusted, so a hint could extend a route that can never win).
+  if (path[0] !== p.start || seen.size !== path.length) return null;
+  for (let k = 0; k < path.length; k++) {
+    const c = path[k]!, step = k + 1;
+    if (k && !nb4(p.n, path[k - 1]!).includes(c)) return null;
+    if ((want.has(step) && want.get(step) !== c) || (cellStep.has(c) && cellStep.get(c) !== step) || (c === p.cave && step !== N)) return null;
+  }
   const rec = (): boolean => {
     if (path.length === N) return path[N - 1] === p.cave;
     const at = path[path.length - 1]!, step = path.length + 1;
@@ -44,6 +51,14 @@ export function solveBear(p: BearPuzzle, prefix: number[]): number[] | null {
     return false;
   };
   return rec() ? path : null;
+}
+/** The hint: keep the longest start of the player's route that can still win, then add the next step. */
+export function bearHint(p: BearPuzzle, route: readonly number[]): number[] | null {
+  for (let keep = route.length; keep >= 1; keep--) {
+    const sol = solveBear(p, route.slice(0, keep));
+    if (sol) return sol.slice(0, keep + 1);
+  }
+  return null;
 }
 const def: GameDef<BearPuzzle> = {
   id: 'bears-last-snack', generate,
@@ -78,9 +93,8 @@ const def: GameDef<BearPuzzle> = {
       } else if (act === 'undo') route.pop();
       else if (act === 'restart') route = [p.start];
       else if (act === 'hint') {
-        let keep = route.length, sol = solveBear(p, route);
-        while (!sol && keep > 1) { keep--; sol = solveBear(p, route.slice(0, keep)); }
-        if (sol) { route = sol.slice(0, keep + 1); hints++; msg = keep < route.length - 1 ? 'Hint: your route went wrong earlier, so it was shortened and the next step added.' : 'Hint: the next step is added.'; if (route.length === N && checkRoute(p, route)) { done = true; const time = t.stop(); render(); ctx.onSolved({ time, hints }); return; } }
+        const had = route.length, next = bearHint(p, route);
+        if (next) { route = next; hints++; msg = route.length <= had ? 'Hint: your route went wrong earlier, so it was shortened and the next step added.' : 'Hint: the next step is added.'; if (route.length === N && checkRoute(p, route)) { done = true; const time = t.stop(); render(); ctx.onSolved({ time, hints }); return; } }
       }
       render();
     });

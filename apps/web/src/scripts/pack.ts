@@ -46,7 +46,7 @@ else Promise.all([loader(), loadPuzzle<unknown>(`/puzzles/pack/${id}/${date}.jso
         el: document.getElementById('pk-result') as HTMLElement, game: key, date, rec,
         title: 'Solved!', subtitle: `${GAMES[key].name}, ${formatDate(date)}`,
         art: character('fox', 'happy', 90, 'cheer') + character('rabbit', 'happy', 84, 'cheer'),
-        stats: [{ value: formatTime(s.time), label: 'time', tint: 'var(--fox-t)' }, s.moves !== undefined ? { value: String(s.moves), label: 'moves', tint: 'var(--rabbit-t)' } : { value: String(s.hints), label: s.hints === 1 ? 'hint' : 'hints', tint: 'var(--rabbit-t)' }, { value: String(rec.streak), label: 'day streak', tint: 'var(--deer-t)' }],
+        stats: [{ value: formatTime(s.time), label: 'time', tint: 'var(--fox-t)' }, s.score ? { ...s.score, tint: 'var(--rabbit-t)' } : s.moves !== undefined ? { value: String(s.moves), label: 'moves', tint: 'var(--rabbit-t)' } : { value: String(s.hints), label: s.hints === 1 ? 'hint' : 'hints', tint: 'var(--rabbit-t)' }, { value: String(rec.streak), label: 'day streak', tint: 'var(--deer-t)' }],
         share: shareLine(GAMES[key].name, date, rec.result),
       }), 700);
     },

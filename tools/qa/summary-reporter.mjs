@@ -3,9 +3,9 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { QA_DIR } from './lib/site.mjs';
 
-const ORDER = ['links', 'overflow', 'clipping', 'overlap', 'footer-gap', 'contrast', 'console', 'smoke-play', 'seo', 'focus', 'hover', 'midnight'];
+const ORDER = ['links', 'overflow', 'clipping', 'overlap', 'footer-gap', 'contrast', 'console', 'smoke-play', 'seo', 'focus', 'hover', 'midnight', 'game-controls'];
 const TITLE = {
-  hover: '10 Hover keeps text AA', midnight: '11 New day offered at midnight',
+  hover: '10 Hover keeps text AA', midnight: '11 New day offered at midnight', 'game-controls': '12 Game controls behave',
   links: '1 Links', overflow: '2 Overflow (360/390/1280)', clipping: '2 Clipped button/tab/pill text', overlap: '3 Overlap',
   'footer-gap': '4 Footer gap >= 24px', contrast: '5 Contrast AA (light+dark)', console: '6 Console errors', 'smoke-play': '7 Smoke play', seo: '8 Sitemap and robots', focus: '9 Keyboard focus on boards',
 };

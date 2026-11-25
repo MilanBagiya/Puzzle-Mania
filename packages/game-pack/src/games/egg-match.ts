@@ -40,7 +40,7 @@ ${tools(btn('back', 'Delete', 'btn-w', !cur.length), btn('guess', 'Guess', 'btn-
       else if (act === 'back') cur.pop();
       else if (act === 'guess' && cur.length === 4) {
         const s = score(ans, cur); guesses.push({ g: cur, s }); cur = [];
-        if (s.exact === 4) { done = true; const time = t.stop(); render(); const n = guesses.length; ctx.onSolved({ time, hints: 0, moves: n, stars: n <= 3 ? 3 : n <= 5 ? 2 : 1 }); return; }
+        if (s.exact === 4) { done = true; const time = t.stop(); render(); const n = guesses.length; ctx.onSolved({ time, hints: 0, moves: n, score: { value: String(n), label: n === 1 ? 'guess' : 'guesses' }, stars: n <= 3 ? 3 : n <= 5 ? 2 : 1 }); return; }
         if (guesses.length >= 6) { lost = true; t.stop(); }
       }
       render();

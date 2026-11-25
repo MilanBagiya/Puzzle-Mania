@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest';
 import nutSort, { CAP, KINDS, canMove, isSorted, solveSort } from '../games/nut-sort.js';
 import vineLinks, { solveVines } from '../games/vine-links.js';
 import spot, { THINGS, changesOf, same } from '../games/spot-the-change.js';
+import burrow, { HINT_CAP, movesOf as burrowMoves, solveBurrow } from '../games/burrow-escape.js';
+import { nb4, rngFrom } from '../shared.js';
+import moose, { bestRoute, mooseHint, slide as mooseSlide } from '../games/moose-crossing.js';
+import bear, { bearHint, checkRoute, solveBear } from '../games/bears-last-snack.js';
 import berry, { BERRIES, N as BN, adjacent, canSwap, greedy, matchesOf, play, search, startState, swapsOf } from '../games/berry-match.js';
 
 // Real seeds are 'YYYY-MM-DD' dates.
@@ -134,5 +138,93 @@ describe('Berry Match', () => {
   it('generates a puzzle quickly', () => {
     const t = Date.now(); for (const d of dates(10, Date.UTC(2027, 0, 1))) berry.generate(d);
     expect(Date.now() - t).toBeLessThan(5000);
+  });
+});
+
+describe('Burrow Escape hints', () => {
+  // Boards scrambled far from the start used to need more search than the hint allowed, so Hint did nothing.
+  it('finds a hint from deeply scrambled boards that the old 30k-state cap could not solve', () => {
+    for (const [seed, steps] of [['2026-02-11', 60], ['2026-10-18', 300], ['2026-11-21', 300]] as const) {
+      const p = burrow.generate(seed), rng = rngFrom('y' + seed);
+      // Random legal slides (never the winning one): a 60-slide scramble, then a fresh 300-slide one from the same stream.
+      const scramble = (n: number): typeof p.pieces => {
+        let ps = p.pieces;
+        for (let k = 0; k < n; k++) {
+          const ms = burrowMoves(p.n, ps).filter((m) => m.to.c + m.to.len < p.n || m.k !== 0);
+          const m = ms[Math.floor(rng() * ms.length)]!; ps = ps.map((x, i) => (i === m.k ? m.to : x));
+        }
+        return ps;
+      };
+      let ps = scramble(60);
+      if (steps === 300) ps = scramble(300);
+      expect(solveBurrow({ n: p.n, pieces: ps }), `${seed} old cap`).toBeNull();
+      const sol = solveBurrow({ n: p.n, pieces: ps }, HINT_CAP);
+      expect(sol, seed).not.toBeNull();
+      expect(sol!.at(-1)![0]!.c + 2, seed).toBe(p.n); // the rabbit reaches the exit
+    }
+  });
+});
+
+describe('Moose Crossing hints', () => {
+  it('from a trapped square, the hint says how many slides to undo (it used to do nothing)', () => {
+    let trapped = 0;
+    for (const seed of dates(120)) {
+      const p = moose.generate(seed);
+      // Every square the moose can reach from the start, with the slides that get it there.
+      const via = new Map<number, number[]>([[p.start, [p.start]]]), q = [p.start];
+      for (let h = 0; h < q.length; h++) for (let d = 0; d < 4; d++) { const j = mooseSlide(p, q[h]!, d); if (!via.has(j)) { via.set(j, [...via.get(q[h]!)!, j]); q.push(j); } }
+      for (const [sq, path] of via) {
+        if (sq === p.lake || bestRoute(p, sq)) continue;
+        trapped++;
+        const h = mooseHint(p, path);
+        expect(h && 'undo' in h, `${seed} square ${sq}`).toBe(true);
+        const back = path.slice(0, path.length - (h as { undo: number }).undo);
+        expect(bestRoute(p, back.at(-1)!), `${seed}: undoing reaches a square that can still win`).not.toBeNull();
+        expect(mooseHint(p, back) && 'dir' in mooseHint(p, back)!, seed).toBe(true);
+      }
+    }
+    expect(trapped).toBeGreaterThan(0); // the case really occurs
+  });
+  it('from a normal square the hint names the first slide of a shortest route', () => {
+    for (const seed of dates(30)) {
+      const p = moose.generate(seed), h = mooseHint(p, [p.start]) as { dir: number };
+      expect(bestRoute(p, mooseSlide(p, p.start, h.dir))!.length, seed).toBe(p.best);
+    }
+  });
+});
+
+describe("Bear's Last Snack hints", () => {
+  it('a route that visits a numbered bush at the wrong step is cut back to where it can still win', () => {
+    let tested = 0;
+    for (const seed of dates(60)) {
+      const p = bear.generate(seed), rng = rngFrom('wrong:' + seed);
+      for (let trial = 0; trial < 20; trial++) {
+        // Walk randomly until the bear steps on a numbered bush at the wrong step.
+        const route = [p.start];
+        for (;;) {
+          const opts = nb4(p.n, route.at(-1)!).filter((j) => !route.includes(j));
+          if (!opts.length) break;
+          route.push(opts[Math.floor(rng() * opts.length)]!);
+          const g = p.given[String(route.at(-1))];
+          if (g && g !== route.length) break;
+        }
+        const g = p.given[String(route.at(-1))];
+        if (!g || g === route.length) continue;
+        tested++;
+        expect(solveBear(p, route), `${seed}: a broken route never counts as solvable`).toBeNull();
+        const next = bearHint(p, route)!;
+        expect(next.length, seed).toBeLessThanOrEqual(route.length); // shortened, then one step added
+        expect(next.slice(0, -1), seed).toEqual(route.slice(0, next.length - 1));
+        expect(checkRoute(p, solveBear(p, next)!), seed).toBe(true); // and it can still be finished
+      }
+    }
+    expect(tested).toBeGreaterThan(20);
+  });
+  it('on a good route the hint adds exactly one step', () => {
+    for (const seed of dates(20)) {
+      const p = bear.generate(seed), next = bearHint(p, [p.start])!;
+      expect(next).toHaveLength(2);
+      expect(next[0]).toBe(p.start);
+    }
   });
 });
