@@ -25,6 +25,7 @@ const LOADERS: Record<string, () => Promise<{ default: GameDef<unknown> }>> = {
   'feather-pairs': () => import('@wild-daily/game-pack/games/feather-pairs') as never,
   'leaf-pile': () => import('@wild-daily/game-pack/games/leaf-pile') as never,
   'who-was-here': () => import('@wild-daily/game-pack/games/who-was-here') as never,
+  'acorn-thief': () => import('@wild-daily/game-pack/games/acorn-thief') as never,
   'berry-match': () => import('@wild-daily/game-pack/games/berry-match') as never,
   'spot-the-change': () => import('@wild-daily/game-pack/games/spot-the-change') as never,
   'vine-links': () => import('@wild-daily/game-pack/games/vine-links') as never,
