@@ -3,6 +3,8 @@ import './portal';
 import { activeSeason, loadProgress, saveProgress, SEASON_INFO, todayIso, type Theme } from '@wild-daily/core';
 import { toast } from './toast';
 import { play } from './sound';
+import { applyWeather } from './weather';
+import { startMusic, stopMusic } from './music';
 import { goTo } from './nav';
 
 function applyTheme(t: Theme): void {
@@ -21,6 +23,8 @@ function syncFx(): void {
   const p = loadProgress();
   document.querySelectorAll<HTMLElement>('[data-act="sound"]').forEach((b) => { const on = String((b.dataset.v === 'on') === !!p.sound); b.setAttribute('aria-checked', on); b.setAttribute('aria-selected', on); });
   document.querySelectorAll<HTMLElement>('[data-act="vibrate"]').forEach((b) => { const on = String((b.dataset.v === 'on') === !!p.vibrate); b.setAttribute('aria-checked', on); b.setAttribute('aria-selected', on); });
+  document.querySelectorAll<HTMLElement>('[data-act="music"]').forEach((b) => { const on = String((b.dataset.v === 'on') === !!p.music); b.setAttribute('aria-checked', on); b.setAttribute('aria-selected', on); });
+  document.querySelectorAll<HTMLElement>('[data-act="weather"]').forEach((b) => { const on = String((b.dataset.v === 'on') === (p.weather !== false)); b.setAttribute('aria-checked', on); b.setAttribute('aria-selected', on); });
 }
 export function applySeason(): void {
   const p = loadProgress(), s = activeSeason(p, todayIso(), tz());
@@ -55,11 +59,13 @@ document.addEventListener('click', (e) => {
     case 'season': { const p = loadProgress(); p.season = (t.dataset.v as typeof p.season) ?? 'auto'; saveProgress(p); applySeason(); break; }
     case 'hemi': { const p = loadProgress(); p.hemisphere = (t.dataset.v as typeof p.hemisphere) ?? 'auto'; saveProgress(p); applySeason(); break; }
     case 'sound': { const p = loadProgress(); p.sound = t.dataset.v === 'on'; saveProgress(p); syncFx(); if (p.sound) play('win', true); break; }
+    case 'music': { const p = loadProgress(); p.music = t.dataset.v === 'on'; saveProgress(p); syncFx(); if (p.music) startMusic(); else stopMusic(); break; }
+    case 'weather': { const p = loadProgress(); p.weather = t.dataset.v === 'on'; saveProgress(p); syncFx(); applyWeather(); break; }
     case 'vibrate': { const p = loadProgress(); p.vibrate = t.dataset.v === 'on'; saveProgress(p); syncFx(); if (p.vibrate) { try { navigator.vibrate?.(30); } catch { /* not supported */ } } break; }
     case 'reset': {
       if (!t.dataset.armed) { t.dataset.armed = '1'; t.textContent = 'Tap again to erase everything'; t.classList.replace('btn-w', 'btn-c'); break; }
       const keep = loadProgress();
-      saveProgress({ days: {}, ...(keep.sound ? { sound: keep.sound } : {}), ...(keep.vibrate ? { vibrate: keep.vibrate } : {}), ...(keep.theme ? { theme: keep.theme } : {}), ...(keep.season ? { season: keep.season } : {}), ...(keep.hemisphere ? { hemisphere: keep.hemisphere } : {}) });
+      saveProgress({ days: {}, ...(keep.sound ? { sound: keep.sound } : {}), ...(keep.vibrate ? { vibrate: keep.vibrate } : {}), ...(keep.music ? { music: keep.music } : {}), ...(keep.weather === false ? { weather: false } : {}), ...(keep.theme ? { theme: keep.theme } : {}), ...(keep.season ? { season: keep.season } : {}), ...(keep.hemisphere ? { hemisphere: keep.hemisphere } : {}) });
       t.closest('dialog')?.close(); toast('Progress erased. Fresh start!');
       window.setTimeout(() => goTo('/'), 600);
       break;

@@ -76,6 +76,10 @@ export interface Progress {
   /** Sound effects and vibration: both off unless the player turns them on. */
   sound?: boolean;
   vibrate?: boolean;
+  /** Calm background music: off unless the player turns it on. */
+  music?: boolean;
+  /** Weather behind the page (snow, rain, fireflies, leaves): on unless the player turns it off. */
+  weather?: boolean;
   tutorialDone?: boolean;
   tutorialSeen?: boolean;
 }

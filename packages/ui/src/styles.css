@@ -1341,3 +1341,23 @@ body:has(main #tut > .coach:only-child) > footer{display:none}
 .btn-learn::before{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6.5C5.5 5 8.5 5 12 7c3.5-2 6.5-2 9-.5V19c-2.5-1.5-5.5-1.5-9 .5-3.5-2-6.5-2-9-.5z'/%3E%3Cpath d='M12 7v12.5'/%3E%3C/svg%3E")}
 /* Primary buttons: a soft top highlight so the paper looks lit, not flat. */
 .btn-p{background-image:linear-gradient(to bottom, rgba(255,255,255,.10), rgba(255,255,255,0) 55%)}
+
+/* Content pages: a clean 24px gap between the hero picture and the first card (20px on phones), never touching or overlapping. */
+body > .scene + main.body{margin-top:0; padding-top:24px}
+body > .scene + main.body > :first-child{margin-top:0} /* the gap above comes from main only */
+@media (max-width:720px){ body > .scene + main.body{padding-top:20px} }
+
+/* Weather behind the page (scripts/weather.ts): decoration only, drawn behind every card and board, never clickable.
+   Slow and soft; switched off with reduced motion or in Options. */
+.weather{position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none}
+.weather .wx{position:absolute; top:-24px; animation:wx-fall var(--t) linear var(--d) infinite both}
+.wx-snow .wx{width:calc(7px * var(--s)); height:calc(7px * var(--s)); border-radius:50%; background:#FFFFFF; box-shadow:0 0 4px rgba(120,150,190,.35); opacity:.85}
+.wx-rain .wx{width:1.5px; height:calc(18px * var(--s)); border-radius:1px; background:linear-gradient(transparent, rgba(63,134,211,.45)); animation-name:wx-rain; animation-timing-function:linear}
+.wx-leaves .wx{color:#C9772B; opacity:.75; animation-name:wx-leaf}
+.wx-leaves .wx svg{display:block}
+.wx-fireflies .wx{top:auto; bottom:-12px; width:6px; height:6px; border-radius:50%; background:#F6C445; box-shadow:0 0 10px 3px rgba(246,196,69,.55); animation-name:wx-rise; animation-timing-function:ease-in-out}
+@keyframes wx-fall{from{transform:translate(0,0)} to{transform:translate(var(--x),105vh)}}
+@keyframes wx-rain{from{transform:translate(0,0) rotate(12deg)} to{transform:translate(-60px,105vh) rotate(12deg)}}
+@keyframes wx-leaf{from{transform:translate(0,0) rotate(0deg)} to{transform:translate(var(--x),105vh) rotate(320deg)}}
+@keyframes wx-rise{0%{transform:translate(0,0); opacity:0} 15%{opacity:.9} 85%{opacity:.9} 100%{transform:translate(var(--x),-80vh); opacity:0}}
+@media (prefers-reduced-motion: reduce){ .weather{display:none} }
