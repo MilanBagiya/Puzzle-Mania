@@ -29,6 +29,6 @@ export function generate(seed: string): CountPuzzle {
 }
 const def: GameDef<CountPuzzle> = {
   id: 'owl-watch', generate,
-  mount: (root, p, ctx) => mountCount(root, p, ctx, { item: svgUse('n-mouse', '0 0 40 30'), itemName: 'mouse', clueArt: svgUse('n-owl', '0 0 40 40'), clueName: 'owl that sees', tile: 'night', intro: 'Tap a square to hide a mouse. Each owl’s number is how many mice it can see along its diagonals. Mice never touch.' }),
+  mount: (root, p, ctx) => mountCount(root, p, ctx, { host: 'owl', item: svgUse('n-mouse', '0 0 40 30'), itemName: 'mouse', clueArt: svgUse('n-owl', '0 0 40 40'), clueName: 'owl that sees', tile: 'night', intro: 'Tap a square to hide a mouse. Each owl’s number is how many mice it can see along its diagonals. Mice never touch.' }),
 };
 export default def;

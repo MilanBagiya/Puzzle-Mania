@@ -62,7 +62,7 @@ const def: GameDef<PondPuzzle> = {
       const { bad } = checkPond(p, frogs());
       const cells = range(n * n).map((i) => `<button type="button" class="gcell pond${bad.has(i) ? ' bad' : ''}" style="background:${COLORS[p.regions[i]! % COLORS.length]}" data-g="cell:${i}" aria-label="${cellLabel(n, i)}, patch ${p.regions[i]! + 1}: ${marks[i] === 1 ? 'frog' : marks[i] === 2 ? 'marked empty' : 'empty'}">${marks[i] === 1 ? svgUse('n-frog', '0 0 64 56') : marks[i] === 2 ? '<span class="dot"></span>' : ''}</button>`).join('');
       const text = done ? 'Every frog has its own lily patch!' : msg ?? (bad.size ? 'Red frogs share a row, column or patch, or are touching.' : 'Tap to place a frog, tap again for a dot. One frog per row, column and colour patch; frogs never touch.');
-      root.innerHTML = `${pills(`Frogs: ${frogs().size} of ${n}`, `${n} patches`)}${coach(text, done ? 'good' : kind)}${grid(n, cells, 'Pond', 72)}${tools(btn('clear', 'Clear', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done), btn('check', 'Check', 'btn-p', done))}`;
+      root.innerHTML = `${pills(`Frogs: ${frogs().size} of ${n}`, `${n} patches`)}${coach(text, done ? 'good' : kind, 'frog')}${grid(n, cells, 'Pond', 72)}${tools(btn('clear', 'Clear', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done), btn('check', 'Check', 'btn-p', done))}`;
     };
     const off = onAct(root, (act, arg) => {
       if (done) return; msg = null; kind = '';

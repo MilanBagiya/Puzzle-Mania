@@ -1,7 +1,7 @@
 // Art helpers: return SVG markup that references the shared sprite (sprite.svg must be inlined once per page).
 export type AnimalId = 'fox' | 'rabbit' | 'deer';
 /** The wider cast in cast.svg (inlined only on pages that use them: see Base.astro's `cast` prop). */
-export const CAST = ['moose', 'squirrel', 'bear', 'salmon'] as const;
+export const CAST = ['moose', 'squirrel', 'bear', 'salmon', 'owl', 'mouse', 'beaver', 'otter', 'frog'] as const;
 export type CastId = (typeof CAST)[number];
 /** Every full-body character with idle, happy and oops faces. */
 export type CharacterId = AnimalId | CastId;

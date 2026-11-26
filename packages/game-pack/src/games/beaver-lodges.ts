@@ -80,7 +80,7 @@ const def: GameDef<LodgePuzzle> = {
       }).join('');
       const covered = o.filter((x) => x >= 0).length;
       const text = done ? 'Every lodge has its own pool!' : msg ?? (first !== null ? 'Now tap the opposite corner of the rectangle.' : 'Tap one corner, then the opposite corner, to build a rectangle. Each must hold one lodge, sized by its number.');
-      root.innerHTML = `${pills(`Covered: ${covered} of ${n * n}`, `${p.clues.length} lodges`)}${coach(text, done ? 'good' : kind)}<div class="boardwrap"><div class="board" role="grid" aria-label="River" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 72}px; gap:2px">${cells}</div></div>${tools(btn('clear', 'Clear', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done), btn('check', 'Check', 'btn-p', done))}`;
+      root.innerHTML = `${pills(`Covered: ${covered} of ${n * n}`, `${p.clues.length} lodges`)}${coach(text, done ? 'good' : kind, 'beaver')}<div class="boardwrap"><div class="board" role="grid" aria-label="River" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 72}px; gap:2px">${cells}</div></div>${tools(btn('clear', 'Clear', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done), btn('check', 'Check', 'btn-p', done))}`;
     };
     const off = onAct(root, (act, arg) => {
       if (done) return; msg = null; kind = '';
