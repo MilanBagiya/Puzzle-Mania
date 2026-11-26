@@ -1291,3 +1291,28 @@ body:has(main #tut > .coach:only-child) > footer{display:none}
 .coach-host svg{width:100%; height:100%}
 .coach-text{flex:1; min-width:0}
 @media (max-width:720px){ .coach-host{width:44px; height:44px} .coach.has-host{gap:10px} }
+
+/* ---------- Acorn Thief: the suspect lineup ----------
+   Order matters ("the thief is to my right"), so the five suspects always stand side by side, left to right. */
+.lineup{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; align-items:stretch}
+.suspect{display:flex; flex-direction:column; gap:6px; min-width:0}
+.suspect-pick{flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 6px 10px; border:0; border-radius:10px; background:var(--paper); color:var(--ink); font:inherit; text-align:center; cursor:pointer; box-shadow:0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 12px 16px -12px var(--shade-strong); transition:box-shadow .16s ease}
+.suspect-art{display:block; width:100%; max-width:96px; aspect-ratio:1}
+.suspect-art svg{display:block; width:100%; height:100%}
+.suspect-name{font-family:var(--font-display); font-variation-settings:"SOFT" 100; font-weight:700; font-size:16px; line-height:1.1}
+.suspect-says{font-size:13px; line-height:1.35; color:var(--ink-soft)}
+.suspect-cross{min-height:36px; border:0; border-radius:var(--r-full); background:var(--soft); color:var(--ink-soft); font:inherit; font-size:12.5px; font-weight:800; cursor:pointer; box-shadow:inset 0 0 0 1px var(--soft-e)}
+.suspect.sel .suspect-pick{box-shadow:0 0 0 3px var(--pine), 0 6px 0 var(--edge1), 0 12px 16px -12px var(--shade-strong)}
+.suspect.out .suspect-art{filter:grayscale(1); opacity:.45}
+.suspect.out .suspect-name{text-decoration:line-through; text-decoration-thickness:2px}
+.suspect.out .suspect-cross{background:var(--paper); color:var(--ink); box-shadow:inset 0 0 0 2px var(--edge2)}
+.suspect.caught .suspect-pick{box-shadow:0 0 0 3px var(--coral), 0 6px 0 var(--edge1), 0 12px 16px -12px var(--shade-strong)}
+.suspect-pick:disabled{cursor:default}
+.suspect-pick:focus-visible, .suspect-cross:focus-visible{outline:3px solid var(--focus); outline-offset:3px}
+@media (max-width:560px){
+  .lineup{gap:6px}
+  .suspect-pick{padding:6px 3px 8px}
+  .suspect-name{font-size:13px}
+  .suspect-says{font-size:11.5px; line-height:1.3}
+  .suspect-cross{min-height:44px; font-size:11px; padding:0 2px}
+}
