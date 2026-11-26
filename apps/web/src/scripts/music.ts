@@ -29,6 +29,7 @@ function note(freq: number, at: number, vol: number): void {
 }
 function step(): void {
   const a = audio(); if (!a || !running) return;
+  if (a.state !== 'running') { timer = window.setTimeout(step, 600); return; } // queue nothing while audio is blocked
   const scale = SCALES[document.documentElement.dataset.season ?? 'winter'] ?? SCALES.winter!;
   const f = scale[Math.floor(Math.random() * scale.length)]!, t = a.currentTime + 0.05;
   note(f, t, 0.05);
@@ -37,8 +38,9 @@ function step(): void {
   timer = window.setTimeout(step, 1400 + Math.random() * 1400);
 }
 export function startMusic(): void {
-  const a = audio(); if (!a || !master || running) return;
-  if (a.state === 'suspended') void a.resume();
+  const a = audio(); if (!a || !master) return;
+  if (a.state === 'suspended') void a.resume(); // resume first: a second "On" must still wake a stopped context
+  if (running) return;
   running = true;
   master.gain.cancelScheduledValues(a.currentTime); master.gain.setTargetAtTime(0.6, a.currentTime, 0.8); // fade in
   step();
@@ -48,8 +50,14 @@ export function stopMusic(): void {
   if (ctx && master) master.gain.setTargetAtTime(0, ctx.currentTime, 0.3); // fade out
 }
 // Music that was on last time starts again on the first tap or key press (browsers block sound before one).
+// Phones only allow sound after a click, touchend or key press (not pointerdown), so listen for those until it plays.
 if (loadProgress().music) {
-  const go = (): void => { if (loadProgress().music) startMusic(); };
-  window.addEventListener('pointerdown', go, { once: true }); window.addEventListener('keydown', go, { once: true });
+  const EVENTS = ['click', 'touchend', 'keydown'] as const;
+  const go = (): void => {
+    if (!loadProgress().music) return;
+    startMusic();
+    if (ctx?.state === 'running') EVENTS.forEach((e) => window.removeEventListener(e, go));
+  };
+  EVENTS.forEach((e) => window.addEventListener(e, go));
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden) stopMusic(); else if (loadProgress().music && ctx) startMusic(); });

@@ -101,7 +101,8 @@ ${done ? '' : `<button type="button" class="suspect-cross" data-g="cross:${i}" a
       else if (act === 'cross') { if (crossed.has(i)) crossed.delete(i); else { crossed.add(i); if (sel === i) sel = -1; } }
       else if (act === 'hint') {
         const left = range(N).filter((k) => k !== thief && !crossed.has(k));
-        if (left.length) { const k = left[0]!; crossed.add(k); if (sel === k) sel = -1; hints++; msg = `Hint: ${nameOf(p.line[k]!)} is telling the truth, so it’s not them.`; }
+        if (crossed.has(thief)) { crossed.delete(thief); hints++; msg = `Hint: you crossed off ${nameOf(p.line[thief]!)}, but they could still be the thief.`; }
+        else if (left.length) { const k = left[0]!; crossed.add(k); if (sel === k) sel = -1; hints++; msg = `Hint: ${nameOf(p.line[k]!)} is telling the truth, so it’s not them.`; }
       } else if (act === 'accuse' && sel >= 0) {
         if (sel === thief) {
           done = true; const time = t.stop(); render();

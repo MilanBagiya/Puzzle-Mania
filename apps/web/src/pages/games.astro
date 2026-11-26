@@ -5,7 +5,7 @@ import { LISTED, CATS } from '../data/catalog';
 import { tileHtml } from '../scripts/tiles';
 const all = LISTED.slice().sort((a, b) => a.featured - b.featured);
 ---
-<Base title="All games" description={`${LISTED.length} free daily nature puzzles: Fresh Snow, Trail Trek, Nests, Dawn Chorus, Frog Pond, Owl Watch, Snow Picture, Track Word and more.`} active="games">
+<Base title="All games" description={`${LISTED.length} free daily nature puzzles: Fresh Snow, Trail Trek, Nests, Dawn Chorus, Acorn Thief, Vine Links, Frog Pond, Track Word and more. New puzzles every day.`} active="games">
   <main class="wrap portal">
     <PortalHead crumbs={[['Home', '/'], ['All games']]} title="All games" blurb={`${LISTED.length} games from one forest, with new puzzles every day.`} more="Snow trails, logic grids, routes across ponds and ice, clue puzzles, guessing games and one-minute quickies. Every puzzle is the same for everyone each day, and every logic puzzle has exactly one answer." />
     <nav class="jump" aria-label="Categories">{CATS.map((c) => <a href={`/games/${c.id}`}>{c.name}</a>)}</nav>

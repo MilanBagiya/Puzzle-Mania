@@ -918,7 +918,7 @@ a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover, .lvrow:hover, .st
   a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover{box-shadow:0 0 0 2px var(--pine), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -14px var(--shade-strong)}
   .tab:not([aria-selected="true"]):hover, .jump a:hover, .nav a:not([aria-current="page"]):hover{box-shadow:0 0 0 2px var(--pine), 0 4px 0 var(--edge1)}
   button.cell:not(:disabled):not(.blocked):hover, button.gcell:not(:disabled):hover, button.nb-cell:not(.tree):hover, button.mr-cell:not(.stump):hover,
-  .st-cell:hover, a.day:hover, button.day:hover, .tstage:not(.locked):hover{outline:none; filter:brightness(.95)} /* no green border on hover */
+  .st-cell:hover, a.day:hover, button.day:hover, .tstage:not(.locked):hover{filter:brightness(.95)} /* hover only darkens: hint, selection and focus outlines stay */
 }
 
 /* ======================================================================
@@ -979,7 +979,7 @@ main.home{padding-bottom:40px}
 .hub-cards .card{padding:16px}
 @media (min-width:721px) and (max-width:1099px){ .hub-cards{grid-template-columns:repeat(2,minmax(0,1fr))} .hub-cards > .card:first-child{grid-column:1 / -1} }
 /* Daily Set stays five across from 900px (cards ~186px, as at 1280) instead of 3 + 2 with a gap. */
-@media (min-width:900px) and (max-width:1100px){ .tiles-5{grid-template-columns:repeat(5,minmax(0,1fr))} }
+/* (the Daily Set follows the shared card width: 3 per row on tablets) */
 /* Wide screens: use more of the width. */
 @media (min-width:1500px){ .wrap{max-width:1240px} }
 /* Footer matches the sidebar navy, with a hairline in dark mode so it separates from the page. */
@@ -1096,7 +1096,7 @@ footer{background:var(--shell)}
   .tiles[data-grid] > .tile:last-child:nth-child(odd) .tile-art{flex:0 0 40%; aspect-ratio:auto; margin:8px 0 8px 8px}
 }
 /* Small sets on wide screens keep normal card widths instead of stretching. */
-.tiles[data-grid]:not(:has(> .tile:nth-child(5))){grid-template-columns:repeat(auto-fit,minmax(230px,300px))}
+/* (short category grids use the shared card width too: see "One card width everywhere") */
 /* "Show more" passes AA (was 3.65:1). */
 .portal-blurb .more-btn{color:var(--link-hover); text-decoration:underline; text-underline-offset:3px}
 /* Sort box: visible edge, and a chevron that shows in dark mode. */
@@ -1164,7 +1164,7 @@ footer{background:var(--shell)}
 .bcell.fresh{animation:berry-drop .28s ease-out both}
 .bcell:active{transform:scale(.9)}
 .bcell:focus-visible{outline:3px solid var(--focus); outline-offset:2px; z-index:1}
-@media (hover:hover) and (pointer:fine){ .bcell:hover{box-shadow:inset 0 0 0 2px var(--pine)} }
+@media (hover:hover) and (pointer:fine){ .bcell:hover{filter:brightness(.96)} }
 .bgoal{display:inline-flex; align-items:center; gap:6px}
 .bgoal svg{width:22px; height:22px}
 @keyframes berry-drop{from{transform:translateY(-30%); opacity:.2} to{transform:none; opacity:1}}
@@ -1282,10 +1282,10 @@ body:has(main #tut > .coach:only-child) > footer{display:none}
 /* Hover never draws a green border. Cards deepen their shadow, tabs and links get a light tint, cells darken a touch.
    (Keyboard focus keeps its own outline.) */
 @media (hover:hover) and (pointer:fine){
-  .tile:hover, .tile.done:hover, a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover{box-shadow:0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 22px 30px -14px var(--shade-strong) !important}
+  .tile:hover, .tile.done:hover, a.card:hover, .gamecard:hover, .guidecard:hover, .acard:not([aria-pressed="true"]):hover{box-shadow:0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 22px 30px -14px var(--shade-strong) !important}
   .tab:not([aria-selected="true"]):hover, .jump a:hover, .nav a:not([aria-current="page"]):hover{box-shadow:0 4px 0 var(--edge1) !important; background:var(--paper-h)}
-  .st-cell:hover, a.day:hover, button.day:hover, .tstage:not(.locked):hover{outline:none !important; filter:brightness(.96)}
-  .bcell:hover{box-shadow:none !important; filter:brightness(.96)}
+  .st-cell:hover, a.day:hover, button.day:hover, .tstage:not(.locked):hover{filter:brightness(.96)}
+  .bcell:hover{filter:brightness(.96)} /* keeps the selected and hinted rings */
 }
 /* A game's host animal sits beside its message; only its face changes with the message (nothing moves). */
 .coach.has-host{gap:12px; padding-left:8px}

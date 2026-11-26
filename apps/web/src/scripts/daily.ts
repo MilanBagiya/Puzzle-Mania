@@ -48,6 +48,7 @@ export function recordFinish(f: Finish): Recorded {
 
 /** Pages show the day they were opened. When local midnight passes, offer today's puzzles (once). */
 function watchMidnight(): void {
+  if (!document.querySelector('main [id$="-game"], main #dc, #hub-levels')) return; // not on stats and other pages
   if (params().get('date')) return; // archive play: a new day changes nothing here
   const check = (): boolean => {
     if (todayIso() === today || document.querySelector('.newday')) return false;
@@ -73,11 +74,12 @@ export interface ResultView {
 /** The shared result screen. */
 export function showResult(v: ResultView): void {
   const p = loadProgress();
-  const next = v.date === today ? nextInSet(p, v.date) : undefined;
+  const now = todayIso(), live = v.date === today; // the page may have stayed open past midnight
+  const next = live ? nextInSet(p, v.date) : undefined;
   const primary = next
-    ? `<a class="btn btn-c big" href="${GAMES[next].href}${v.date !== today ? `&date=${v.date}` : ''}">Next: ${GAMES[next].name}</a>`
+    ? `<a class="btn btn-c big" href="${GAMES[next].href}${v.date !== now ? `&date=${v.date}` : ''}">Next: ${GAMES[next].name}</a>`
     : `<a class="btn btn-c big" href="/">Back to today</a>`;
-  const setBanner = v.rec.setDone && v.date === today
+  const setBanner = v.rec.setDone && v.date === now
     ? `<section class="card banner" style="background:var(--good)">${character('deer', 'happy', 80, 'cheer')}<div class="grow"><h2 class="h-s">Daily Set complete!</h2><p style="margin:4px 0 0" class="muted">Fresh snow falls in <b class="countdown" data-countdown>${formatCountdown(msUntilMidnight())}</b>. Try a bonus game or the Trail Trek while you wait.</p></div><a class="btn btn-w" href="/trek">Trail Trek</a></section>` : '';
   v.el.innerHTML = `<section class="card stack" style="align-items:center; text-align:center; padding:26px">
 <div class="row" style="justify-content:center; gap:4px">${v.art}</div>

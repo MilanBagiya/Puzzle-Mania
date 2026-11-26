@@ -28,6 +28,7 @@ function syncFx(): void {
 }
 export function applySeason(): void {
   const p = loadProgress(), s = activeSeason(p, todayIso(), tz());
+  const changed = document.documentElement.getAttribute('data-season') !== s;
   document.documentElement.setAttribute('data-season', s);
   document.querySelectorAll<HTMLElement>('[data-act="season"]').forEach((b) => { const on = String(b.dataset.v === (p.season ?? 'auto')); b.setAttribute('aria-checked', on); b.setAttribute('aria-selected', on); });
   document.querySelectorAll<HTMLElement>('[data-act="hemi"]').forEach((b) => { const on = String(b.dataset.v === (p.hemisphere ?? 'auto')); b.setAttribute('aria-checked', on); b.setAttribute('aria-selected', on); });
@@ -35,7 +36,7 @@ export function applySeason(): void {
   const now = document.getElementById('season-now'); if (now) now.textContent = auto ? `· showing ${SEASON_INFO[s].name.toLowerCase()}` : '';
   const row = document.getElementById('hemi-row'); if (row) row.hidden = !auto; // only matters while Season is Auto
   const note = document.getElementById('hemi-note'); if (note) note.textContent = '· used to pick your season';
-  document.dispatchEvent(new CustomEvent('wd:season', { detail: s }));
+  if (changed) document.dispatchEvent(new CustomEvent('wd:season', { detail: s })); // only a real change redraws
 }
 const openDialog = (id: string): void => { const d = document.getElementById(id) as HTMLDialogElement | null; d?.showModal?.(); };
 /** "Erase my progress" asks for a second tap; closing Options (Done, ✕ or Escape) cancels that. */

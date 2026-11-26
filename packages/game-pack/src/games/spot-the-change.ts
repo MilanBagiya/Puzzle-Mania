@@ -38,7 +38,7 @@ export function generate(seed: string): SpotPuzzle {
   // Five changes, each on a different thing, each kind visible at a glance.
   const right: (Item | null)[] = left.map((it) => ({ ...it }));
   for (const i of shuffle(rng, range(left.length)).slice(0, 5)) {
-    const it = left[i]!, kinds = ['gone', 'swap', 'size', ...(it.t === 'bird' ? ['color', 'color'] : [])];
+    const it = left[i]!, kinds = ['gone', 'swap', 'size']; // no colour-only changes: colour-blind players may not see them
     const k = pick(kinds);
     if (k === 'gone') right[i] = null;
     else if (k === 'size') { const w = Math.round(it.w * (rng() < 0.5 ? 1.45 : 0.6)); right[i] = { ...it, w, x: Math.round(it.x + it.w / 2 - w / 2), y: Math.round(it.y + heightOf(it) / 2 - heightOf({ ...it, w }) / 2) }; }

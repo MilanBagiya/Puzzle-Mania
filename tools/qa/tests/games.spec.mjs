@@ -70,3 +70,13 @@ test('Whose Print?: the result shows answers right, not moves', async ({ page },
   await expect(stats).toContainText('correct');
   await expect(stats).not.toContainText('moves');
 });
+
+test('Acorn Thief: if you cross off the thief, Hint puts them back', async ({ page }, info) => {
+  info.annotations.push({ type: 'qa-ran', description: 'game-controls' });
+  await page.goto('/play/acorn-thief', { waitUntil: 'networkidle' });
+  for (let k = 0; k < 5; k++) await page.locator(`#pk-game [data-g="cross:${k}"]`).click();
+  await expect(pill(page, 0)).toContainText('0 left');
+  await page.locator('#pk-game [data-g="hint"]').click();
+  await expect(page.locator('#pk-game .coach')).toContainText('could still be the thief');
+  await expect(pill(page, 0)).toContainText('1 left');
+});

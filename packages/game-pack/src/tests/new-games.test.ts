@@ -237,3 +237,15 @@ describe('message host', () => {
     expect(coach('Tap a bush.')).not.toContain('coach-host'); // games without a host are unchanged
   });
 });
+
+describe('review fixes', () => {
+  it('Spot the Change never makes a colour-only change (colour-blind players must see every change)', () => {
+    for (const d of dates(120)) {
+      const p = spot.generate(d);
+      for (const i of changesOf(p)) {
+        const a = p.left[i]!, b = p.right[i];
+        if (b) expect(b.t !== a.t || b.w !== a.w, `${d} #${i}`).toBe(true);
+      }
+    }
+  });
+});

@@ -151,8 +151,9 @@ const def: GameDef<VinePuzzle> = {
             const s = sol[c]!, mine = paths[c]!, fromA = mine[0] === s[0] ? s : [...s].reverse();
             let k = 0; while (k < mine.length && mine[k] === fromA[k]) k++;
             if (k === fromA.length) continue;
-            for (let o = 0; o < K; o++) if (o !== c) { const cut = paths[o]!.findIndex((i) => fromA.slice(0, k + 1).includes(i)); if (cut >= 0) paths[o] = paths[o]!.slice(0, cut); }
-            paths[c] = fromA.slice(0, Math.max(k, 1) + 1); sel = c; hints++; msg = `Hint: the ${FLOWERS[c]!.name} vine goes this way.`; kind = ''; break;
+            const laid = fromA.slice(0, Math.max(k, 1) + 1); // clear other vines off every square the hint lays
+            for (let o = 0; o < K; o++) if (o !== c) { const cut = paths[o]!.findIndex((i) => laid.includes(i)); if (cut >= 0) paths[o] = paths[o]!.slice(0, cut); }
+            paths[c] = laid; sel = c; hints++; msg = `Hint: the ${FLOWERS[c]!.name} vine goes this way.`; kind = ''; break;
           }
           check();
         }

@@ -149,3 +149,13 @@ describe('earnedBadges and takeNewBadges', () => {
     expect(new Set(BADGES.map((b) => b.id)).size).toBe(BADGES.length);
   });
 });
+
+describe('badges once earned are kept', () => {
+  it('a badge the player was awarded stays earned even if its rule would no longer pass', () => {
+    const p = prog({ [T]: ['morning'] }, { badges: ['picks', 'archive-5'] });
+    const ids = earnedBadges(p, T).map((b) => b.id);
+    expect(ids).toContain('picks');
+    expect(ids).toContain('archive-5');
+    expect(ids).toContain('first-tracks'); // and rules still award new ones
+  });
+});

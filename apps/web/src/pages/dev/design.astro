@@ -2,6 +2,7 @@
 // TEMPORARY design board (dev only): three colour directions and three font pairings on the same sample content.
 // noindex, not linked from navigation, left out of the sitemap. Production styles are NOT loaded here.
 import sprite from '@wild-daily/ui/sprite.svg?raw';
+import castSprite from '@wild-daily/ui/cast.svg?raw';
 import { cover } from '@wild-daily/ui';
 // Fonts for this page only (Fredoka and Bricolage Grotesque are dev-only packages until a pairing is chosen).
 import '@fontsource-variable/fraunces/soft.css';
@@ -137,6 +138,7 @@ const fmt = (n: number): string => n.toFixed(2) + ':1';
 </head>
 <body class="dz-body">
   <Fragment set:html={sprite} />
+  <Fragment set:html={castSprite} />
   <header class="dz-head">
     <h1>Design board</h1>
     <p>Temporary dev page: three directions on the same content, with WCAG contrast computed for every text colour on every background it is used on. Colours that missed AA were adjusted; the table shows the original and the fix. Nothing here changes the live site.</p>

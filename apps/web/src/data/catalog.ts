@@ -35,11 +35,11 @@ export const ICON: Record<string, string> = {
 };
 export const CATS: Category[] = [
   { id: 'snow', name: 'Snow trails', title: 'Snow trail games', icon: 'snow', blurb: 'Read animal tracks in fresh snow and guide every animal home.', more: 'Fresh Snow has three daily levels (Morning, Noon and Night), and Trail Trek turns it into a 60-stage campaign that teaches one animal at a time.' },
-  { id: 'logic', name: 'Logic', title: 'Logic puzzles', icon: 'logic', blurb: 'Grid puzzles with exactly one answer, solved by pure reasoning.', more: 'Every logic puzzle is checked by a solver before it is published, so you never need to guess. Numbers, patches, lights and hidden pictures, from two-minute warm-ups to five-minute thinkers.' },
+  { id: 'logic', name: 'Logic', title: 'Logic puzzles', icon: 'logic', blurb: 'Grid puzzles with exactly one answer, solved by pure reasoning.', more: 'Every logic puzzle is checked by a solver before it is published, so you never need to guess. Nests, frogs and vines, from two-minute warm-ups to five-minute thinkers.' },
   { id: 'path', name: 'Paths and moves', title: 'Path and move puzzles', icon: 'path', blurb: 'Plan routes, slide pieces and leap across ponds, rivers and ice.', more: 'Each puzzle is guaranteed solvable, and most know the fewest moves possible, so you can chase three paws.' },
   { id: 'order', name: 'Clues and order', title: 'Clue puzzles', icon: 'order', blurb: 'Read the clues and work out who did what, and in which order.', more: 'Every clue is true, and only one answer fits them all.' },
-  { id: 'guess', name: 'Guessing', title: 'Guessing games', icon: 'guess', blurb: 'Words, eggs, spores and close-ups: six tries to crack today’s answer.', more: 'Quick daily guessing games with clear feedback after every try.' },
-  { id: 'quick', name: 'Quick games', title: 'Quick one-minute games', icon: 'quick', blurb: 'Fast games for a short break: quizzes, memory and flips.', more: 'Each takes about a minute, and everyone gets the same puzzle each day.' },
+  { id: 'guess', name: 'Guessing', title: 'Guessing games', icon: 'guess', blurb: 'Words and spores: a few tries to crack today’s answer.', more: 'Quick daily guessing games with clear feedback after every try.' },
+  { id: 'quick', name: 'Quick games', title: 'Quick one-minute games', icon: 'quick', blurb: 'Fast games for a short break: sorting and spotting.', more: 'Each takes about a minute, and everyone gets the same puzzle each day.' },
 ];
 const minutesOf = (t: string): number => { const m = t.match(/(\d+)/); return m ? Number(m[1]) : 3; };
 const KIND_TO_CAT: Record<string, CatId> = { logic: 'logic', path: 'path', order: 'order', guess: 'guess', quick: 'quick' };

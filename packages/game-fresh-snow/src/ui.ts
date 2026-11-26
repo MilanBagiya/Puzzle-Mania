@@ -36,6 +36,7 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
   const first = p.animals[0] as AnimalId;
   const S: State = { paths: Object.fromEntries(p.animals.map((a) => [a, [] as number[]])), hist: [], sel: first, hints: 0, t0: Date.now(), wrong: -1, oops: null, msg: null, kind: '', done: false, secs: 0, next: [] };
   let wrongTimer = 0;
+  let nextTimer = 0; // selects the next animal after one reaches its burrow
   let solution: Record<string, number[]> | null = null;
   // Animals walk the board: fox trots, rabbit hops, deer walks.
   const GAIT: Record<AnimalId, Gait> = { fox: 'trot', rabbit: 'hop', deer: 'walk' };
@@ -149,7 +150,7 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
         if (other) { S.msg = `The ${other} is already in that burrow. Each burrow fits one animal.`; S.kind = 'bad'; }
         else {
           const nxt = p.animals.find((b) => !isHome(b));
-          if (nxt) window.setTimeout(() => { if (!S.done) { S.sel = nxt; render(); } }, 700);
+          if (nxt) { window.clearTimeout(nextTimer); nextTimer = window.setTimeout(() => { if (!S.done) { S.sel = nxt; render(); } }, 700); }
         }
       }
       render(i); return;
@@ -199,6 +200,7 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
     if (act === 'cell') tapCell(Number(t.dataset.i));
     else if (act === 'sel') { S.sel = t.dataset.a as AnimalId; S.msg = null; render(); mover.hop(S.sel); }
     else if (act === 'undo') {
+      window.clearTimeout(nextTimer); // Undo must not be followed by a late switch of animal
       const prev = S.hist.pop();
       if (prev) { S.paths = prev.paths; S.sel = prev.sel; }
       S.msg = null; render();
@@ -217,5 +219,5 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
   window.addEventListener('resize', onResize);
   const timer = window.setInterval(tick, 1000);
   render(); tick();
-  return { destroy(): void { root.removeEventListener('click', onClick); window.removeEventListener('resize', onResize); window.clearInterval(timer); window.clearTimeout(wrongTimer); mover.clear(); } };
+  return { destroy(): void { root.removeEventListener('click', onClick); window.removeEventListener('resize', onResize); window.clearInterval(timer); window.clearTimeout(wrongTimer); window.clearTimeout(nextTimer); mover.clear(); } };
 }

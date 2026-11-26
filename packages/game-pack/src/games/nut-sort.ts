@@ -81,7 +81,7 @@ export function generate(seed: string): SortPuzzle {
 const def: GameDef<SortPuzzle> = {
   id: 'nut-sort', generate,
   mount(root, p, ctx) {
-    let b = p.baskets.map((t) => [...t]), sel = -1, moves = 0, hints = 0, done = false, glow: Move | null = null, msg: string | null = null;
+    let b = p.baskets.map((t) => [...t]), sel = -1, moves = 0, hints = 0, done = false, glow: Move | null = null, msg: string | null = null, kind = '';
     const hist: number[][][] = [];
     const t = clock(ctx);
     const render = (): void => {
@@ -92,23 +92,23 @@ const def: GameDef<SortPuzzle> = {
         return `<button type="button" class="${cls}" data-g="pick:${i}" aria-pressed="${sel === i}" aria-label="${label}">${slots}</button>`;
       }).join('');
       const text = done ? `Sorted in ${moves} moves!` : msg ?? (sel >= 0 ? 'Now tap the basket to move it to.' : 'Tap a basket to pick up its top find, then tap where it goes. Same kind on top, or an empty basket.');
-      root.innerHTML = `${pills(`Moves: ${moves} (best ${p.best})`, `${b.filter((x) => x.length === CAP && x.every((y) => y === x[0])).length} of ${KINDS.length} sorted`)}${coach(text, done ? 'good' : msg ? 'bad' : '')}<div class="boardwrap nsort" style="--bmax:520px"><div class="nbaskets" role="group" aria-label="Baskets">${baskets}</div></div>${tools(btn('undo', 'Undo', 'btn-w', done || !hist.length), btn('restart', 'Restart', 'btn-w', done || !moves), btn('hint', 'Hint', 'btn-y', done))}`;
+      root.innerHTML = `${pills(`Moves: ${moves} (best ${p.best})`, `${b.filter((x) => x.length === CAP && x.every((y) => y === x[0])).length} of ${KINDS.length} sorted`)}${coach(text, done ? 'good' : kind)}<div class="boardwrap nsort" style="--bmax:520px"><div class="nbaskets" role="group" aria-label="Baskets">${baskets}</div></div>${tools(btn('undo', 'Undo', 'btn-w', done || !hist.length), btn('restart', 'Restart', 'btn-w', done || !moves), btn('hint', 'Hint', 'btn-y', done))}`;
     };
     const finish = (): void => { done = true; const time = t.stop(); render(); ctx.onSolved({ time, hints, moves, stars: !hints && moves <= p.best ? 3 : moves <= p.best + 6 ? 2 : 1 }); };
     const off = onAct(root, (act, arg) => {
-      if (done) return; msg = null; glow = null;
+      if (done) return; msg = null; kind = ''; glow = null;
       if (act === 'pick') {
         const i = Number(arg);
-        if (sel < 0) { if (b[i]!.length) sel = i; else msg = 'That basket is empty: pick one with something in it.'; }
+        if (sel < 0) { if (b[i]!.length) sel = i; else { msg = 'That basket is empty: pick one with something in it.'; kind = 'bad'; } }
         else if (sel === i) sel = -1;
         else if (canMove(b, sel, i)) { hist.push(b.map((x) => [...x])); b = apply(b, [sel, i]); sel = -1; moves++; if (isSorted(b)) return finish(); }
-        else { msg = b[i]!.length >= CAP ? 'That basket is full.' : 'Only the same kind can go on top.'; sel = -1; }
+        else { msg = b[i]!.length >= CAP ? 'That basket is full.' : 'Only the same kind can go on top.'; kind = 'bad'; sel = -1; }
       } else if (act === 'undo') { const prev = hist.pop(); if (prev) { b = prev; moves = hist.length; } sel = -1; } // undo takes the move back
       else if (act === 'restart') { b = p.baskets.map((x) => [...x]); hist.length = 0; moves = 0; sel = -1; }
       else if (act === 'hint') {
         const s = solveSort(b, 150_000);
         if (s && s[0]) { glow = s[0]; hints++; sel = -1; msg = `Hint: move the top of the glowing basket to the outlined one. ${s.length} moves to go.`; }
-        else msg = 'No way to finish from here: try Undo or Restart.';
+        else { msg = 'No way to finish from here: try Undo or Restart.'; kind = 'bad'; }
       }
       render();
     });

@@ -33,7 +33,8 @@ export const BADGES: readonly Badge[] = [
   { id: 'four-seasons', name: 'Four seasons', desc: 'Play in spring, summer, autumn and winter.', icon: '🍂', earned: (p) => new Set(Object.keys(p.days).filter((d) => playedDay(p, d)).map((d) => seasonFor(d, p.hemisphere === 'south' ? 'south' : 'north'))).size === 4 },
   { id: 'journal-6', name: 'Naturalist', desc: 'Collect 6 Forest Journal cards.', icon: '📔', earned: (p) => Math.min(daysPlayed(p), JOURNAL.length) >= 6 },
 ];
-export const earnedBadges = (p: Progress, today: string): Badge[] => BADGES.filter((b) => b.earned(p, today));
+/** Badges earned now, plus any the player was already awarded (a rule may change later; a badge once earned is kept). */
+export const earnedBadges = (p: Progress, today: string): Badge[] => { const had = new Set(p.badges ?? []); return BADGES.filter((b) => had.has(b.id) || b.earned(p, today)); };
 /** Badges earned but not yet celebrated; marks them as seen (caller saves progress). */
 export function takeNewBadges(p: Progress, today: string): Badge[] {
   const seen = new Set(p.badges ?? []);
