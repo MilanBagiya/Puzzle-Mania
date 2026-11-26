@@ -64,35 +64,36 @@ if (week) week.innerHTML = [...Array(7).keys()].map((i) => {
 }).join('');
 startCountdowns();
 
-// Rails scroll sideways: no scrollbar, but ◀ ▶ buttons (mouse and keyboard) and soft edge fades show there is more.
-// Touch screens swipe, so the buttons are hidden there by CSS.
-const chevron = (d: 'l' | 'r'): string => `<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="${d === 'l' ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7'}" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+// Rails scroll sideways: no scrollbar, but a pair of ◀ ▶ buttons in the section heading (next to "See all"), so they
+// never cover a card. Touch screens swipe, so CSS hides the buttons there.
+const chevron = (d: 'l' | 'r'): string => `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="${d === 'l' ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7'}" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const navOf = new WeakMap<HTMLElement, HTMLElement>();
 function railNav(): void {
-  document.querySelectorAll<HTMLElement>('.rail').forEach((r) => {
-    let wrap = r.parentElement;
-    if (!wrap?.classList.contains('rail-wrap')) {
-      wrap = document.createElement('div'); wrap.className = 'rail-wrap';
-      r.before(wrap); wrap.append(r);
-      const name = r.closest('section')?.querySelector('h2')?.textContent?.trim() || 'games';
-      wrap.insertAdjacentHTML('beforeend', `<button type="button" class="rail-btn prev" aria-label="Scroll ${name} back">${chevron('l')}</button><button type="button" class="rail-btn next" aria-label="Scroll ${name} forward">${chevron('r')}</button>`);
+  document.querySelectorAll<HTMLElement>('.rail, .tiles-5').forEach((r) => {
+    if (!navOf.has(r)) {
+      const head = r.parentElement?.querySelector<HTMLElement>(':scope > .shelf-head');
+      const name = head?.querySelector('h2')?.textContent?.trim() || 'games';
+      const nav = document.createElement('div'); nav.className = 'rail-nav';
+      nav.innerHTML = `<button type="button" class="rail-btn prev" aria-label="Scroll ${name} back">${chevron('l')}</button><button type="button" class="rail-btn next" aria-label="Scroll ${name} forward">${chevron('r')}</button>`;
+      if (head) head.append(nav); else r.before(nav);
       const go = (dir: number): void => {
         const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         r.scrollBy({ left: dir * Math.max(200, r.clientWidth * 0.85), behavior: smooth ? 'smooth' : 'auto' });
       };
-      wrap.querySelector('.prev')!.addEventListener('click', () => go(-1));
-      wrap.querySelector('.next')!.addEventListener('click', () => go(1));
+      nav.querySelector('.prev')!.addEventListener('click', () => go(-1));
+      nav.querySelector('.next')!.addEventListener('click', () => go(1));
       r.addEventListener('scroll', () => update(r), { passive: true });
+      navOf.set(r, nav);
     }
     update(r);
   });
 }
 function update(r: HTMLElement): void {
-  const wrap = r.parentElement!, can = r.scrollWidth > r.clientWidth + 2;
+  const nav = navOf.get(r)!, can = r.scrollWidth > r.clientWidth + 2;
   const atStart = r.scrollLeft <= 4, atEnd = r.scrollLeft + r.clientWidth >= r.scrollWidth - 4;
-  r.classList.toggle('can-scroll', can); r.classList.toggle('at-start', atStart); r.classList.toggle('at-end', atEnd);
-  const prev = wrap.querySelector<HTMLButtonElement>('.prev'), next = wrap.querySelector<HTMLButtonElement>('.next');
-  if (prev) prev.disabled = !can || atStart;
-  if (next) next.disabled = !can || atEnd;
+  nav.hidden = !can;
+  nav.querySelector<HTMLButtonElement>('.prev')!.disabled = atStart;
+  nav.querySelector<HTMLButtonElement>('.next')!.disabled = atEnd;
 }
 railNav();
 window.addEventListener('resize', railNav);

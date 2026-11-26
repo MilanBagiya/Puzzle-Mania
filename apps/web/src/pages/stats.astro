@@ -2,25 +2,32 @@
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import { character } from '@wild-daily/ui';
+import { TREK_STAGE_COUNT } from '@wild-daily/game-fresh-snow/engine';
+import { BADGES, BONUS, DAILY_SET } from '@wild-daily/core';
+import { badgeTiles, gameRow } from '../scripts/stats-html';
+// Drawn with empty progress at full size; stats.ts fills in the player's numbers without moving anything.
+const baseRows = [...DAILY_SET, ...BONUS].map((g) => gameRow(g, [])).join('');
+const lockedBadges = badgeTiles(new Set());
 ---
 <Base title="Your stats and badges" description="Your streaks, best times, Trail Trek progress and badges." active="stats" noindex>
   <PageHead title="Your stats" />
   <main class="wrap body">
     <div class="card banner" id="s-empty" hidden style="background:var(--good)"><Fragment set:html={character('fox', 'idle', 80)} /><div class="grow"><h2 class="h-s">No stats yet</h2><p style="margin:4px 0 0" class="muted">Solve today’s first puzzle and your streak, times and badges start here.</p></div><a class="btn btn-p" href="/fresh-snow?level=morning">Play Morning</a></div>
+    <script is:inline>/* Decide the empty-stats banner before the first paint, so the page does not jump. stats.ts does the same check. */try{var d=JSON.parse(localStorage.getItem("wilddaily:v1")||"{}");if(!Object.keys(d.days||{}).length&&!Object.keys(d.trek||{}).length)document.getElementById("s-empty").hidden=false}catch(e){document.getElementById("s-empty").hidden=false}</script>
     <div class="statrow">
       <div class="card stack" style="background:var(--fox-t); gap:4px"><b class="big" id="s-cur">0</b><span style="font-weight:800; font-size:14px">day streak</span></div>
       <div class="card stack" style="background:var(--rabbit-t); gap:4px"><b class="big" id="s-best">0</b><span style="font-weight:800; font-size:14px">best streak</span></div>
       <div class="card stack" style="background:var(--deer-t); gap:4px"><b class="big" id="s-trek-n">0</b><span style="font-weight:800; font-size:14px">Trek stages</span></div>
     </div>
-    <p class="muted" id="s-trek" style="margin:12px 0 0"></p>
-    <p class="muted" id="s-snow" style="margin-top:16px"></p>
+    <p class="muted" id="s-trek" style="margin:12px 0 0">Trail Trek: 0 of {TREK_STAGE_COUNT} stages cleared, 0 paws earned.</p>
+    <p class="muted" id="s-snow" style="margin-top:16px">One missed day each week is forgiven automatically, so a busy day won’t end your streak.</p>
+    <section class="section stack"><div class="row" style="justify-content:space-between"><h2 class="h-m">Badges</h2><span class="pill p-y" id="s-badge-count">0 of {BADGES.length} earned</span></div><div class="grid4" id="s-badges" set:html={lockedBadges}></div></section>
     <section class="section card stack"><h2 class="h-m">By game</h2>
       <div style="overflow-x:auto"><table style="width:100%; border-collapse:collapse; font-size:15px">
         <thead><tr style="text-align:left"><th scope="col" style="padding:10px 12px">Game</th><th scope="col" style="padding:10px 12px">Solved</th><th scope="col" style="padding:10px 12px">Best time</th><th scope="col" class="hide-sm" style="padding:10px 12px">Average</th><th scope="col" style="padding:10px 12px">3 paws</th></tr></thead>
-        <tbody id="s-table"></tbody></table></div>
+        <tbody id="s-table" set:html={baseRows}></tbody></table></div>
       <p class="muted" style="margin:0; font-size:14px">Games from the pack appear here after you play them.</p>
     </section>
-    <section class="section stack"><div class="row" style="justify-content:space-between"><h2 class="h-m">Badges</h2><span class="pill p-y" id="s-badge-count"></span></div><div class="grid4" id="s-badges"></div></section>
   </main>
   <script>import '../scripts/stats.ts';</script>
 </Base>

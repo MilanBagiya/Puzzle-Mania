@@ -73,7 +73,7 @@ const def: GameDef<BearPuzzle> = {
         const g = p.given[String(i)], s = step.get(i);
         return `<button type="button" class="gcell forest${s ? ' trail' : ''}${!done && nb4(n, at).includes(i) && !s ? ' target' : ''}" data-g="cell:${i}" aria-label="Bush${g ? ` number ${g}` : ''}${i === p.cave ? ', cave' : ''}${s ? `, visited as ${s}` : ''}">${i === p.cave ? svgUse('i3-home', '0 0 72 54') : svgUse('n-bush', '0 0 36 30')}${g ? `<span class="num ${s === g ? 'ok' : s ? 'over' : ''}">${g}</span>` : s ? `<span class="stepnum">${s}</span>` : ''}</button>`;
       }).join('');
-      const text = done ? 'Every bush visited and the bear is snoring in its cave!' : msg ?? `Visit all ${N} bushes once, one step at a time, ending in the cave. Numbered bushes must be visited at that step. Tap a visited bush to go back to it.`;
+      const text = done ? 'Every bush visited and the bear is snoring in its cave!' : msg ?? `Visit every bush once and end in the cave. A numbered bush must be that step. Tap a visited bush to go back.`;
       root.innerHTML = `${pills(`Bushes: ${route.length} of ${N}`, `Step ${route.length}`)}${coach(text, done ? 'good' : kind)}<div class="boardwrap"><div class="board" role="grid" aria-label="Forest" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 76}px">${cells}</div></div>${tools(btn('undo', 'Undo', 'btn-w', done || route.length < 2), btn('restart', 'Restart', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done))}`;
       mover.sync(root.querySelector<HTMLElement>('.boardwrap'), [{ id: 'bear', cell: at, el: root.querySelector(`[data-g="cell:${at}"]`), html: svgUse('n-bear', '0 0 40 36'), gait: 'walk', selected: !done, size: 0.8 }]);
     };

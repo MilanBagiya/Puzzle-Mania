@@ -20,6 +20,7 @@ const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 
       <div class="grow"><b class="display" style="font-size:19px">First time playing?</b><div class="muted">Take the 1-minute guided tutorial, then come back to this puzzle.</div></div>
       <div class="row" style="gap:8px"><a class="btn btn-p" href="/fresh-snow/tutorial">Start tutorial</a><button class="btn btn-w" id="fs-skip">I know how</button></div>
     </div>
+    <script is:inline>/* Show the first-time banner before the first paint, so the board does not jump (game.ts does the same check). */try{var d=JSON.parse(localStorage.getItem("wilddaily:v1")||"{}");if(!d.tutorialSeen&&!d.tutorialDone)document.getElementById("fs-banner").hidden=false}catch(e){}</script>
     <div class="game">
       <div class="stack">
         <nav class="tabs" id="fs-tabs" aria-label="Level">{LEVELS.map((l) => <a class="tab" data-level={l} href={`/fresh-snow?level=${l}`} style="display:grid; place-items:center; text-decoration:none">{LEVEL_NAME[l]}</a>)}</nav>
