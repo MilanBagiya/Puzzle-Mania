@@ -374,7 +374,7 @@ button.gcell:hover{transform:translateY(-2px)}
 .gcell.burrow{box-shadow:0 2px 0 rgba(0,0,0,.12)} .gcell.burrow > svg{width:90%}
 .exit{position:absolute; right:-4px; top:calc(2 * (100% / 6) + 10px); font-weight:800; font-size:12px; background:var(--good); padding:4px 6px; border-radius:3px}
 .gcell.stream{background:#BFE3F5; box-shadow:0 2px 0 #8DC6E6} .gcell.stream.spawn{background:#9BD08A; box-shadow:0 2px 0 #6BBE55} .gcell.stream b{font-size:clamp(15px,3.6vw,22px)} .gcell.stream .fishpos{position:absolute; width:70%; bottom:8%}
-.gcell.forest{background:#E3F4D6} .gcell.forest.trail{background:#FFE3D8} /* Forest squares stay light in dark mode too, so the step number keeps a fixed dark ink (5.8:1 on the trail pink, 5.9:1 on green). */
+.gcell.forest{background:#E3F4D6} .gcell.forest.trail{background:#FBEDB8} /* honey gold: a visited bush, clearly not an error */ /* Forest squares stay light in dark mode too, so the step number keeps a fixed dark ink (5.8:1 on the trail pink, 5.9:1 on green). */
 .stepnum{position:absolute; top:2px; left:4px; font-size:11px; font-weight:800; color:#4E5D6E}
 .gcell.pond{box-shadow:0 2px 0 rgba(0,0,0,.08)}
 .gcell.leafy{background:#DDEFD2} .gcell.leafy > svg{filter:hue-rotate(80deg) saturate(.8)} .gcell.leafy.gold{background:#FFF1C9} .gcell.leafy.gold > svg{filter:none}

@@ -13,8 +13,8 @@ import '@fontsource-variable/atkinson-hyperlegible-next/wght.css';
 import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-soft-normal.woff2?url';
 import atkinsonLatin from '@fontsource-variable/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-wght-normal.woff2?url';
 const southTz = SOUTH_TZ.source;
-interface Props { title: string; description: string; active?: string; noindex?: boolean; /** Inline the wider cast (moose, squirrel, bear, salmon…) for pages that show them. */ cast?: boolean; jsonLd?: Record<string, unknown> | Record<string, unknown>[] }
-const { title, description, active = '', noindex = false, cast = false, jsonLd } = Astro.props;
+interface Props { title: string; description: string; active?: string; noindex?: boolean; /** @deprecated the cast is now on every page (card pictures use it). */ cast?: boolean; jsonLd?: Record<string, unknown> | Record<string, unknown>[] }
+const { title, description, active = '', noindex = false, jsonLd } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -43,7 +43,7 @@ const { title, description, active = '', noindex = false, cast = false, jsonLd }
   </head>
   <body>
     <Fragment set:html={sprite} />
-    {cast && <Fragment set:html={castSprite} />}
+    <Fragment set:html={castSprite} />
     <Header active={active} />
     <slot />
     <Footer />

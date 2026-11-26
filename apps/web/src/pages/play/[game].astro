@@ -10,7 +10,7 @@ export function getStaticPaths() { return PACK.map((g) => ({ params: { game: g.i
 const { g } = Astro.props as { g: PackGame };
 const ld = { '@context': 'https://schema.org', '@type': 'WebApplication', name: g.name, applicationCategory: 'GameApplication', operatingSystem: 'Any', url: new URL(`/play/${g.id}`, Astro.site).href, description: g.blurb, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 ---
-<Base cast title={`${g.name}: daily puzzle`} description={`${g.blurb} A new ${g.name} puzzle every day, free.`} active={activeFor(g.id)} jsonLd={ld}>
+<Base title={`${g.name}: daily puzzle`} description={`${g.blurb} A new ${g.name} puzzle every day, free.`} active={activeFor(g.id)} jsonLd={ld}>
   <main class="wrap" style="padding-top:18px">
     <GameHead title={g.name} prefix="pk" back="/games" />
     <div class="game">

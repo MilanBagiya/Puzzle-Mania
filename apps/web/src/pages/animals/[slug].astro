@@ -16,7 +16,7 @@ const ld = [
 ];
 const more = GUIDES.filter((x) => x.slug !== g.slug).slice(0, 6);
 ---
-<Base cast title={g.title} description={g.description} active="guides" jsonLd={ld}>
+<Base title={g.title} description={g.description} active="guides" jsonLd={ld}>
   <Scenery height={240}>
     <nav aria-label="Breadcrumb" style="font-weight:800"><a href="/animals">Animal guides</a></nav>
     <h1 class="h-xl" style="margin-top:10px">{g.name} tracks in snow</h1>
