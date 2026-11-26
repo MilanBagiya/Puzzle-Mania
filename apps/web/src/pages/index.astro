@@ -16,13 +16,13 @@ const dailyTiles = DAILY_SET.map((g) => {
 const rail = (ids: string[]): string => ids.map((id) => entryById(id)).filter(Boolean).map((e) => tileHtml(e!)).join('');
 ---
 <Base title="Fresh Snow: the daily animal tracks puzzle · Wild Daily" description={`Read the footprints in fresh snow and guide each animal home. A new Fresh Snow puzzle every day, plus Nests, Dawn Chorus and ${LISTED.length - 3} more short animal puzzles. Free to play.`} active="today" jsonLd={ld}>
-  <Scenery height={230} pad={26} class="hub">
+  <Scenery height={230} pad={26} class="hub" story>
     <div class="hub-hero">
       <div class="stack" style="gap:12px; max-width:640px">
         <div class="row" style="gap:8px"><span class="pill p-w" id="hub-date">Today’s puzzles</span><span class="pill p-y season-pill" id="hub-season"></span><span class="pill p-w" id="hub-streak">Start a streak today</span></div>
         <h1 class="h-xl" id="hub-title">Read the tracks. Find each animal’s way home.</h1>
         <p class="lead" style="color:var(--ink); margin:0" id="hub-lead">Fresh Snow is a new puzzle every day: animals crossed the snow overnight, and their footprints show the way. Morning takes 1–2 minutes.</p>
-        <div class="row"><a class="btn btn-p big" id="hub-play" href="/fresh-snow?level=morning">Play Fresh Snow</a><a class="btn btn-w" href="/fresh-snow/tutorial" id="hub-tut">Start the tutorial</a></div>
+        <div class="row"><a class="btn btn-p big btn-go" id="hub-play" href="/fresh-snow?level=morning">Play Fresh Snow</a><a class="btn btn-w btn-learn" href="/fresh-snow/tutorial" id="hub-tut">Start the tutorial</a></div>
       </div>
     </div>
   </Scenery>

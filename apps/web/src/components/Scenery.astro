@@ -1,8 +1,10 @@
 ---
 // Cut-paper header scenery. Colours follow the season (tokens), and each season adds its own living details.
-import { svgUse } from '@wild-daily/ui';
-interface Props { height?: number; pad?: number; class?: string }
-const { height = 220, pad = 32, class: extra = '' } = Astro.props;
+import { character, svgUse } from '@wild-daily/ui';
+interface Props { height?: number; pad?: number; class?: string; /** Home page: footprints lead across the snow to a burrow, with the cast waiting (explains Fresh Snow at a glance). */ story?: boolean }
+const { height = 220, pad = 32, class: extra = '', story = false } = Astro.props;
+// A fox trail: alternating prints that curve across the snow to the burrow (story-art units, 560 x 170).
+const trail = Array.from({ length: 13 }, (_, k) => { const t = k / 12; return [36 + t * 400, 152 - Math.sin(t * Math.PI) * 14 + (k % 2 ? 5 : -5), k % 2 ? 14 : -10]; });
 const flakes = [[6, 0], [14, 1.2], [23, 2.6], [31, 0.6], [40, 3.1], [48, 1.8], [57, 0.3], [66, 2.2], [74, 1.1], [83, 3.4], [91, 0.9], [97, 2.9]];
 const leaves = [[8, 0], [22, 1.6], [38, 3.2], [55, 0.8], [71, 2.4], [86, 4]];
 const flies = [[12, 30, 0], [28, 18, 0.8], [46, 34, 1.6], [64, 22, 0.4], [80, 30, 2.2], [92, 14, 1.2]];
@@ -14,6 +16,16 @@ const flies = [[12, 30, 0], [28, 18, 0.8], [46, 34, 1.6], [64, 22, 0.4], [80, 30
     <path d="M0 150 Q220 110 460 142 T930 136 T1280 144 V200 H0 Z" style="fill:var(--hill)"></path>
     <path d="M0 178 Q320 154 660 172 T1280 168 V200 H0 Z" style="fill:var(--front)"></path>
   </svg>
+  {story && <div class="story" aria-hidden="true">
+    <svg class="story-art" viewBox="0 0 560 170">
+      <use href="#i3-tree" x="470" y="36" width="62" height="70"></use><use href="#i3-tree" x="410" y="58" width="44" height="50"></use><use href="#i3-tree" x="18" y="70" width="36" height="41"></use>
+      <use href="#i3-home" x="458" y="104" width="70" height="52"></use>
+      {trail.map(([x, y, r]) => <use class="trail-print" href="#p3-fox" x={x} y={y - 8} width="16" height="16" transform={`rotate(${r} ${x + 8} ${y})`}></use>)}
+    </svg>
+    <span class="cast cast-deer" set:html={character('deer', 'idle', 84)} />
+    <span class="cast cast-rabbit" set:html={character('rabbit', 'happy', 66)} />
+    <span class="cast cast-fox" set:html={character('fox', 'happy', 86)} />
+  </div>}
   <div class="deco" aria-hidden="true">
     <div class="deco-winter">{flakes.map(([x, d]) => <span class="flake snowfall" style={`left:${x}%; animation-delay:${d}s; animation-duration:${5 + (Number(x) % 3)}s`}></span>)}</div>
     <div class="deco-spring">
