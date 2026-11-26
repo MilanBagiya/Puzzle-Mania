@@ -951,8 +951,6 @@ a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover, .lvrow:hover, .st
 @media (hover:hover) and (pointer:fine){
   .tile:hover{box-shadow:0 0 0 2px var(--pine), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -14px var(--shade-strong)}
 }
-/* Wide side-by-side card (last odd card in the phone Daily Set): keep the art on the left, details on the right. */
-.tiles-5 > .tile:last-child:nth-child(odd) .tile-art{margin:8px 0 8px 8px}
 /* Buttons that are links keep their own text colour on hover: the plain-link hover (coral text, line 48) is more
    specific than .btn-p etc., and turned "Play Morning" coral on green. */
 a.btn-p:hover, a.btn-p:focus-visible{color:var(--on-pine)}
@@ -1173,3 +1171,42 @@ main.portal{min-height:calc(100dvh - 300px)}
 @keyframes berry-drop{from{transform:translateY(-30%); opacity:.2} to{transform:none; opacity:1}}
 @media (prefers-reduced-motion: reduce){ .bcell{transition:none} .bcell.fresh{animation:none} .bcell.sel{transform:none} }
 @media (max-width:420px){ .bgrid{gap:3px; padding:4px} .bcell{border-radius:8px} }
+
+/* ======================================================================
+   One card width everywhere, rail arrows, footer at the bottom (2026-11-26)
+   ====================================================================== */
+/* One card width everywhere: a fifth of the page on desktop (the Daily Set fills a row), a third on tablets, half on
+   phones. It is measured from the page (main is a size container), so grids beside a sidebar and sideways rails use
+   exactly the same card width. A lone last card stays one card wide (no stretched strip). */
+body > main{width:100%; container-type:inline-size}
+:root{--tgap:24px; --card-w:calc((100cqw - 4 * var(--tgap)) / 5)}
+@media (max-width:899px){ :root{--card-w:calc((100cqw - 2 * var(--tgap)) / 3)} }
+@media (max-width:720px){ :root{--tgap:16px; --card-w:calc((100cqw - var(--tgap)) / 2)} }
+.tiles, .tiles-5{grid-template-columns:repeat(auto-fill, var(--card-w)); gap:var(--tgap); justify-content:start}
+.rail{grid-auto-columns:var(--card-w); gap:var(--tgap)}
+.tiles > .tile:last-child:nth-child(odd), .tiles-5 > .tile:last-child:nth-child(odd), .tiles[data-grid] > .tile:last-child:nth-child(odd){grid-column:auto; flex-direction:column}
+.tiles > .tile:last-child:nth-child(odd) .tile-art, .tiles-5 > .tile:last-child:nth-child(odd) .tile-art, .tiles[data-grid] > .tile:last-child:nth-child(odd) .tile-art{flex:none; aspect-ratio:16 / 9; margin:8px 8px 0}
+
+/* Rails: no scrollbar. Round arrow buttons scroll them on mouse and keyboard devices; touch screens swipe. */
+.rail{scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rail-wrap{position:relative}
+.rail.can-scroll:not(.at-start){-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 92%,transparent); mask-image:linear-gradient(90deg,transparent,#000 6%,#000 92%,transparent)}
+.rail.can-scroll:not(.at-start).at-end{-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%); mask-image:linear-gradient(90deg,transparent,#000 6%)}
+.rail-btn{position:absolute; top:calc(50% - 30px); z-index:2; display:grid; place-items:center; width:44px; height:44px; padding:0; border:0; border-radius:50%;
+  background:var(--card); color:var(--ink); box-shadow:0 0 0 1px var(--edge1), 0 3px 0 var(--edge2), 0 10px 18px -8px var(--shade-strong); cursor:pointer;
+  transition:opacity .15s ease, background-color .15s ease, color .15s ease}
+.rail-btn.prev{left:-14px}
+.rail-btn.next{right:-14px}
+.rail-btn:disabled{opacity:0; pointer-events:none}
+.rail-btn:active{transform:translateY(2px); box-shadow:0 0 0 1px var(--edge1), 0 1px 0 var(--edge2)}
+.rail-btn:focus-visible{outline:3px solid var(--focus); outline-offset:3px}
+@media (hover:hover) and (pointer:fine){ .rail-btn:hover{background:var(--pine); color:var(--on-pine)} }
+@media (hover:none), (pointer:coarse){ .rail-btn{display:none} }
+@media (prefers-reduced-motion: reduce){ .rail-btn{transition:none} .rail-btn:active{transform:none} }
+
+/* The footer sits at the bottom of the window on short pages, with even spacing inside. */
+body{min-height:100vh; min-height:100dvh; display:flex; flex-direction:column}
+body > main{flex:1 0 auto}
+body > footer{margin-top:auto}
+footer .wrap{padding-top:32px; padding-bottom:32px; row-gap:12px; align-items:center}

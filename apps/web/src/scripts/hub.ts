@@ -64,13 +64,37 @@ if (week) week.innerHTML = [...Array(7).keys()].map((i) => {
 }).join('');
 startCountdowns();
 
-// Rails that scroll sideways get a fade at the right edge (removed at the end), so players see there is more.
-function railFade(): void {
+// Rails scroll sideways: no scrollbar, but ◀ ▶ buttons (mouse and keyboard) and soft edge fades show there is more.
+// Touch screens swipe, so the buttons are hidden there by CSS.
+const chevron = (d: 'l' | 'r'): string => `<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="${d === 'l' ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7'}" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+function railNav(): void {
   document.querySelectorAll<HTMLElement>('.rail').forEach((r) => {
-    const update = (): void => { r.classList.toggle('can-scroll', r.scrollWidth > r.clientWidth + 2); r.classList.toggle('at-end', r.scrollLeft + r.clientWidth >= r.scrollWidth - 4); };
-    if (!r.dataset.fade) { r.dataset.fade = '1'; r.addEventListener('scroll', update, { passive: true }); }
-    update();
+    let wrap = r.parentElement;
+    if (!wrap?.classList.contains('rail-wrap')) {
+      wrap = document.createElement('div'); wrap.className = 'rail-wrap';
+      r.before(wrap); wrap.append(r);
+      const name = r.closest('section')?.querySelector('h2')?.textContent?.trim() || 'games';
+      wrap.insertAdjacentHTML('beforeend', `<button type="button" class="rail-btn prev" aria-label="Scroll ${name} back">${chevron('l')}</button><button type="button" class="rail-btn next" aria-label="Scroll ${name} forward">${chevron('r')}</button>`);
+      const go = (dir: number): void => {
+        const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        r.scrollBy({ left: dir * Math.max(200, r.clientWidth * 0.85), behavior: smooth ? 'smooth' : 'auto' });
+      };
+      wrap.querySelector('.prev')!.addEventListener('click', () => go(-1));
+      wrap.querySelector('.next')!.addEventListener('click', () => go(1));
+      r.addEventListener('scroll', () => update(r), { passive: true });
+    }
+    update(r);
   });
 }
-railFade();
-window.addEventListener('resize', railFade);
+function update(r: HTMLElement): void {
+  const wrap = r.parentElement!, can = r.scrollWidth > r.clientWidth + 2;
+  const atStart = r.scrollLeft <= 4, atEnd = r.scrollLeft + r.clientWidth >= r.scrollWidth - 4;
+  r.classList.toggle('can-scroll', can); r.classList.toggle('at-start', atStart); r.classList.toggle('at-end', atEnd);
+  const prev = wrap.querySelector<HTMLButtonElement>('.prev'), next = wrap.querySelector<HTMLButtonElement>('.next');
+  if (prev) prev.disabled = !can || atStart;
+  if (next) next.disabled = !can || atEnd;
+}
+railNav();
+window.addEventListener('resize', railNav);
+// Rails filled later (picks, in season, continue) need their buttons too.
+document.addEventListener('wd:season', () => requestAnimationFrame(railNav));
