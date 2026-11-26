@@ -1,0 +1,36 @@
+---
+// Cast review board (dev only): every character in every mood, large and at board size.
+// noindex, not linked from navigation, left out of the sitemap (astro.config.mjs NOINDEX).
+import Base from '../../layouts/Base.astro';
+import { CAST, character, type CharacterId, type Mood } from '@wild-daily/ui';
+
+const all: CharacterId[] = ['fox', 'rabbit', 'deer', ...CAST];
+const moods: Mood[] = ['idle', 'happy', 'oops'];
+const name = (a: string): string => a[0]!.toUpperCase() + a.slice(1);
+---
+<Base title="Cast" description="Every Wild Daily character in every mood." noindex>
+  <main class="wrap body">
+    <h1 class="h-l" style="margin:24px 0 8px">The cast</h1>
+    <p class="muted" style="margin:0 0 24px">{all.length} characters, each with idle, happy and oops faces. Large, then at board size.</p>
+    <div class="cast-board">
+      {all.map((a) => (
+        <section class="card cast-row">
+          <h2 class="h-s">{name(a)}</h2>
+          <div class="cast-moods">
+            {moods.map((m) => (<figure><Fragment set:html={character(a, m, 104, '', `${name(a)}, ${m}`)} /><figcaption>{m}</figcaption></figure>))}
+            <div class="cast-small">{moods.map((m) => <Fragment set:html={character(a, m, 40)} />)}</div>
+          </div>
+        </section>
+      ))}
+    </div>
+  </main>
+</Base>
+
+<style>
+  .cast-board { display: grid; grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); gap: 24px; }
+  .cast-row { display: flex; flex-direction: column; gap: 10px; }
+  .cast-moods { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .cast-moods figure { margin: 0; text-align: center; font-weight: 800; font-size: 13px; }
+  .cast-small { display: flex; gap: 6px; padding: 8px; border-radius: 10px; background: var(--soft); }
+  @media (max-width: 720px) { .cast-board { grid-template-columns: 1fr; } }
+</style>

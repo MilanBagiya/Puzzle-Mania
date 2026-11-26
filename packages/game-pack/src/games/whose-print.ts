@@ -1,7 +1,9 @@
 // Whose Print?: five footprints, three choices each. Every answer links to a track guide.
-import { print } from '@wild-daily/ui';
+import { character, print, type CharacterId } from '@wild-daily/ui';
 import { btn, clock, coach, onAct, range, rngFrom, scramble, shuffle, unscramble, type GameDef } from '../shared.js';
 
+/** Who made each print (for the answers screen); the turkey has no character yet. */
+const WHO: Record<string, CharacterId> = { fox: 'fox', rabbit: 'rabbit', deer: 'deer', squirrel: 'squirrel', canid: 'coyote', hand: 'raccoon', cat: 'bobcat', skunk: 'skunk', hoof: 'moose' };
 export const PRINTS = [
   { id: 'fox', name: 'Red fox', guide: 'fox', why: 'Four toes and a neat oval with a chevron-shaped heel bar.' },
   { id: 'rabbit', name: 'Rabbit', guide: 'rabbit', why: 'Long hind feet that land side by side, in front of the small front feet.' },
@@ -30,7 +32,7 @@ const def: GameDef<QuizPuzzle> = {
     const render = (): void => {
       const q = picked.length, right = picked.filter((x, i) => x === ans[i]).length;
       if (q >= 5) {
-        root.innerHTML = `${coach(`You got ${right} of 5 right!`, right >= 3 ? 'good' : '')}<div class="stack">${ans.map((a, i) => `<div class="card tight row" style="flex-wrap:nowrap">${print(PRINTS[a]!.id, 46)}<div><b>${picked[i] === a ? '✓' : '✗'} ${PRINTS[a]!.name}</b><div class="muted" style="font-size:14px">${PRINTS[a]!.why}</div><a href="/animals/${PRINTS[a]!.guide}" style="font-weight:800; font-size:14px">Read the guide</a></div></div>`).join('')}</div>`;
+        root.innerHTML = `${coach(`You got ${right} of 5 right!`, right >= 3 ? 'good' : '')}<div class="stack">${ans.map((a, i) => `<div class="card tight row" style="flex-wrap:nowrap">${WHO[PRINTS[a]!.id] ? character(WHO[PRINTS[a]!.id]!, picked[i] === a ? 'happy' : 'idle', 52) : '<span style="width:52px; flex:none"></span>'}${print(PRINTS[a]!.id, 46)}<div><b>${picked[i] === a ? '✓' : '✗'} ${PRINTS[a]!.name}</b><div class="muted" style="font-size:14px">${PRINTS[a]!.why}</div><a href="/animals/${PRINTS[a]!.guide}" style="font-weight:800; font-size:14px">Read the guide</a></div></div>`).join('')}</div>`;
         return;
       }
       const a = ans[q]!, last = picked[q - 1], lastAns = ans[q - 1];

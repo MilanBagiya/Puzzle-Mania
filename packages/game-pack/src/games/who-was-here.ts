@@ -4,10 +4,10 @@ import { btn, clock, coach, onAct, range, rngFrom, scramble, unscramble, type Ga
 
 export const CAST = [
   { name: 'Red fox', art: () => character('fox', 'idle', 300) }, { name: 'Rabbit', art: () => character('rabbit', 'idle', 300) },
-  { name: 'Deer', art: () => character('deer', 'idle', 300) }, { name: 'Beaver', art: () => svgUse('n-beaver', '0 0 80 80', 300) },
-  { name: 'Crab', art: () => svgUse('n-crab', '0 0 80 64', 300) }, { name: 'Frog', art: () => svgUse('n-frog', '0 0 64 56', 300) },
+  { name: 'Deer', art: () => character('deer', 'idle', 300) }, { name: 'Beaver', art: () => character('beaver', 'idle', 300) },
+  { name: 'Crab', art: () => svgUse('n-crab', '0 0 80 64', 300) }, { name: 'Frog', art: () => character('frog', 'idle', 300) },
   { name: 'Robin', art: () => bird('#E2594A', 300) }, { name: 'Bluebird', art: () => bird('#3F86D3', 300) },
-  { name: 'Owl', art: () => svgUse('n-owl', '0 0 40 40', 300) }, { name: 'Salmon', art: () => svgUse('n-fish', '0 0 40 22', 300) },
+  { name: 'Owl', art: () => character('owl', 'idle', 300) }, { name: 'Salmon', art: () => character('salmon', 'idle', 300) },
 ];
 export interface ZoomPuzzle { seed: string; code: string; fx: number; fy: number }
 export function generate(seed: string): ZoomPuzzle {

@@ -1,5 +1,7 @@
 // Animal track guides. Each becomes a static page at /animals/<slug>. Facts are summarised from the sourced guide drafts.
-export type GuideArt = { kind: 'character'; animal: 'fox' | 'rabbit' | 'deer'; print: string } | { kind: 'print'; print: string };
+/** Animals with a full character (the sprite and cast.svg in @wild-daily/ui). */
+export type GuideAnimal = 'fox' | 'rabbit' | 'deer' | 'squirrel' | 'coyote' | 'wolf' | 'raccoon' | 'skunk' | 'bobcat' | 'moose';
+export type GuideArt = { kind: 'character'; animal: GuideAnimal; print: string } | { kind: 'print'; print: string };
 export interface Guide { slug: string; name: string; group: 'paws' | 'hooves' | 'birds'; size: string; clue: string; body: string[]; lookAlike: string; art: GuideArt; title: string; description: string }
 export const GUIDES: readonly Guide[] = [
   { slug: 'fox', name: 'Fox', group: 'paws', size: '1¾–2½ in', clue: 'Neat ovals in an almost straight line.', art: { kind: 'character', animal: 'fox', print: 'fox' },
@@ -14,7 +16,7 @@ export const GUIDES: readonly Guide[] = [
     title: "Deer Tracks in Snow: How to Identify Them", description: "Deer tracks: split hearts that point the way. Print size 2–3 in. Learn what to look for and the look-alikes.",
     body: ["Deer leave split-heart prints made by two hoof halves.", "The pointed tips face the direction the deer was walking.", "In deep snow the dewclaws can show as two dots behind the hoof."],
     lookAlike: "Moose prints have the same shape but can be more than twice as long." },
-  { slug: 'squirrel', name: 'Squirrel', group: 'paws', size: 'Hind 1¼–3¼ in', clue: 'Boxy groups of four, tree to tree.', art: { kind: 'print', print: 'squirrel' },
+  { slug: 'squirrel', name: 'Squirrel', group: 'paws', size: 'Hind 1¼–3¼ in', clue: 'Boxy groups of four, tree to tree.', art: { kind: 'character', animal: 'squirrel', print: 'squirrel' },
     title: "Squirrel Tracks in Snow: How to Identify Them", description: "Squirrel tracks: boxy groups of four, tree to tree. Print size Hind 1¼–3¼ in. Learn what to look for and the look-alikes.",
     body: ["Squirrels bound, leaving boxy groups of four with the bigger hind feet landing in front.", "Gray squirrels usually set their front feet side by side.", "Trails that start and end at trees almost always belong to squirrels."],
     lookAlike: "Rabbit groups are longer, with the front prints one behind the other." },
@@ -22,27 +24,27 @@ export const GUIDES: readonly Guide[] = [
     title: "Turkey and birds Tracks in Snow: How to Identify Them", description: "Turkey and birds tracks: three toes forward; walkers vs hoppers. Print size Turkey 3½–4½ in. Learn what to look for and the look-alikes.",
     body: ["Wild turkeys leave large three-toed prints one after another, because they walk.", "Small songbirds hop, leaving pairs of tiny prints side by side.", "A gobbler’s track is about an inch longer than a hen’s."],
     lookAlike: "Pheasant and grouse prints look like small turkey prints in a walking line." },
-  { slug: 'coyote', name: 'Coyote', group: 'paws', size: 'About 2½ in', clue: 'Oval prints with an H-shaped gap.', art: { kind: 'print', print: 'canid' },
+  { slug: 'coyote', name: 'Coyote', group: 'paws', size: 'About 2½ in', clue: 'Oval prints with an H-shaped gap.', art: { kind: 'character', animal: 'coyote', print: 'canid' },
     title: "Coyote Tracks in Snow: How to Identify Them", description: "Coyote tracks: oval prints with an H-shaped gap. Print size About 2½ in. Learn what to look for and the look-alikes.",
     body: ["Coyote prints are neat ovals with four toes and claw marks.", "The empty space between the toes and heel pad often forms an H shape.", "Like foxes, coyotes travel in straight, purposeful lines."],
     lookAlike: "A wandering, loopy trail usually means a pet dog." },
-  { slug: 'wolf', name: 'Wolf', group: 'paws', size: '4¼–5 in', clue: 'Huge dog-like prints, often single file.', art: { kind: 'print', print: 'canid' },
+  { slug: 'wolf', name: 'Wolf', group: 'paws', size: '4¼–5 in', clue: 'Huge dog-like prints, often single file.', art: { kind: 'character', animal: 'wolf', print: 'canid' },
     title: "Wolf Tracks in Snow: How to Identify Them", description: "Wolf tracks: huge dog-like prints, often single file. Print size 4¼–5 in. Learn what to look for and the look-alikes.",
     body: ["Wolf prints are very large ovals with four toes and claws.", "A wolf’s front print is about twice as long as a fox’s.", "In deep snow a pack often walks single file in the leader’s prints."],
     lookAlike: "Some big dogs leave prints this size, but their trails wander." },
-  { slug: 'raccoon', name: 'Raccoon', group: 'paws', size: 'Front 2½–3 in', clue: 'Tiny hands, set in side-by-side pairs.', art: { kind: 'print', print: 'hand' },
+  { slug: 'raccoon', name: 'Raccoon', group: 'paws', size: 'Front 2½–3 in', clue: 'Tiny hands, set in side-by-side pairs.', art: { kind: 'character', animal: 'raccoon', print: 'hand' },
     title: "Raccoon Tracks in Snow: How to Identify Them", description: "Raccoon tracks: tiny hands, set in side-by-side pairs. Print size Front 2½–3 in. Learn what to look for and the look-alikes.",
     body: ["Raccoon prints look like small human hands with five long toes.", "Each hind foot lands beside the opposite front foot, so prints come in pairs."],
     lookAlike: "Opossum prints have toes spread like a star and a thumb sticking out to the side." },
-  { slug: 'skunk', name: 'Skunk', group: 'paws', size: 'Front about 1¾ in', clue: 'Five toes, long claws, a wandering trail.', art: { kind: 'print', print: 'skunk' },
+  { slug: 'skunk', name: 'Skunk', group: 'paws', size: 'Front about 1¾ in', clue: 'Five toes, long claws, a wandering trail.', art: { kind: 'character', animal: 'skunk', print: 'skunk' },
     title: "Skunk Tracks in Snow: How to Identify Them", description: "Skunk tracks: five toes, long claws, a wandering trail. Print size Front about 1¾ in. Learn what to look for and the look-alikes.",
     body: ["Skunk prints show five toes, with long claw marks on the front feet.", "Skunks amble with short steps, so prints sit in loose, uneven clusters."],
     lookAlike: "House cats show four toes and no claw marks." },
-  { slug: 'bobcat', name: 'Bobcat', group: 'paws', size: 'About 2 in', clue: 'Round prints with no claw marks.', art: { kind: 'print', print: 'cat' },
+  { slug: 'bobcat', name: 'Bobcat', group: 'paws', size: 'About 2 in', clue: 'Round prints with no claw marks.', art: { kind: 'character', animal: 'bobcat', print: 'cat' },
     title: "Bobcat Tracks in Snow: How to Identify Them", description: "Bobcat tracks: round prints with no claw marks. Print size About 2 in. Learn what to look for and the look-alikes.",
     body: ["Bobcat prints are round, with four toes and no claw marks.", "The heel pad has two lobes on top and three below.", "A bobcat places its hind feet in its front prints, leaving a neat line."],
     lookAlike: "Dog and coyote prints are oval and show claws." },
-  { slug: 'moose', name: 'Moose', group: 'hooves', size: 'About 6 in', clue: 'Giant split hearts with long strides.', art: { kind: 'print', print: 'hoof' },
+  { slug: 'moose', name: 'Moose', group: 'hooves', size: 'About 6 in', clue: 'Giant split hearts with long strides.', art: { kind: 'character', animal: 'moose', print: 'hoof' },
     title: "Moose Tracks in Snow: How to Identify Them", description: "Moose tracks: giant split hearts with long strides. Print size About 6 in. Learn what to look for and the look-alikes.",
     body: ["Moose prints are giant split hearts, often about 6 inches long.", "A moose’s stride is about double a deer’s.", "In deep snow moose often drag their feet, leaving long troughs."],
     lookAlike: "Elk prints are rounder and a little smaller." },

@@ -13,6 +13,11 @@
 <radialGradient id="g3-beaver" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#B07A48"></stop><stop offset="0.65" stop-color="#835534"></stop><stop offset="1" stop-color="#58371F"></stop></radialGradient>
 <radialGradient id="g3-otter" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#8E6A50"></stop><stop offset="0.65" stop-color="#654532"></stop><stop offset="1" stop-color="#432C1E"></stop></radialGradient>
 <radialGradient id="g3-frog" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#9ADB74"></stop><stop offset="0.65" stop-color="#5DAE4A"></stop><stop offset="1" stop-color="#3C8532"></stop></radialGradient>
+<radialGradient id="g3-wolf" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#BFC6CE"></stop><stop offset="0.65" stop-color="#8C95A0"></stop><stop offset="1" stop-color="#5E6773"></stop></radialGradient>
+<radialGradient id="g3-coyote" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#DDB98F"></stop><stop offset="0.65" stop-color="#B08860"></stop><stop offset="1" stop-color="#7F5F42"></stop></radialGradient>
+<radialGradient id="g3-raccoon" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#BCC1C7"></stop><stop offset="0.65" stop-color="#8E949B"></stop><stop offset="1" stop-color="#62686F"></stop></radialGradient>
+<radialGradient id="g3-skunk" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#555B65"></stop><stop offset="0.65" stop-color="#2E333A"></stop><stop offset="1" stop-color="#16191E"></stop></radialGradient>
+<radialGradient id="g3-bobcat" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#E6BA86"></stop><stop offset="0.65" stop-color="#C08A52"></stop><stop offset="1" stop-color="#8C5F36"></stop></radialGradient>
 </defs>
 
 <!-- Moose: dark brown, very long legs, wide flat antlers, a long nose and a "bell" under the chin. -->
@@ -288,5 +293,125 @@
 <path d="M23.5 15.5 L32 18 M56.5 15.5 L48 18" stroke="#2E6A27" stroke-width="2" stroke-linecap="round"></path>
 <circle cx="29" cy="23.5" r="2.4" fill="#1C2430"></circle><circle cx="51" cy="23.5" r="2.4" fill="#1C2430"></circle>
 <path d="M32 41 Q36 38.5 40 41 Q44 43.5 48 41" stroke="#1C2430" stroke-width="1.5" fill="none" stroke-linecap="round"></path><path d="M63 10 Q66 15 63 17 Q60 15 63 10 Z" fill="#8FD0F5"></path>
+</symbol>
+<!-- Wolf: cool grey and broad, with a white face mask and chest, upright ears and a bushy tail. -->
+<symbol id="ch-wolf-body" viewBox="0 0 80 80">
+<ellipse cx="40" cy="75" rx="24" ry="3.6" fill="#233142" fill-opacity="0.18"></ellipse>
+<path d="M52 65 Q69 67 71 54 Q72 45 66 43 Q64 54 52 58 Z" fill="url(#g3-wolf)"></path><path d="M66 43 Q72 45 71 52 Q68 47 66 43 Z" fill="#4A525C"></path>
+<path d="M21 66 Q17 49 30 43 Q40 39 50 43 Q63 49 59 66 Q40 72 21 66 Z" fill="url(#g3-wolf)"></path>
+<path d="M33 46 Q40 43 47 46 Q47 60 40 64 Q33 60 33 46 Z" fill="#EEF1F4"></path>
+<rect x="31.5" y="57" width="5" height="13" rx="2" fill="#8C95A0"></rect><rect x="43.5" y="57" width="5" height="13" rx="2" fill="#8C95A0"></rect>
+<ellipse cx="34" cy="70" rx="4" ry="2.2" fill="#5E6773"></ellipse><ellipse cx="46" cy="70" rx="4" ry="2.2" fill="#5E6773"></ellipse>
+<path d="M23 23 L25 6 L36 16 Z" fill="url(#g3-wolf)"></path><path d="M57 23 L55 6 L44 16 Z" fill="url(#g3-wolf)"></path>
+<path d="M26 18 L26.8 10.5 L32 15.5 Z" fill="#D9C7C4"></path><path d="M54 18 L53.2 10.5 L48 15.5 Z" fill="#D9C7C4"></path>
+<path d="M23 27 Q23 13 40 13 Q57 13 57 27 Q57 37 47 42 L40 45 L33 42 Q23 37 23 27 Z" fill="url(#g3-wolf)"></path>
+<path d="M29 30 Q40 25 51 30 Q49 41 40 45 Q31 41 29 30 Z" fill="#EEF1F4"></path>
+</symbol>
+<symbol id="ch-wolf-idle" viewBox="0 0 80 80">
+<ellipse cx="28.5" cy="32" rx="3" ry="1.9" fill="#FF8FA3" fill-opacity="0.5"></ellipse><ellipse cx="51.5" cy="32" rx="3" ry="1.9" fill="#FF8FA3" fill-opacity="0.5"></ellipse><g class="blink"><ellipse cx="34" cy="25" rx="2.8" ry="3.4" fill="#1C2430"></ellipse><ellipse cx="46" cy="25" rx="2.8" ry="3.4" fill="#1C2430"></ellipse><circle cx="35" cy="23.9" r="1" fill="#FFFFFF"></circle><circle cx="47" cy="23.9" r="1" fill="#FFFFFF"></circle></g><ellipse cx="40" cy="35" rx="3.3" ry="2.4" fill="#1C2430"></ellipse><path d="M37.5 38.5 Q40 40.5 42.5 38.5" stroke="#1C2430" stroke-width="1.3" fill="none" stroke-linecap="round"></path>
+</symbol>
+<symbol id="ch-wolf-happy" viewBox="0 0 80 80">
+<ellipse cx="28.5" cy="32" rx="3.6" ry="2.3" fill="#FF7F96" fill-opacity="0.75"></ellipse><ellipse cx="51.5" cy="32" rx="3.6" ry="2.3" fill="#FF7F96" fill-opacity="0.75"></ellipse><path d="M31 26 Q34 22 37 26 M43 26 Q46 22 49 26" stroke="#1C2430" stroke-width="2.1" fill="none" stroke-linecap="round"></path><ellipse cx="40" cy="35" rx="3.3" ry="2.4" fill="#1C2430"></ellipse><path d="M36.5 38 Q40 43 43.5 38 Z" fill="#7A3B3B"></path><path d="M62 28 c1.5 -3 5 -2 4 1 c-0.6 1.8 -4 4 -4 4 c0 0 -3.4 -2.2 -4 -4 c-1 -3 2.5 -4 4 -1 Z" fill="#FF7F96"></path>
+</symbol>
+<symbol id="ch-wolf-oops" viewBox="0 0 80 80">
+<path d="M30.5 20 L37 21.5 M49.5 20 L43 21.5" stroke="#4A525C" stroke-width="1.8" stroke-linecap="round"></path><ellipse cx="34" cy="25.5" rx="2.5" ry="3.1" fill="#1C2430"></ellipse><ellipse cx="46" cy="25.5" rx="2.5" ry="3.1" fill="#1C2430"></ellipse><circle cx="35" cy="24.4" r="1" fill="#FFFFFF"></circle><circle cx="47" cy="24.4" r="1" fill="#FFFFFF"></circle><ellipse cx="40" cy="35" rx="3.3" ry="2.4" fill="#1C2430"></ellipse><path d="M38 40.2 Q40 39 42 40.2" stroke="#1C2430" stroke-width="1.3" fill="none" stroke-linecap="round"></path><path d="M60 11 Q63 16 60 18 Q57 16 60 11 Z" fill="#8FD0F5"></path>
+</symbol>
+
+<!-- Coyote: tan and slim, with very large pointed ears, a narrow cream muzzle and a black-tipped tail. -->
+<symbol id="ch-coyote-body" viewBox="0 0 80 80">
+<ellipse cx="40" cy="75" rx="21" ry="3.6" fill="#233142" fill-opacity="0.18"></ellipse>
+<path d="M50 64 Q66 70 70 58 Q71 50 64 48 Q62 56 50 58 Z" fill="url(#g3-coyote)"></path><path d="M64 48 Q71 50 70 57 Q67 52 64 48 Z" fill="#3A3330"></path>
+<path d="M25 66 Q21 50 31 44 Q40 40 49 44 Q59 50 55 66 Q40 71 25 66 Z" fill="url(#g3-coyote)"></path>
+<path d="M34 47 Q40 44 46 47 Q46 60 40 63 Q34 60 34 47 Z" fill="#F3E6D2"></path>
+<rect x="33" y="57" width="4" height="13" rx="1.8" fill="#B08860"></rect><rect x="43" y="57" width="4" height="13" rx="1.8" fill="#B08860"></rect>
+<ellipse cx="35" cy="70" rx="3.6" ry="2" fill="#7F5F42"></ellipse><ellipse cx="45" cy="70" rx="3.6" ry="2" fill="#7F5F42"></ellipse>
+<path d="M25 22 L23 2 L37 15 Z" fill="url(#g3-coyote)"></path><path d="M55 22 L57 2 L43 15 Z" fill="url(#g3-coyote)"></path>
+<path d="M27 17 L26 7 L33 14.5 Z" fill="#E8C4B0"></path><path d="M53 17 L54 7 L47 14.5 Z" fill="#E8C4B0"></path>
+<path d="M26 25 Q26 13 40 13 Q54 13 54 25 Q53 34 45 40 L40 45 L35 40 Q27 34 26 25 Z" fill="url(#g3-coyote)"></path>
+<path d="M32 31 Q40 28 48 31 Q46 40 40 45 Q34 40 32 31 Z" fill="#F3E6D2"></path>
+</symbol>
+<symbol id="ch-coyote-idle" viewBox="0 0 80 80">
+<ellipse cx="29.5" cy="31.5" rx="3" ry="1.9" fill="#FF8FA3" fill-opacity="0.5"></ellipse><ellipse cx="50.5" cy="31.5" rx="3" ry="1.9" fill="#FF8FA3" fill-opacity="0.5"></ellipse><g class="blink"><ellipse cx="34.5" cy="24.5" rx="2.5" ry="3.1" fill="#1C2430"></ellipse><ellipse cx="45.5" cy="24.5" rx="2.5" ry="3.1" fill="#1C2430"></ellipse><circle cx="35.5" cy="23.4" r="1" fill="#FFFFFF"></circle><circle cx="46.5" cy="23.4" r="1" fill="#FFFFFF"></circle></g><ellipse cx="40" cy="36.5" rx="2.6" ry="1.9" fill="#1C2430"></ellipse><path d="M37.5 39.5 Q40 41.5 42.5 39.5" stroke="#1C2430" stroke-width="1.3" fill="none" stroke-linecap="round"></path>
+</symbol>
+<symbol id="ch-coyote-happy" viewBox="0 0 80 80">
+<ellipse cx="29.5" cy="31.5" rx="3.6" ry="2.3" fill="#FF7F96" fill-opacity="0.75"></ellipse><ellipse cx="50.5" cy="31.5" rx="3.6" ry="2.3" fill="#FF7F96" fill-opacity="0.75"></ellipse><path d="M31.5 25.5 Q34.5 21.5 37.5 25.5 M42.5 25.5 Q45.5 21.5 48.5 25.5" stroke="#1C2430" stroke-width="2.1" fill="none" stroke-linecap="round"></path><ellipse cx="40" cy="36.5" rx="2.6" ry="1.9" fill="#1C2430"></ellipse><path d="M36.5 39 Q40 44 43.5 39 Z" fill="#7A3B3B"></path><path d="M60 28 c1.5 -3 5 -2 4 1 c-0.6 1.8 -4 4 -4 4 c0 0 -3.4 -2.2 -4 -4 c-1 -3 2.5 -4 4 -1 Z" fill="#FF7F96"></path>
+</symbol>
+<symbol id="ch-coyote-oops" viewBox="0 0 80 80">
+<path d="M31.0 19.5 L37.5 21.0 M49.0 19.5 L42.5 21.0" stroke="#7F5F42" stroke-width="1.8" stroke-linecap="round"></path><ellipse cx="34.5" cy="25" rx="2.3" ry="2.8" fill="#1C2430"></ellipse><ellipse cx="45.5" cy="25" rx="2.3" ry="2.8" fill="#1C2430"></ellipse><circle cx="35.5" cy="23.9" r="1" fill="#FFFFFF"></circle><circle cx="46.5" cy="23.9" r="1" fill="#FFFFFF"></circle><ellipse cx="40" cy="36.5" rx="2.6" ry="1.9" fill="#1C2430"></ellipse><path d="M38 41.2 Q40 40 42 41.2" stroke="#1C2430" stroke-width="1.3" fill="none" stroke-linecap="round"></path><path d="M59 8 Q62 13 59 15 Q56 13 59 8 Z" fill="#8FD0F5"></path>
+</symbol>
+
+<!-- Raccoon: grey and round, with a black eye mask, white brows and muzzle, little dark hands and a ringed tail. -->
+<symbol id="ch-raccoon-body" viewBox="0 0 80 80">
+<ellipse cx="40" cy="75" rx="24" ry="3.6" fill="#233142" fill-opacity="0.18"></ellipse>
+<path d="M50 66 Q68 70 72 56 Q74 46 66 44 Q64 56 50 60 Z" fill="url(#g3-raccoon)"></path>
+<path d="M57 60.5 L60.5 67 M63.5 54 L69.5 59 M66.5 46.5 L72.5 48.5" stroke="#3B3F45" stroke-width="3.2" stroke-linecap="round"></path>
+<path d="M21 66 Q17 48 40 43 Q63 48 59 66 Q49 72 40 72 Q31 72 21 66 Z" fill="url(#g3-raccoon)"></path>
+<ellipse cx="40" cy="60" rx="10.5" ry="8.5" fill="#D9DCE0"></ellipse>
+<ellipse cx="34" cy="55" rx="3.2" ry="2.4" fill="#3B3F45"></ellipse><ellipse cx="46" cy="55" rx="3.2" ry="2.4" fill="#3B3F45"></ellipse>
+<ellipse cx="29" cy="69.5" rx="6" ry="3" fill="#3B3F45"></ellipse><ellipse cx="51" cy="69.5" rx="6" ry="3" fill="#3B3F45"></ellipse>
+<path d="M25 21 Q21 8 33 13 Z" fill="url(#g3-raccoon)" stroke="#EDEFF1" stroke-width="1.6" stroke-linejoin="round"></path><path d="M55 21 Q59 8 47 13 Z" fill="url(#g3-raccoon)" stroke="#EDEFF1" stroke-width="1.6" stroke-linejoin="round"></path>
+<path d="M23 28 Q23 14 40 14 Q57 14 57 28 Q57 40 40 43 Q23 40 23 28 Z" fill="url(#g3-raccoon)"></path>
+<ellipse cx="40" cy="35" rx="10" ry="7" fill="#EDEFF1"></ellipse>
+<path d="M27 21 Q33 17.5 38.5 21 M41.5 21 Q47 17.5 53 21" stroke="#EDEFF1" stroke-width="2.4" fill="none" stroke-linecap="round"></path>
+<path d="M23.5 27 Q32 21 40 26.5 Q48 21 56.5 27 Q55.5 33 47 31.5 Q40 30 33 31.5 Q24.5 33 23.5 27 Z" fill="#2E3238"></path>
+</symbol>
+<symbol id="ch-raccoon-idle" viewBox="0 0 80 80">
+<ellipse cx="30" cy="38" rx="3" ry="1.9" fill="#FF8FA3" fill-opacity="0.5"></ellipse><ellipse cx="50" cy="38" rx="3" ry="1.9" fill="#FF8FA3" fill-opacity="0.5"></ellipse><g class="blink"><circle cx="33" cy="26.5" r="3.6" fill="#FFFFFF"></circle><circle cx="47" cy="26.5" r="3.6" fill="#FFFFFF"></circle><ellipse cx="33" cy="26.5" rx="2.2" ry="2.6" fill="#1C2430"></ellipse><ellipse cx="47" cy="26.5" rx="2.2" ry="2.6" fill="#1C2430"></ellipse><circle cx="34" cy="25.4" r="1" fill="#FFFFFF"></circle><circle cx="48" cy="25.4" r="1" fill="#FFFFFF"></circle></g><ellipse cx="40" cy="33.5" rx="3" ry="2.2" fill="#1C2430"></ellipse><path d="M37.5 36.5 Q40 38.5 42.5 36.5" stroke="#1C2430" stroke-width="1.3" fill="none" stroke-linecap="round"></path>
+</symbol>
+<symbol id="ch-raccoon-happy" viewBox="0 0 80 80">
+<ellipse cx="30" cy="38" rx="3.6" ry="2.3" fill="#FF7F96" fill-opacity="0.75"></ellipse><ellipse cx="50" cy="38" rx="3.6" ry="2.3" fill="#FF7F96" fill-opacity="0.75"></ellipse><circle cx="33" cy="26.5" r="4.2" fill="#FFFFFF"></circle><circle cx="47" cy="26.5" r="4.2" fill="#FFFFFF"></circle><path d="M30 27.5 Q33 23.5 36 27.5 M44 27.5 Q47 23.5 50 27.5" stroke="#1C2430" stroke-width="2.1" fill="none" stroke-linecap="round"></path><ellipse cx="40" cy="33.5" rx="3" ry="2.2" fill="#1C2430"></ellipse><path d="M36.5 36 Q40 41 43.5 36 Z" fill="#7A3B3B"></path><path d="M62 30 c1.5 -3 5 -2 4 1 c-0.6 1.8 -4 4 -4 4 c0 0 -3.4 -2.2 -4 -4 c-1 -3 2.5 -4 4 -1 Z" fill="#FF7F96"></path>
+</symbol>
+<symbol id="ch-raccoon-oops" viewBox="0 0 80 80">
+<path d="M29.5 20.5 L36 22.0 M50.5 20.5 L44 22.0" stroke="#EDEFF1" stroke-width="1.8" stroke-linecap="round"></path><circle cx="33" cy="27" r="3.3" fill="#FFFFFF"></circle><circle cx="47" cy="27" r="3.3" fill="#FFFFFF"></circle><ellipse cx="33" cy="27" rx="1.9" ry="2.3" fill="#1C2430"></ellipse><ellipse cx="47" cy="27" rx="1.9" ry="2.3" fill="#1C2430"></ellipse><circle cx="34" cy="25.9" r="1" fill="#FFFFFF"></circle><circle cx="48" cy="25.9" r="1" fill="#FFFFFF"></circle><ellipse cx="40" cy="33.5" rx="3" ry="2.2" fill="#1C2430"></ellipse><path d="M38 38.7 Q40 37.5 42 38.7" stroke="#1C2430" stroke-width="1.3" fill="none" stroke-linecap="round"></path><path d="M61 11 Q64 16 61 18 Q58 16 61 11 Z" fill="#8FD0F5"></path>
+</symbol>
+
+<!-- Skunk: black with a white stripe down its forehead and a huge plumed tail with a white stripe. -->
+<symbol id="ch-skunk-body" viewBox="0 0 80 80">
+<ellipse cx="40" cy="75" rx="22" ry="3.6" fill="#233142" fill-opacity="0.18"></ellipse>
+<path d="M48 64 Q71 64 71 42 Q71 25 58 23 Q67 34 57 44 Q52 54 48 60 Z" fill="url(#g3-skunk)"></path>
+<path d="M60 26 Q70 38 61 54 Q65 41 58.5 29 Z" fill="#F2F2F2"></path>
+<path d="M24 66 Q20 50 32 45 Q40 41 48 45 Q58 50 54 66 Q40 71 24 66 Z" fill="url(#g3-skunk)"></path>
+<path d="M36 47 Q40 45 44 47 Q43 56 40 60 Q37 56 36 47 Z" fill="#F2F2F2" opacity="0.9"></path>
+<ellipse cx="31" cy="69" rx="5.5" ry="2.6" fill="#16191E"></ellipse><ellipse cx="49" cy="69" rx="5.5" ry="2.6" fill="#16191E"></ellipse>
+<circle cx="29" cy="17.5" r="4.2" fill="url(#g3-skunk)"></circle><circle cx="51" cy="17.5" r="4.2" fill="url(#g3-skunk)"></circle>
+<path d="M25 28 Q25 15 40 15 Q55 15 55 28 Q55 40 40 42 Q25 40 25 28 Z" fill="url(#g3-skunk)"></path>
+<path d="M38 15 Q40 13 42 15 L41.6 27 Q40 28.2 38.4 27 Z" fill="#F2F2F2"></path>
+<ellipse cx="40" cy="34" rx="7.5" ry="5.2" fill="#3C414A"></ellipse>
+</symbol>
+<symbol id="ch-skunk-idle" viewBox="0 0 80 80">
+<ellipse cx="29" cy="32" rx="3" ry="1.9" fill="#FF8FA3" fill-opacity="0.5"></ellipse><ellipse cx="51" cy="32" rx="3" ry="1.9" fill="#FF8FA3" fill-opacity="0.5"></ellipse><g class="blink"><circle cx="33.5" cy="25" r="3.6" fill="#FFFFFF"></circle><circle cx="46.5" cy="25" r="3.6" fill="#FFFFFF"></circle><ellipse cx="33.5" cy="25" rx="2.2" ry="2.6" fill="#1C2430"></ellipse><ellipse cx="46.5" cy="25" rx="2.2" ry="2.6" fill="#1C2430"></ellipse><circle cx="34.5" cy="23.9" r="1" fill="#FFFFFF"></circle><circle cx="47.5" cy="23.9" r="1" fill="#FFFFFF"></circle></g><ellipse cx="40" cy="32.5" rx="2.8" ry="2" fill="#F2A7B5"></ellipse><path d="M37.5 35.5 Q40 37.5 42.5 35.5" stroke="#F2F2F2" stroke-width="1.3" fill="none" stroke-linecap="round"></path>
+</symbol>
+<symbol id="ch-skunk-happy" viewBox="0 0 80 80">
+<ellipse cx="29" cy="32" rx="3.6" ry="2.3" fill="#FF7F96" fill-opacity="0.75"></ellipse><ellipse cx="51" cy="32" rx="3.6" ry="2.3" fill="#FF7F96" fill-opacity="0.75"></ellipse><circle cx="33.5" cy="25" r="4.2" fill="#FFFFFF"></circle><circle cx="46.5" cy="25" r="4.2" fill="#FFFFFF"></circle><path d="M30.5 26 Q33.5 22 36.5 26 M43.5 26 Q46.5 22 49.5 26" stroke="#1C2430" stroke-width="2.1" fill="none" stroke-linecap="round"></path><ellipse cx="40" cy="32.5" rx="2.8" ry="2" fill="#F2A7B5"></ellipse><path d="M36.5 35 Q40 40 43.5 35 Z" fill="#C4566A"></path><path d="M60 28 c1.5 -3 5 -2 4 1 c-0.6 1.8 -4 4 -4 4 c0 0 -3.4 -2.2 -4 -4 c-1 -3 2.5 -4 4 -1 Z" fill="#FF7F96"></path>
+</symbol>
+<symbol id="ch-skunk-oops" viewBox="0 0 80 80">
+<path d="M30.0 19.5 L36.5 21.0 M50.0 19.5 L43.5 21.0" stroke="#F2F2F2" stroke-width="1.8" stroke-linecap="round"></path><circle cx="33.5" cy="25.5" r="3.3" fill="#FFFFFF"></circle><circle cx="46.5" cy="25.5" r="3.3" fill="#FFFFFF"></circle><ellipse cx="33.5" cy="25.5" rx="1.9" ry="2.3" fill="#1C2430"></ellipse><ellipse cx="46.5" cy="25.5" rx="1.9" ry="2.3" fill="#1C2430"></ellipse><circle cx="34.5" cy="24.4" r="1" fill="#FFFFFF"></circle><circle cx="47.5" cy="24.4" r="1" fill="#FFFFFF"></circle><ellipse cx="40" cy="32.5" rx="2.8" ry="2" fill="#F2A7B5"></ellipse><path d="M38 37.7 Q40 36.5 42 37.7" stroke="#F2F2F2" stroke-width="1.3" fill="none" stroke-linecap="round"></path><path d="M58 9 Q61 14 58 16 Q55 14 58 9 Z" fill="#8FD0F5"></path>
+</symbol>
+
+<!-- Bobcat: tawny with dark spots, black-tufted pointed ears, a white muzzle, cheek ruffs and a short bobbed tail. -->
+<symbol id="ch-bobcat-body" viewBox="0 0 80 80">
+<ellipse cx="40" cy="75" rx="22" ry="3.6" fill="#233142" fill-opacity="0.18"></ellipse>
+<path d="M53 62 Q62 61 62 54 Q57 53 53 58 Z" fill="url(#g3-bobcat)"></path><path d="M62 54 Q63 58 60 60 Q60 56 59 54 Z" fill="#2B2F36"></path>
+<path d="M23 66 Q19 49 31 44 Q40 40 49 44 Q61 49 57 66 Q40 71 23 66 Z" fill="url(#g3-bobcat)"></path>
+<path d="M33 48 Q40 44 47 48 Q47 61 40 65 Q33 61 33 48 Z" fill="#F6E9D6"></path>
+<g fill="#6E4A2A" fill-opacity="0.7"><circle cx="26" cy="55" r="1.4"></circle><circle cx="28" cy="61" r="1.2"></circle><circle cx="25" cy="64" r="1.1"></circle><circle cx="54" cy="55" r="1.4"></circle><circle cx="52" cy="61" r="1.2"></circle><circle cx="55" cy="64" r="1.1"></circle><circle cx="30" cy="50" r="1"></circle><circle cx="50" cy="50" r="1"></circle></g>
+<ellipse cx="32" cy="69.5" rx="5" ry="2.6" fill="#F6E9D6"></ellipse><ellipse cx="48" cy="69.5" rx="5" ry="2.6" fill="#F6E9D6"></ellipse>
+<path d="M25 21 L27 7 L36 16 Z" fill="url(#g3-bobcat)"></path><path d="M55 21 L53 7 L44 16 Z" fill="url(#g3-bobcat)"></path>
+<path d="M27.5 17 L28.2 11 L32.5 15.5 Z" fill="#F4C7B8"></path><path d="M52.5 17 L51.8 11 L47.5 15.5 Z" fill="#F4C7B8"></path>
+<path d="M25.6 8 Q25.4 3.6 27 2 Q28.6 4.4 28.4 8.4 Z M54.4 8 Q54.6 3.6 53 2 Q51.4 4.4 51.6 8.4 Z" fill="#2B2F36"></path>
+<path d="M25 30 L18.5 37 L27 35.5 Z" fill="url(#g3-bobcat)"></path><path d="M55 30 L61.5 37 L53 35.5 Z" fill="url(#g3-bobcat)"></path>
+<path d="M24 28 Q24 14 40 14 Q56 14 56 28 Q56 40 40 43 Q24 40 24 28 Z" fill="url(#g3-bobcat)"></path>
+<path d="M33.5 17.5 L34.5 21.5 M40 16 V20.5 M46.5 17.5 L45.5 21.5" stroke="#8C5F36" stroke-width="1.3" stroke-linecap="round"></path>
+<ellipse cx="40" cy="34.5" rx="8.5" ry="5.8" fill="#FBF3E6"></ellipse>
+<path d="M33 34 L24 32.5 M33 36 L24 37.5 M47 34 L56 32.5 M47 36 L56 37.5" stroke="#B9A48C" stroke-width="0.8" stroke-linecap="round"></path>
+</symbol>
+<symbol id="ch-bobcat-idle" viewBox="0 0 80 80">
+<ellipse cx="29" cy="31.5" rx="3" ry="1.9" fill="#FF8FA3" fill-opacity="0.5"></ellipse><ellipse cx="51" cy="31.5" rx="3" ry="1.9" fill="#FF8FA3" fill-opacity="0.5"></ellipse><g class="blink"><ellipse cx="34" cy="26" rx="2.6" ry="3.2" fill="#1C2430"></ellipse><ellipse cx="46" cy="26" rx="2.6" ry="3.2" fill="#1C2430"></ellipse><circle cx="35" cy="24.9" r="1" fill="#FFFFFF"></circle><circle cx="47" cy="24.9" r="1" fill="#FFFFFF"></circle></g><path d="M38 31.5 L42 31.5 L40 34 Z" fill="#E07A8A"></path><path d="M37.5 35.5 Q38.8 37 40 35.5 Q41.2 37 42.5 35.5" stroke="#1C2430" stroke-width="1.2" fill="none" stroke-linecap="round"></path>
+</symbol>
+<symbol id="ch-bobcat-happy" viewBox="0 0 80 80">
+<ellipse cx="29" cy="31.5" rx="3.6" ry="2.3" fill="#FF7F96" fill-opacity="0.75"></ellipse><ellipse cx="51" cy="31.5" rx="3.6" ry="2.3" fill="#FF7F96" fill-opacity="0.75"></ellipse><path d="M31 27 Q34 23 37 27 M43 27 Q46 23 49 27" stroke="#1C2430" stroke-width="2.1" fill="none" stroke-linecap="round"></path><path d="M38 31.5 L42 31.5 L40 34 Z" fill="#E07A8A"></path><path d="M36.8 35 Q40 40 43.2 35 Z" fill="#7A3B3B"></path><path d="M61 28 c1.5 -3 5 -2 4 1 c-0.6 1.8 -4 4 -4 4 c0 0 -3.4 -2.2 -4 -4 c-1 -3 2.5 -4 4 -1 Z" fill="#FF7F96"></path>
+</symbol>
+<symbol id="ch-bobcat-oops" viewBox="0 0 80 80">
+<path d="M30.5 21 L37 22.5 M49.5 21 L43 22.5" stroke="#6E4A2A" stroke-width="1.8" stroke-linecap="round"></path><ellipse cx="34" cy="26.5" rx="2.3" ry="2.9" fill="#1C2430"></ellipse><ellipse cx="46" cy="26.5" rx="2.3" ry="2.9" fill="#1C2430"></ellipse><circle cx="35" cy="25.4" r="1" fill="#FFFFFF"></circle><circle cx="47" cy="25.4" r="1" fill="#FFFFFF"></circle><path d="M38 31.5 L42 31.5 L40 34 Z" fill="#E07A8A"></path><path d="M38 37.7 Q40 36.5 42 37.7" stroke="#1C2430" stroke-width="1.3" fill="none" stroke-linecap="round"></path><path d="M59 10 Q62 15 59 17 Q56 15 59 10 Z" fill="#8FD0F5"></path>
 </symbol>
 </svg>
