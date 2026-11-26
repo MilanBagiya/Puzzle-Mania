@@ -15,14 +15,14 @@ const dailyTiles = DAILY_SET.map((g) => {
 }).join('');
 const rail = (ids: string[]): string => ids.map((id) => entryById(id)).filter(Boolean).map((e) => tileHtml(e!)).join('');
 ---
-<Base title="Wild Daily · Daily animal puzzles" description="Fresh Snow, Nests, Dawn Chorus and 23 more: short daily puzzles about real animals. A new set every morning, free to play." active="today" jsonLd={ld}>
+<Base title="Fresh Snow: the daily animal tracks puzzle · Wild Daily" description="Read the footprints in fresh snow and guide each animal home. A new Fresh Snow puzzle every day, plus Nests, Dawn Chorus and 28 more short animal puzzles. Free to play." active="today" jsonLd={ld}>
   <Scenery height={230} pad={26} class="hub">
     <div class="hub-hero">
       <div class="stack" style="gap:12px; max-width:640px">
         <div class="row" style="gap:8px"><span class="pill p-w" id="hub-date">Today’s puzzles</span><span class="pill p-y season-pill" id="hub-season"></span><span class="pill p-w" id="hub-streak">Start a streak today</span></div>
-        <h1 class="h-xl" id="hub-title">Fresh snow fell overnight.</h1>
-        <p class="lead" style="color:var(--ink); margin:0" id="hub-lead">Five short puzzles are waiting in the forest. Solve one to keep your streak; solve all five to complete the Daily Set.</p>
-        <div class="row"><a class="btn btn-p big" id="hub-play" href="/fresh-snow?level=morning">Play Morning</a><a class="btn btn-w" href="/fresh-snow/tutorial" id="hub-tut">Start the tutorial</a></div>
+        <h1 class="h-xl" id="hub-title">Read the tracks. Find each animal’s way home.</h1>
+        <p class="lead" style="color:var(--ink); margin:0" id="hub-lead">Fresh Snow is a new puzzle every day: animals crossed the snow overnight, and their footprints show the way. Morning takes 1–2 minutes.</p>
+        <div class="row"><a class="btn btn-p big" id="hub-play" href="/fresh-snow?level=morning">Play Fresh Snow</a><a class="btn btn-w" href="/fresh-snow/tutorial" id="hub-tut">Start the tutorial</a></div>
       </div>
     </div>
   </Scenery>

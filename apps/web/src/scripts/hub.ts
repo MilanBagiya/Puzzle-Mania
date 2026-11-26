@@ -13,7 +13,8 @@ const set = (id: string, text: string): void => { const el = $(id); if (el) el.t
 set('hub-date', formatDate(today));
 const next = nextInSet(p, today);
 const play = $('hub-play') as HTMLAnchorElement | null;
-if (play) { if (next) { play.href = GAMES[next].href; play.textContent = `Play ${GAMES[next].name.replace('Fresh Snow · ', '')}`; } else { play.href = '/trek'; play.textContent = 'Play Trail Trek'; } }
+// "Play Fresh Snow", not "Play Fresh Snow · Morning": the level shows on the Daily Set cards, and the short label fits on phones.
+if (play) { if (next) { play.href = GAMES[next].href; play.textContent = `Play ${GAMES[next].name.replace(/ · .*/, '')}`; } else { play.href = '/trek'; play.textContent = 'Play Trail Trek'; } }
 const n = setCount(p, today);
 set('hub-set', `${n} of ${DAILY_SET.length} solved`);
 const bar = $('hub-setbar'); if (bar) bar.style.width = `${(n / DAILY_SET.length) * 100}%`;
@@ -27,7 +28,7 @@ const row = (g: GameKey): void => {
 const tz = (): string => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch { return ''; } };
 function renderSeason(season: Season): void {
   const info = SEASON_INFO[season];
-  set('hub-title', info.title); set('hub-lead', info.lead); set('hub-season', info.name);
+  set('hub-season', info.name); // the headline stays on Fresh Snow; the season shows in its pill
   const s = info.name.toLowerCase();
   set('hub-picks-note', `Three games from the pack, chosen fresh every day, led by ${/^[aeiou]/.test(s) ? 'an' : 'a'} ${s} game. Solve all three for a badge.`);
   const picksEl = $('hub-picks');
