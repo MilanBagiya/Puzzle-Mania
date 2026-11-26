@@ -22,6 +22,6 @@ export function generate(seed: string): CountPuzzle {
 }
 const def: GameDef<CountPuzzle> = {
   id: 'acorn-stash', generate,
-  mount: (root, p, ctx) => mountCount(root, p, ctx, { item: svgUse('n-acorn', '0 0 30 36'), itemName: 'acorn', clueArt: svgUse('n-stump', '0 0 38 30'), clueName: 'stump touching', tile: 'autumn', intro: 'Tap a square to dig up an acorn. Each stump’s number counts the acorns in the 8 squares around it.' }),
+  mount: (root, p, ctx) => mountCount(root, p, ctx, { host: 'squirrel', item: svgUse('n-acorn', '0 0 30 36'), itemName: 'acorn', clueArt: svgUse('n-stump', '0 0 38 30'), clueName: 'stump touching', tile: 'autumn', intro: 'Tap a square to dig up an acorn. Each stump’s number counts the acorns in the 8 squares around it.' }),
 };
 export default def;

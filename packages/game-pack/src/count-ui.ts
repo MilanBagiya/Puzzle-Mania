@@ -1,9 +1,12 @@
 // One board UI for every counting puzzle (Owl Watch, Acorn Stash, Beehive).
+import type { CharacterId } from '@wild-daily/ui';
 import { checkCount, clock, coach, grid, onAct, pills, btn, tools, cellLabel, solveCount, type CountPuzzle, type Ctx, type Mounted } from './shared.js';
 
 export interface CountLook {
   item: string; itemName: string; clueArt: string; clueName: string;
   intro: string; tile: string; hex?: boolean;
+  /** The game's animal beside the message (its face follows the message). */
+  host?: CharacterId;
 }
 export function mountCount(root: HTMLElement, p: CountPuzzle, ctx: Ctx, look: CountLook): Mounted {
   const n = p.n, N = n * n, blocked = new Set(p.blocked);
@@ -26,7 +29,7 @@ export function mountCount(root: HTMLElement, p: CountPuzzle, ctx: Ctx, look: Co
     const body = look.hex ? hexGrid(n, cells) : grid(n, cells, 'Board', 76);
     let text = msg ?? (chk.touching.length ? `Two ${look.itemName}s are touching, and they never touch.` : chk.clueState.includes('over') ? 'A red number means too many around it.' : look.intro);
     if (done) { text = `All ${p.total} found!`; kind = 'good'; }
-    root.innerHTML = `${pills(`Placed: ${chk.solved ? p.total : items().size} of ${p.total}`, `${p.blocked.length} clues`)}${coach(text, done ? 'good' : kind)}${body}
+    root.innerHTML = `${pills(`Placed: ${chk.solved ? p.total : items().size} of ${p.total}`, `${p.blocked.length} clues`)}${coach(text, done ? 'good' : kind, look.host)}${body}
 ${tools(btn('clear', 'Clear', 'btn-w', done), btn('dots', 'Fill dots', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done), btn('check', 'Check', 'btn-p', done))}`;
   }
   function hexGrid(rows: number, cellsHtml: string): string {

@@ -1,6 +1,6 @@
 // Salmon Run: the salmon leaps upstream. Each pool's number is exactly how far it must jump next:
 // up, left or right (never back downstream). Reach the spawning stream at the top.
-import { Mover, svgUse } from '@wild-daily/ui';
+import { Mover, character } from '@wild-daily/ui';
 import { btn, clock, coach, onAct, pills, range, rngFrom, tools, type GameDef } from '../shared.js';
 
 export interface SalmonPuzzle { n: number; seed: string; pools: number[]; start: number; best: number }
@@ -45,8 +45,8 @@ const def: GameDef<SalmonPuzzle> = {
       const at = path[path.length - 1]!, next = done ? [] : leaps(p, at);
       const cells = range(n * n).map((i) => `<button type="button" class="gcell stream${isTop(n, i) ? ' spawn' : ''}${next.includes(i) ? ' target' : ''}${glow === i ? ' hinted' : ''}${path.includes(i) && i !== at ? ' trail' : ''}" data-g="cell:${i}" aria-label="Pool ${p.pools[i]}${i === at ? ', salmon here' : ''}${next.includes(i) ? ', can leap here' : ''}"><b class="display">${p.pools[i]}</b></button>`).join('');
       const text = done ? `Home to the spawning stream in ${path.length - 1} leaps! Best possible: ${p.best}.` : msg ?? `The salmon is in a ${p.pools[at]} pool: it leaps exactly ${p.pools[at]} up, left or right. Reach the top row.`;
-      root.innerHTML = `${pills(`Leaps: ${path.length - 1}`, `Best possible: ${p.best}`)}${coach(text, done ? 'good' : kind)}<div class="boardwrap"><div class="board" role="grid" aria-label="River" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 66}px; gap:3px">${cells}</div></div>${tools(btn('undo', 'Undo', 'btn-w', done || path.length < 2), btn('restart', 'Restart', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done))}`;
-      mover.sync(root.querySelector<HTMLElement>('.boardwrap'), [{ id: 'salmon', cell: at, el: root.querySelector(`[data-g="cell:${at}"]`), html: svgUse('n-fish', '0 0 40 22'), gait: 'leap', selected: !done, size: 0.78, puff: '#9FD3EE' }]);
+      root.innerHTML = `${pills(`Leaps: ${path.length - 1}`, `Best possible: ${p.best}`)}${coach(text, done ? 'good' : kind, 'salmon')}<div class="boardwrap"><div class="board" role="grid" aria-label="River" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 66}px; gap:3px">${cells}</div></div>${tools(btn('undo', 'Undo', 'btn-w', done || path.length < 2), btn('restart', 'Restart', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done))}`;
+      mover.sync(root.querySelector<HTMLElement>('.boardwrap'), [{ id: 'salmon', cell: at, el: root.querySelector(`[data-g="cell:${at}"]`), html: character('salmon', done ? 'happy' : kind === 'bad' ? 'oops' : 'idle'), gait: 'leap', selected: !done, size: 0.62, puff: '#9FD3EE' }]);
     };
     const off = onAct(root, (act, arg) => {
       if (done) return; msg = null; kind = ''; glow = -1;

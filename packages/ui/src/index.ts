@@ -1,5 +1,10 @@
 // Art helpers: return SVG markup that references the shared sprite (sprite.svg must be inlined once per page).
 export type AnimalId = 'fox' | 'rabbit' | 'deer';
+/** The wider cast in cast.svg (inlined only on pages that use them: see Base.astro's `cast` prop). */
+export const CAST = ['moose', 'squirrel', 'bear', 'salmon'] as const;
+export type CastId = (typeof CAST)[number];
+/** Every full-body character with idle, happy and oops faces. */
+export type CharacterId = AnimalId | CastId;
 export type Mood = 'idle' | 'happy' | 'oops';
 
 const label = (l?: string): string => (l ? `role="img" aria-label="${l}"` : 'aria-hidden="true"');
@@ -12,13 +17,13 @@ export function svgUse(id: string, viewBox: string, w?: number, cls?: string, l?
 }
 
 /** Full-body character in a mood (calm, happy, oops). */
-export function character(a: AnimalId, mood: Mood, w?: number, cls?: string, l?: string): string {
+export function character(a: CharacterId, mood: Mood, w?: number, cls?: string, l?: string): string {
   const size = w ? ` width="${w}" height="${w}"` : '';
   return `<svg${cls ? ` class="${cls}"` : ''} viewBox="0 0 80 80"${size} ${label(l)}><use href="#ch-${a}-body"></use><use href="#ch-${a}-${mood}"></use></svg>`;
 }
 
 /** Animation class that matches a mood (and the rabbit's idle bounce). */
-export const moodClass = (a: AnimalId, mood: Mood): string => (mood === 'happy' ? 'cheer' : mood === 'oops' ? 'shake' : a === 'rabbit' ? 'boing' : '');
+export const moodClass = (a: CharacterId, mood: Mood): string => (mood === 'happy' ? 'cheer' : mood === 'oops' ? 'shake' : a === 'rabbit' ? 'boing' : '');
 
 export const tree = (w?: number): string => svgUse('i3-tree', '0 0 64 72', w);
 export const rock = (w?: number): string => svgUse('i3-rock', '0 0 64 52', w);

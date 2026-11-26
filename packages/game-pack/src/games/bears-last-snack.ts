@@ -1,6 +1,6 @@
 // Bear's Last Snack: before winter, the bear visits every bush exactly once, stepping up, down, left or right,
 // and ends in its cave. A few bushes show their visit number. Any route that follows the rules wins.
-import { Mover, svgUse } from '@wild-daily/ui';
+import { Mover, character, svgUse } from '@wild-daily/ui';
 import { btn, clock, coach, nb4, onAct, pills, range, rngFrom, shuffle, tools, type GameDef } from '../shared.js';
 
 export interface BearPuzzle { n: number; seed: string; start: number; cave: number; given: Record<string, number> }
@@ -74,8 +74,8 @@ const def: GameDef<BearPuzzle> = {
         return `<button type="button" class="gcell forest${s ? ' trail' : ''}${!done && nb4(n, at).includes(i) && !s ? ' target' : ''}" data-g="cell:${i}" aria-label="Bush${g ? ` number ${g}` : ''}${i === p.cave ? ', cave' : ''}${s ? `, visited as ${s}` : ''}">${i === p.cave ? svgUse('i3-home', '0 0 72 54') : svgUse('n-bush', '0 0 36 30')}${g ? `<span class="num ${s === g ? 'ok' : s ? 'over' : ''}">${g}</span>` : s ? `<span class="stepnum">${s}</span>` : ''}</button>`;
       }).join('');
       const text = done ? 'Every bush visited and the bear is snoring in its cave!' : msg ?? `Visit every bush once and end in the cave. A numbered bush must be that step. Tap a visited bush to go back.`;
-      root.innerHTML = `${pills(`Bushes: ${route.length} of ${N}`, `Step ${route.length}`)}${coach(text, done ? 'good' : kind)}<div class="boardwrap"><div class="board" role="grid" aria-label="Forest" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 76}px">${cells}</div></div>${tools(btn('undo', 'Undo', 'btn-w', done || route.length < 2), btn('restart', 'Restart', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done))}`;
-      mover.sync(root.querySelector<HTMLElement>('.boardwrap'), [{ id: 'bear', cell: at, el: root.querySelector(`[data-g="cell:${at}"]`), html: svgUse('n-bear', '0 0 40 36'), gait: 'walk', selected: !done, size: 0.8 }]);
+      root.innerHTML = `${pills(`Bushes: ${route.length} of ${N}`, `Step ${route.length}`)}${coach(text, done ? 'good' : kind, 'bear')}<div class="boardwrap"><div class="board" role="grid" aria-label="Forest" style="grid-template-columns:repeat(${n},1fr); max-width:${n * 76}px">${cells}</div></div>${tools(btn('undo', 'Undo', 'btn-w', done || route.length < 2), btn('restart', 'Restart', 'btn-w', done), btn('hint', 'Hint', 'btn-y', done))}`;
+      mover.sync(root.querySelector<HTMLElement>('.boardwrap'), [{ id: 'bear', cell: at, el: root.querySelector(`[data-g="cell:${at}"]`), html: character('bear', done ? 'happy' : kind === 'bad' ? 'oops' : 'idle'), gait: 'walk', selected: !done, size: 0.8 }]);
     };
     const off = onAct(root, (act, arg) => {
       if (done) return; msg = null; kind = '';

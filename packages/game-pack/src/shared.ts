@@ -1,7 +1,7 @@
 // Shared helpers for every game in the pack: seeded randomness, grid maths, a timer,
 // small UI builders and a generic counting-puzzle solver (used by Owl Watch, Acorn Stash, Beehive).
 import { rngFrom } from '@wild-daily/game-fresh-snow/engine';
-import { escapeHtml } from '@wild-daily/ui';
+import { character, escapeHtml, type CharacterId } from '@wild-daily/ui';
 
 export { rngFrom, escapeHtml };
 export type Rng = () => number;
@@ -66,7 +66,13 @@ export function onAct(root: HTMLElement, fn: (act: string, arg: string, el: HTML
   root.addEventListener('click', h);
   return () => root.removeEventListener('click', h);
 }
-export const coach = (msg: string, kind = ''): string => `<p class="coach ${kind}" role="status">${escapeHtml(msg)}</p>`;
+/**
+ * The message line. With a `host`, the game's animal sits beside it and its face follows the message:
+ * happy for good news, oops for a mistake, calm otherwise (faces only; nothing moves).
+ */
+export const coach = (msg: string, kind = '', host?: CharacterId): string => host
+  ? `<p class="coach has-host ${kind}" role="status"><span class="coach-host">${character(host, kind === 'good' ? 'happy' : kind === 'bad' ? 'oops' : 'idle')}</span><span class="coach-text">${escapeHtml(msg)}</span></p>`
+  : `<p class="coach ${kind}" role="status">${escapeHtml(msg)}</p>`;
 export const btn = (act: string, label: string, cls = 'btn-w', disabled = false): string =>
   `<button type="button" class="btn ${cls}" data-g="${act}"${disabled ? ' disabled' : ''}>${label}</button>`;
 export const tools = (...b: string[]): string => `<div class="tools" style="grid-template-columns:repeat(${b.length},minmax(0,1fr))">${b.join('')}</div>`;

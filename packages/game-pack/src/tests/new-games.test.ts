@@ -3,7 +3,7 @@ import nutSort, { CAP, KINDS, canMove, isSorted, solveSort } from '../games/nut-
 import vineLinks, { solveVines } from '../games/vine-links.js';
 import spot, { THINGS, changesOf, same } from '../games/spot-the-change.js';
 import burrow, { HINT_CAP, movesOf as burrowMoves, solveBurrow } from '../games/burrow-escape.js';
-import { nb4, rngFrom } from '../shared.js';
+import { coach, nb4, rngFrom } from '../shared.js';
 import moose, { bestRoute, mooseHint, slide as mooseSlide } from '../games/moose-crossing.js';
 import bear, { bearHint, checkRoute, solveBear } from '../games/bears-last-snack.js';
 import berry, { BERRIES, N as BN, adjacent, canSwap, greedy, matchesOf, play, search, startState, swapsOf } from '../games/berry-match.js';
@@ -226,5 +226,14 @@ describe("Bear's Last Snack hints", () => {
       expect(next).toHaveLength(2);
       expect(next[0]).toBe(p.start);
     }
+  });
+});
+
+describe('message host', () => {
+  it("the host animal's face follows the message: happy, oops or calm", () => {
+    expect(coach('Yes!', 'good', 'bear')).toContain('#ch-bear-happy');
+    expect(coach('Not there.', 'bad', 'bear')).toContain('#ch-bear-oops');
+    expect(coach('Tap a bush.', '', 'bear')).toContain('#ch-bear-idle');
+    expect(coach('Tap a bush.')).not.toContain('coach-host'); // games without a host are unchanged
   });
 });

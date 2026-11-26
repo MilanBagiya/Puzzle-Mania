@@ -1285,3 +1285,9 @@ body:has(main #tut > .coach:only-child) > footer{display:none}
   .st-cell:hover, a.day:hover, button.day:hover, .tstage:not(.locked):hover{outline:none !important; filter:brightness(.96)}
   .bcell:hover{box-shadow:none !important; filter:brightness(.96)}
 }
+/* A game's host animal sits beside its message; only its face changes with the message (nothing moves). */
+.coach.has-host{gap:12px; padding-left:8px}
+.coach-host{flex:none; width:52px; height:52px; display:grid; place-items:center}
+.coach-host svg{width:100%; height:100%}
+.coach-text{flex:1; min-width:0}
+@media (max-width:720px){ .coach-host{width:44px; height:44px} .coach.has-host{gap:10px} }
