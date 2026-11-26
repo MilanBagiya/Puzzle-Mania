@@ -54,3 +54,45 @@ for (const [w, h] of [[390, 844], [1280, 800]]) for (const p of pages()) {
     expect(total, `layout shift ${total.toFixed(3)}: ${shifts.map((s) => `${s.v.toFixed(3)} ${s.who}`).join('; ')}`).toBeLessThanOrEqual(0.02);
   });
 }
+
+// Calm UI: nothing in the interface shakes, hops, bounces or pops while you play, and buttons do not move on hover
+// or press. Records every CSS animation and script animation that starts while tapping through each game.
+const JOLTS = ['shake', 'wobble', 'boing', 'cheer', 'bounce', 'burrowshake', 'arrivepop', 'tokbob', 'berry-drop', 'bubblein', 'sing'];
+for (const url of PAGES) {
+  test(`nothing shakes, hops or pops: ${url}`, async ({ page }, info) => {
+    info.annotations.push({ type: 'qa-ran', description: 'stable' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.addInitScript(() => {
+      window.__jolts = [];
+      document.addEventListener('animationstart', (e) => window.__jolts.push({ css: e.animationName }));
+      const orig = window.Element.prototype.animate;
+      window.Element.prototype.animate = function (frames, opts) {
+        const tf = (Array.isArray(frames) ? frames : []).map((f) => String(f.transform ?? '')).filter(Boolean);
+        if (tf.length >= 3 && !this.classList.contains('puff')) window.__jolts.push({ js: tf.join(' → ').slice(0, 120), on: this.className });
+        return orig.call(this, frames, opts);
+      };
+    });
+    await page.goto(url, { waitUntil: 'networkidle' });
+    await page.evaluate(() => document.querySelector('#fs-skip')?.click());
+    // Tap around the board (some taps are wrong on purpose), then Hint.
+    const cells = page.locator(`${BOARD} button:not([disabled])`);
+    const n = await cells.count();
+    for (const k of [0, 2, 5, 9, 14].filter((x) => x < n)) { await cells.nth(k).click({ force: true }).catch(() => {}); await page.waitForTimeout(80); }
+    const hint = page.locator('main button[data-g="hint"]:not([disabled]), main button[data-fs="hint"]:not([disabled]), main button[data-nb="hint"]:not([disabled]), main button[data-mr-act="hint"]:not([disabled])').first();
+    if (await hint.count()) {
+      // Hover and press must not move the button.
+      await hint.scrollIntoViewIfNeeded(); await page.mouse.move(0, 0); await page.waitForTimeout(250);
+      const y = () => hint.evaluate((el) => el.getBoundingClientRect().top + window.scrollY);
+      const before = { y: await y() };
+      await hint.hover(); await page.waitForTimeout(250);
+      const hovered = { y: await y() };
+      await page.mouse.down(); await page.waitForTimeout(150);
+      const pressed = { y: await y() };
+      await page.mouse.up(); await page.waitForTimeout(150);
+      expect(Math.abs(hovered.y - before.y), 'Hint moved on hover').toBeLessThanOrEqual(0.5);
+      expect(Math.abs(pressed.y - before.y), 'Hint moved when pressed').toBeLessThanOrEqual(0.5);
+    }
+    const jolts_names = JOLTS; const jolts = (await page.evaluate(() => window.__jolts)).filter((j) => j.js || jolts_names.includes(j.css));
+    expect(jolts, JSON.stringify(jolts.slice(0, 4))).toEqual([]);
+  });
+}

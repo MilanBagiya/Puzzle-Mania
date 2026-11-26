@@ -8,6 +8,7 @@ for (const scheme of ['light', 'dark']) {
     test(`hover contrast ${scheme} ${url}`, async ({ page }, info) => {
       test.setTimeout(240_000); // hovers every control; the home and /games pages have hundreds
       info.annotations.push({ type: 'qa-ran', description: 'hover' });
+      test.setTimeout(180_000); // the home page has many links, some inside sideways rows
       await page.emulateMedia({ colorScheme: scheme });
       await page.setViewportSize({ width: 1280, height: 900 });
       await page.goto(url, { waitUntil: 'networkidle' });

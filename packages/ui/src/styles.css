@@ -917,7 +917,7 @@ a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover, .lvrow:hover, .st
   a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover{box-shadow:0 0 0 2px var(--pine), 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 18px 26px -14px var(--shade-strong)}
   .tab:not([aria-selected="true"]):hover, .jump a:hover, .nav a:not([aria-current="page"]):hover{box-shadow:0 0 0 2px var(--pine), 0 4px 0 var(--edge1)}
   button.cell:not(:disabled):not(.blocked):hover, button.gcell:not(:disabled):hover, button.nb-cell:not(.tree):hover, button.mr-cell:not(.stump):hover,
-  .st-cell:hover, a.day:hover, button.day:hover, .tstage:not(.locked):hover{outline:2px solid var(--pine); outline-offset:-2px; filter:none}
+  .st-cell:hover, a.day:hover, button.day:hover, .tstage:not(.locked):hover{outline:none; filter:brightness(.95)} /* no green border on hover */
 }
 
 /* ======================================================================
@@ -1249,4 +1249,39 @@ body:has(main #tut > .coach:only-child) > footer{display:none}
     scroll-snap-type:x mandatory; scrollbar-width:none; padding:10px 4px 22px; margin:-6px -4px -22px; scroll-padding-inline:4px}
   .tiles-5::-webkit-scrollbar{display:none}
   .tiles-5 > .tile{scroll-snap-align:start}
+}
+
+/* ======================================================================
+   Calm UI (2026-11-26): nothing in the interface shakes, hops, bounces, pops or lifts.
+   Hover and press still show clearly through colour, outline and shadow; wrong moves show red and a message.
+   Slow background scenery (falling snow and leaves, fireflies, butterflies) is not part of the interface.
+   ====================================================================== */
+:is(.btn, .tab, .cell, .gcell, .st-cell, .nb-cell, .mr-cell, .pcard, .day, .tstage, .acard, .lvrow, .card, .gamecard, .guidecard, .tile,
+  .nbasket, .vcell, .bcell, .rail-btn, .jump a, .nav a, .spot-hit, .tbadge):is(:hover, :active, :focus-visible),
+.logo:hover svg, .tile:hover .tile-go svg, .nbasket.sel, .bcell.sel, .acard[aria-pressed="true"]{transform:none !important}
+/* Feedback animations that moved things: shakes on wrong taps, bouncing hints, bouncy idles and pop-ins. */
+.cell.next, .cell.bad, .st-cell.bad, .shake, .react:hover .wobble, .boing, .cheer, .tok.sel .tok-inner, .tok-bubble,
+.cell.arriving > svg, .cell.burrowshake > svg, .bcell.fresh, .sing{animation:none !important}
+/* Pressing a button darkens its edge instead of moving it down. */
+.btn:active:not([disabled]){filter:brightness(.94)}
+
+/* Beehive honeycomb: true hexagons (height = width x 1.155) whose rows interlock by a quarter, every other row
+   shifted by half a cell, centred on the board. The hive's number sits in a badge under the hive, not over it. */
+.hexboard{--g:5px; --hw:min(70px, calc((100cqw - 40px) / 7)); display:block; width:calc(6.5 * var(--hw) + 5.5 * var(--g)); max-width:100%; padding:6px 0; margin:0 auto}
+.hexrow{display:grid; grid-template-columns:repeat(6, var(--hw)); gap:var(--g); margin-top:calc(var(--hw) * -0.2887 + var(--g) * 0.866); transform:none}
+.hexrow:first-child{margin-top:0}
+.hexrow.odd{margin-left:calc((var(--hw) + var(--g)) / 2); transform:none}
+.hexrow .gcell{width:var(--hw); height:calc(var(--hw) * 1.1547); aspect-ratio:auto}
+.hexrow .gcell > svg{width:52%; height:auto; margin-bottom:22%}
+.hexrow .gcell .num{top:auto; bottom:17%; right:auto; left:50%; transform:translateX(-50%); min-width:24px; height:22px; font-size:13px; border-radius:6px}
+/* A hexagon clips an outline, so keyboard focus shows as a strong fill inside the hexagon instead. */
+.hexrow .gcell:focus-visible{outline:none; background:color-mix(in srgb, var(--focus) 45%, var(--tile))}
+@media (hover:hover) and (pointer:fine){ .hexrow button.gcell:hover{background:color-mix(in srgb, var(--pine) 18%, var(--tile))} }
+/* Hover never draws a green border. Cards deepen their shadow, tabs and links get a light tint, cells darken a touch.
+   (Keyboard focus keeps its own outline.) */
+@media (hover:hover) and (pointer:fine){
+  .tile:hover, .tile.done:hover, a.card:hover, .gamecard:hover, .guidecard:hover, .acard:hover{box-shadow:0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 22px 30px -14px var(--shade-strong) !important}
+  .tab:not([aria-selected="true"]):hover, .jump a:hover, .nav a:not([aria-current="page"]):hover{box-shadow:0 4px 0 var(--edge1) !important; background:var(--paper-h)}
+  .st-cell:hover, a.day:hover, button.day:hover, .tstage:not(.locked):hover{outline:none !important; filter:brightness(.96)}
+  .bcell:hover{box-shadow:none !important; filter:brightness(.96)}
 }

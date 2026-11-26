@@ -87,6 +87,9 @@ describe('Mover.sync', () => {
     expect(move.frames[0]!.transform).toContain('translate(40px, 0px)'); // starts where it was
     expect(move.frames[move.frames.length - 1]!.transform).toContain('translate(0px, 0px)');
     expect(tok.byClass('tok-face')[0]!.style.transform).toBe('scaleX(-1)');
+    // Calm UI: a straight glide, with no arc, squash or bounce in between.
+    expect(move.frames).toHaveLength(2);
+    expect(move.frames.map((f) => String(f.transform))).not.toContain('scale');
   });
 
   it('does not animate when the cell is unchanged', () => {
@@ -139,12 +142,19 @@ describe('Mover effects', () => {
     for (const p of puffs) expect(p.style.background).toBe('#5DB6E0');
   });
 
-  it('hop animates a known token and ignores unknown ones', () => {
+  it('hop never moves the animal (calm UI) and ignores unknown ones', () => {
     const { box, cells } = board(), m = new Mover();
     m.sync(asEl(box), [spec(cells, 0)]);
     expect(() => m.hop('nobody')).not.toThrow();
     m.hop('fox');
-    expect(tokOf(box).byClass('tok-inner')[0]!.animations).toHaveLength(1);
+    expect(tokOf(box).byClass('tok-inner')[0]!.animations).toHaveLength(0);
+  });
+  it('shake shows the "?" bubble but never shakes the animal (calm UI)', () => {
+    const { box, cells } = board(), m = new Mover();
+    m.sync(asEl(box), [spec(cells, 0)]);
+    m.shake('fox');
+    expect(tokOf(box).byClass('tok-bubble')).toHaveLength(1);
+    expect(tokOf(box).byClass('tok-inner')[0]!.animations).toHaveLength(0);
   });
 
   it('shake shows a "?" bubble that disappears, even with reduced motion', () => {

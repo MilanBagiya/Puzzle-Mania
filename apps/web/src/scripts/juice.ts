@@ -6,13 +6,10 @@ import { BOARD_ROOT, selectorFor } from './focus';
 const reduced = (): boolean => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const TAP = '[data-fs],[data-g],[data-nb],[data-nb-act],[data-st],[data-st-act],[data-mr],[data-mr-act],[data-in],[data-out],[data-check],[data-hint],[data-clear],#tut [data-i]';
 
-function pop(el: Element | null): void {
-  if (!el || reduced() || !(el as HTMLElement).animate) return;
-  (el as HTMLElement).animate([{ transform: 'scale(1)' }, { transform: 'scale(1.14)' }, { transform: 'scale(.96)' }, { transform: 'scale(1)' }], { duration: 260, easing: 'ease-out' });
-}
-function hop(el: Element | null): void {
-  if (!el || reduced() || !(el as HTMLElement).animate) return;
-  (el as HTMLElement).animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-14px)' }, { transform: 'translateY(0)' }, { transform: 'translateY(-5px)' }, { transform: 'translateY(0)' }], { duration: 520, easing: 'ease-out' });
+// Calm UI: taps and homecomings give sound and vibration (when turned on), never a pop or hop.
+function pop(_el: Element | null): void { /* no motion */ }
+function hop(_el: Element | null): void {
+  /* no motion */
 }
 const homes = (): number => document.querySelectorAll('.acard .home').length;
 const coachBad = (root: Element): boolean => !!root.querySelector('.coach.bad');
@@ -49,15 +46,13 @@ async function celebrate(panel: HTMLElement): Promise<void> {
   confetti({ particleCount: big ? 140 : 80, spread: 75, startVelocity: 42, origin: { y: 0.35 }, colors, disableForReducedMotion: true });
   if (big) window.setTimeout(() => { confetti({ particleCount: 90, angle: 60, spread: 60, origin: { x: 0, y: 0.6 }, colors }); confetti({ particleCount: 90, angle: 120, spread: 60, origin: { x: 1, y: 0.6 }, colors }); }, 450);
   const cards = panel.querySelectorAll(':scope > section, :scope > div');
+  // The result appears with plain fades: nothing slides, stamps, bounces or flips.
   const tl = gsap.timeline();
-  tl.from(cards, { y: 26, opacity: 0, duration: 0.45, stagger: 0.12, ease: 'back.out(1.6)' });
-  const first = panel.querySelector('section');
-  if (first) tl.from(first.querySelectorAll('h2, .stats > *, .row .btn'), { y: 12, opacity: 0, duration: 0.3, stagger: 0.05 }, 0.15);
+  tl.from(cards, { opacity: 0, duration: 0.35, stagger: 0.1, ease: 'power1.out' });
   panel.querySelectorAll<SVGElement>('.paws svg.on').forEach((paw, k) => {
-    tl.fromTo(paw, { scale: 2.6, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.28, ease: 'back.out(3)', onStart: () => play('stamp') }, 0.45 + k * 0.22);
+    tl.fromTo(paw, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power1.out', onStart: () => play('stamp') }, 0.35 + k * 0.2);
   });
-  if (badges) tl.call(() => play('badge'), [], 0.5 + 0.22 * 3);
-  panel.querySelectorAll('.tilt-l').forEach((card) => tl.fromTo(card, { rotateY: 90, transformPerspective: 800 }, { rotateY: 0, duration: 0.6, ease: 'power2.out' }, 0.9));
+  if (badges) tl.call(() => play('badge'), [], 0.4 + 0.2 * 3);
 }
 const watch = new MutationObserver(() => {
   document.querySelectorAll<HTMLElement>('[id$="-result"]').forEach((p) => { if (!p.hidden && p.children.length) void celebrate(p); });
