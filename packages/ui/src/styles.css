@@ -886,7 +886,8 @@ footer a{text-decoration-color:rgba(255,255,255,.35)}
   .topbar{margin-left:calc(-1 * var(--side-w))}
   :root[data-nav="mini"] .topbar{margin-left:calc(-1 * var(--side-mini))}
 }
-.scene.hub + main.portal{margin-top:0; padding-top:28px}
+.scene.hub + main.portal{margin-top:0; padding-top:24px} /* same rhythm as .home sections (design-plans/02) */
+@media (max-width:720px){ .scene.hub + main.portal{padding-top:20px} }
 .portal-blurb details{background:none; box-shadow:none; padding:0; border:0}
 .portal-blurb details summary{padding:0; background:none; box-shadow:none}
 
@@ -1222,7 +1223,8 @@ footer .wrap{padding-top:32px; padding-bottom:32px; row-gap:12px; align-items:ce
 /* Pages never jump while they load. The main area always fills the window, so the footer starts below it and never
    moves on screen when script fills a page in. While a game is still loading, the panels below it and the footer
    wait, so they appear once instead of being pushed down by the board. */
-body > main{min-height:100vh; min-height:100dvh}
+/* Only pages that script fills in (portal lists, stats, journal, Trail Trek, archive) reserve the full window; static pages end where their content ends. */
+body > main:is(.portal, :has(#s-table), :has(#jr-grid), :has(#trek-map), :has(#arc-cal)){min-height:100vh; min-height:100dvh}
 main:has([id$="-game"] > .coach:only-child) aside,
 main:has([id$="-game"] > .coach:first-child + noscript:last-child) aside,
 main:has(#dc > .coach:only-child) aside,
