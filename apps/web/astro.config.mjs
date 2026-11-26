@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { readFileSync } from 'node:fs';
 
 // Set SITE_URL (e.g. in Cloudflare Pages settings) once the domain is bought. Never hard-code it.
 const site = process.env.SITE_URL || 'https://example.com';
@@ -13,9 +14,13 @@ if (process.env.CF_PAGES && !process.env.SITE_URL) {
 
 // Pages marked noindex must stay out of the sitemap (`pnpm qa` checks this). /dev/ = internal design pages.
 const NOINDEX = /\/(journal|stats|recent|trek\/play|dev\/.*)\/?$/;
+// Unlisted pack games (not released yet) are built but noindex, so they stay out of the sitemap too.
+// The list lives in packages/core/src/launch.json, shared with the site's game lists.
+const LISTED_PACK = new Set(JSON.parse(readFileSync(new URL('../../packages/core/src/launch.json', import.meta.url), 'utf8')).listedPack);
+const unlisted = (path) => { const m = path.match(/^\/play\/([a-z-]+)\/?$/); return !!m && !LISTED_PACK.has(m[1]); };
 
 export default defineConfig({
   site,
   output: 'static',
-  integrations: [sitemap({ filter: (page) => !NOINDEX.test(new URL(page).pathname) })],
+  integrations: [sitemap({ filter: (page) => { const p = new URL(page).pathname; return !NOINDEX.test(p) && !unlisted(p); } })],
 });

@@ -1,0 +1,4 @@
+{
+  "_note": "Launch line-up: pack games shown in lists, search and Today's picks. Every other pack game is built but unlisted (noindex, not in the sitemap) until it is released by adding its id here.",
+  "listedPack": ["frog-pond", "owl-watch", "acorn-thief", "track-word", "spot-the-change"]
+}

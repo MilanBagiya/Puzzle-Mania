@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CATALOG } from './catalog';
+import { CATALOG, CATS, LISTED, SEARCH_INDEX, byCat } from './catalog';
 import { tileHtml } from '../scripts/tiles';
 
 describe('card hooks', () => {
@@ -23,5 +23,16 @@ describe('card hooks', () => {
     expect(tileHtml(dawn)).toContain('>Clues</span>');
     expect(tileHtml(nests, { chip: 'Morning', chipKind: 'lv-morning' })).toContain('<span class="tile-chip lv-morning">Morning</span>');
     expect(tileHtml(nests)).not.toContain('tile-cat');
+  });
+});
+
+describe('launch line-up', () => {
+  it('lists the six main games plus the five launch pack games, everywhere', () => {
+    expect(LISTED.map((e) => e.id).sort()).toEqual(['acorn-thief', 'dawn', 'fresh-snow', 'frog-pond', 'nests', 'owl-watch', 'rings', 'spot-the-change', 'stones', 'track-word', 'trek']);
+    expect(SEARCH_INDEX.map((e) => e.id).sort()).toEqual(LISTED.map((e) => e.id).sort());
+    expect(CATS.flatMap((c) => byCat(c.id)).length).toBe(LISTED.length);
+  });
+  it('keeps every category non-empty', () => {
+    for (const c of CATS) expect(byCat(c.id).length, c.id).toBeGreaterThan(0);
   });
 });

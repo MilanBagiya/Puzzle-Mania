@@ -1,13 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
 import PortalHead from '../components/PortalHead.astro';
-import { CATALOG, CATS } from '../data/catalog';
+import { LISTED, CATS } from '../data/catalog';
 import { tileHtml } from '../scripts/tiles';
-const all = CATALOG.slice().sort((a, b) => a.featured - b.featured);
+const all = LISTED.slice().sort((a, b) => a.featured - b.featured);
 ---
-<Base title="All games" description={`${CATALOG.length} free daily nature puzzles: Fresh Snow, Trail Trek, Nests, Dawn Chorus, Frog Pond, Owl Watch, Snow Picture, Track Word and more.`} active="games">
+<Base title="All games" description={`${LISTED.length} free daily nature puzzles: Fresh Snow, Trail Trek, Nests, Dawn Chorus, Frog Pond, Owl Watch, Snow Picture, Track Word and more.`} active="games">
   <main class="wrap portal">
-    <PortalHead crumbs={[['Home', '/'], ['All games']]} title="All games" blurb={`${CATALOG.length} games from one forest, with new puzzles every day.`} more="Snow trails, logic grids, routes across ponds and ice, clue puzzles, guessing games and one-minute quickies. Every puzzle is the same for everyone each day, and every logic puzzle has exactly one answer." />
+    <PortalHead crumbs={[['Home', '/'], ['All games']]} title="All games" blurb={`${LISTED.length} games from one forest, with new puzzles every day.`} more="Snow trails, logic grids, routes across ponds and ice, clue puzzles, guessing games and one-minute quickies. Every puzzle is the same for everyone each day, and every logic puzzle has exactly one answer." />
     <nav class="jump" aria-label="Categories">{CATS.map((c) => <a href={`/games/${c.id}`}>{c.name}</a>)}</nav>
     <div class="tiles" data-grid set:html={all.map((e) => tileHtml(e)).join('')} />
     <p class="card" id="grid-empty" hidden>No games match your search. Try a word like “frog”, “logic” or “snow”.</p>

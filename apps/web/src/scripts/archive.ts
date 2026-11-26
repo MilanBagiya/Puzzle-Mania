@@ -1,5 +1,5 @@
 // Archive calendar: pick any past day, then a level.
-import { BONUS, DAILY_SET, GAMES, PACK_KEYS, formatDate, formatTime, fromIso, loadProgress, setCount, toIso, todayIso, type GameKey } from '@wild-daily/core';
+import { BONUS, DAILY_SET, GAMES, LISTED_PACK, formatDate, formatTime, fromIso, loadProgress, setCount, toIso, todayIso, type GameKey } from '@wild-daily/core';
 import { chevron, paws } from '@wild-daily/ui';
 
 const p = loadProgress();
@@ -23,7 +23,7 @@ function render(): void {
 <div class="cal">${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((x) => `<span class="dow">${x}</span>`).join('')}${cells.join('')}</div>`;
   const link = (g: GameKey): string => { const r = p.days[sel!]?.[g]; const href = `${GAMES[g].href}${GAMES[g].href.includes('?') ? '&' : '?'}date=${sel}`; return `<a class="btn ${r ? 'btn-w' : 'btn-p'}" href="${href}" style="justify-content:space-between">${GAMES[g].name}${r ? ` <span>${paws(r.stars, 14)} ${formatTime(r.time)}</span>` : ''}</a>`; };
   panel.innerHTML = sel
-    ? `<div class="card stack"><h2 class="h-s">${formatDate(sel)}</h2>${[...DAILY_SET, ...BONUS].map(link).join('')}<details><summary>Game pack (${PACK_KEYS.length} more)</summary><div class="stack" style="gap:8px; margin-top:10px">${PACK_KEYS.map(link).join('')}</div></details><p class="muted" style="margin:0; font-size:14px">Archive puzzles count for badges and the Journal, but not for today’s streak.</p></div>`
+    ? `<div class="card stack"><h2 class="h-s">${formatDate(sel)}</h2>${[...DAILY_SET, ...BONUS].map(link).join('')}<details><summary>Game pack (${LISTED_PACK.length} more)</summary><div class="stack" style="gap:8px; margin-top:10px">${LISTED_PACK.map(link).join('')}</div></details><p class="muted" style="margin:0; font-size:14px">Archive puzzles count for badges and the Journal, but not for today’s streak.</p></div>`
     : `<div class="card stack" style="background:var(--good)"><h2 class="h-s">Pick a day</h2><p style="margin:0">Every past day has its own puzzles for every game.</p></div>`;
 }
 cal.addEventListener('click', (e) => {

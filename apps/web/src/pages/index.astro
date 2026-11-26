@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Scenery from '../components/Scenery.astro';
 import { DAILY_SET, GAMES } from '@wild-daily/core';
 import { character } from '@wild-daily/ui';
-import { CATS, byCat, entryById } from '../data/catalog';
+import { CATS, LISTED, byCat, entryById } from '../data/catalog';
 import { tileHtml } from '../scripts/tiles';
 const ld = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Wild Daily', url: new URL('/', Astro.site).href, description: 'Short daily puzzles from one forest.' };
 // Daily Set as tiles: the three Fresh Snow levels share its cover, each with its own label.
@@ -15,7 +15,7 @@ const dailyTiles = DAILY_SET.map((g) => {
 }).join('');
 const rail = (ids: string[]): string => ids.map((id) => entryById(id)).filter(Boolean).map((e) => tileHtml(e!)).join('');
 ---
-<Base title="Fresh Snow: the daily animal tracks puzzle · Wild Daily" description="Read the footprints in fresh snow and guide each animal home. A new Fresh Snow puzzle every day, plus Nests, Dawn Chorus and 28 more short animal puzzles. Free to play." active="today" jsonLd={ld}>
+<Base title="Fresh Snow: the daily animal tracks puzzle · Wild Daily" description={`Read the footprints in fresh snow and guide each animal home. A new Fresh Snow puzzle every day, plus Nests, Dawn Chorus and ${LISTED.length - 3} more short animal puzzles. Free to play.`} active="today" jsonLd={ld}>
   <Scenery height={230} pad={26} class="hub">
     <div class="hub-hero">
       <div class="stack" style="gap:12px; max-width:640px">

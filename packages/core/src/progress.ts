@@ -1,5 +1,6 @@
 // Player progress lives only on the device (localStorage). The server stores nothing personal.
 import { addDays, fromIso, toIso } from './dates.js';
+import launch from './launch.json';
 
 export type LevelId = 'morning' | 'noon' | 'night';
 export const LEVELS: readonly LevelId[] = ['morning', 'noon', 'night'];
@@ -25,6 +26,8 @@ export const PACK_META = [
 ] as const;
 export type PackKey = (typeof PACK_META)[number][0];
 export const PACK_KEYS: readonly PackKey[] = PACK_META.map((m) => m[0]);
+/** Pack games on show at launch (lists, search, Today's picks). The rest are built but unlisted until released. */
+export const LISTED_PACK: readonly PackKey[] = (launch.listedPack as string[]).filter((k): k is PackKey => (PACK_KEYS as readonly string[]).includes(k));
 /** Every daily game. The Daily Set is the first five; stones and rings are bonus games; the pack adds 20 more. */
 export type GameKey = LevelId | 'nests' | 'dawn' | 'stones' | 'rings' | PackKey;
 export const DAILY_SET: readonly GameKey[] = ['morning', 'noon', 'night', 'nests', 'dawn'];
@@ -49,7 +52,7 @@ export const packSeason = (k: PackKey): PackSeason => PACK_META.find((m) => m[0]
 export function todaysPicks(date: string, count = 3, season?: 'spring' | 'summer' | 'autumn' | 'winter'): PackKey[] {
   let h = 2166136261;
   for (const ch of date) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
-  const keys = PACK_KEYS.slice();
+  const keys = LISTED_PACK.slice();
   for (let i = keys.length - 1; i > 0; i--) { h = Math.imul(h ^ (h >>> 13), 1274126177) >>> 0; const j = h % (i + 1); [keys[i], keys[j]] = [keys[j]!, keys[i]!]; }
   if (season) {
     const k = keys.findIndex((x) => packSeason(x) === season);

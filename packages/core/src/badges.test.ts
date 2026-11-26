@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { BADGES, earnedBadges, takeNewBadges } from './badges.js';
 import { addDays } from './dates.js';
 import { SEASONS } from './season.js';
-import { DAILY_SET, PACK_KEYS, todaysPicks, type GameKey, type GameResult, type Progress } from './progress.js';
+import { DAILY_SET, LISTED_PACK, PACK_KEYS, todaysPicks, type GameKey, type GameResult, type Progress } from './progress.js';
 
 const T = '2027-01-27'; // a Wednesday
 const live: GameResult = { time: 60, hints: 1, stars: 2, live: true };
@@ -114,9 +114,9 @@ describe('badge conditions (each just below and at its threshold)', () => {
       expect(has(prog({ [T]: shown.slice(1) }), 'picks'), season).toBe(false);
     }
   });
-  it('arcade: every pack game at least once', () => {
-    expect(has(prog({ [T]: PACK_KEYS.slice(1) }), 'arcade')).toBe(false);
-    expect(has(prog({ [T]: PACK_KEYS.slice(1), [addDays(T, -9)]: PACK_KEYS.slice(0, 1) }), 'arcade')).toBe(true);
+  it('arcade: every listed pack game at least once (unlisted games are not required)', () => {
+    expect(has(prog({ [T]: LISTED_PACK.slice(1) }), 'arcade')).toBe(false);
+    expect(has(prog({ [T]: LISTED_PACK.slice(1), [addDays(T, -9)]: LISTED_PACK.slice(0, 1) }), 'arcade')).toBe(true);
   });
   it('four-seasons: played in all four seasons, in either hemisphere', () => {
     const three = prog({ '2027-01-10': ['morning'], '2027-04-10': ['morning'], '2027-07-10': ['morning'] });

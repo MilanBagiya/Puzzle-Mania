@@ -1,6 +1,6 @@
 // One catalog of every game: used by the sidebar, search, tiles, category pages and the home rows.
 import { PACK } from '@wild-daily/game-pack';
-import type { GameKey } from '@wild-daily/core';
+import { LISTED_PACK, type GameKey } from '@wild-daily/core';
 
 export type CatId = 'snow' | 'logic' | 'path' | 'order' | 'guess' | 'quick';
 export interface Category { id: CatId; name: string; title: string; blurb: string; more: string; icon: string }
@@ -55,9 +55,12 @@ export const CATALOG: Entry[] = [
   ...MAIN,
   ...PACK.map((g, k) => ({ id: g.id, name: g.name, href: `/play/${g.id}`, cat: KIND_TO_CAT[g.kind] ?? 'quick', blurb: g.blurb, hook: g.hook, time: g.time, minutes: minutesOf(g.time), daily: true, isNew: true, season: g.season, featured: 10 + k, keys: [g.id as GameKey] })),
 ];
-export const byCat = (c: CatId): Entry[] => CATALOG.filter((e) => e.cat === c).sort((a, b) => a.featured - b.featured);
+/** Games on show: the six main games plus the listed pack games. Unlisted games keep their pages (noindex) but appear nowhere. */
+export const isListed = (id: string): boolean => MAIN.some((e) => e.id === id) || (LISTED_PACK as readonly string[]).includes(id);
+export const LISTED: Entry[] = CATALOG.filter((e) => isListed(e.id));
+export const byCat = (c: CatId): Entry[] => LISTED.filter((e) => e.cat === c).sort((a, b) => a.featured - b.featured);
 export const entryById = (id: string): Entry | undefined => CATALOG.find((e) => e.id === id);
 /** Sidebar item for a game page: its category (`cat-<id>`), so the menu shows where the player is. */
 export const activeFor = (id: string): string => { const e = entryById(id); return e ? `cat-${e.cat}` : 'games'; };
 /** Small data for client-side search (no artwork). */
-export const SEARCH_INDEX = CATALOG.map((e) => ({ id: e.id, n: e.name, h: e.href, c: CATS.find((c) => c.id === e.cat)!.name, b: e.blurb }));
+export const SEARCH_INDEX = LISTED.map((e) => ({ id: e.id, n: e.name, h: e.href, c: CATS.find((c) => c.id === e.cat)!.name, b: e.blurb }));

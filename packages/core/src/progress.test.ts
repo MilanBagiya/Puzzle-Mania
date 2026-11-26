@@ -146,7 +146,7 @@ describe('results, stars, trek, badges', () => {
 describe('game pack', () => {
   it('has 20 pack games with names and par times, and 3 distinct daily picks', async () => {
     const { GAMES, PACK_KEYS, todaysPicks } = await import('./progress.js');
-    expect(PACK_KEYS).toHaveLength(24);
+    expect(PACK_KEYS).toHaveLength(25);
     for (const k of PACK_KEYS) { expect(GAMES[k].href).toBe(`/play/${k}`); expect(GAMES[k].par).toBeGreaterThan(0); }
     const a = todaysPicks('2027-01-18'), b = todaysPicks('2027-01-19');
     expect(new Set(a).size).toBe(3); expect(a).toEqual(todaysPicks('2027-01-18')); expect(a).not.toEqual(b);
@@ -161,7 +161,7 @@ describe('content', () => {
 });
 
 import { hemisphereFromTimeZone, seasonFor } from './season.js';
-import { todaysPicks as picks, packSeason, PACK_KEYS as KEYS } from './progress.js';
+import { todaysPicks as picks, packSeason, PACK_KEYS as KEYS, LISTED_PACK } from './progress.js';
 describe('seasons', () => {
   it('uses meteorological seasons, flipped in the south', () => {
     expect(seasonFor('2027-01-15')).toBe('winter'); expect(seasonFor('2027-04-01')).toBe('spring');
@@ -173,10 +173,12 @@ describe('seasons', () => {
     expect(hemisphereFromTimeZone('Europe/London')).toBe('north'); expect(hemisphereFromTimeZone('America/Toronto')).toBe('north');
     expect(hemisphereFromTimeZone(undefined)).toBe('north');
   });
-  it('always leads Today’s picks with an in-season game', () => {
+  it('draws Today’s picks from the listed games and leads with an in-season one when there is one', () => {
     for (const s of ['spring', 'summer', 'autumn', 'winter'] as const) for (let d = 1; d <= 28; d++) {
       const p = picks(`2027-02-${String(d).padStart(2, '0')}`, 3, s);
-      expect(packSeason(p[0]!)).toBe(s); expect(new Set(p).size).toBe(3);
+      expect(new Set(p).size).toBe(3);
+      for (const k of p) expect(LISTED_PACK).toContain(k);
+      if (LISTED_PACK.some((k) => packSeason(k) === s)) expect(packSeason(p[0]!)).toBe(s);
     }
     expect(KEYS.every((k) => ['spring', 'summer', 'autumn', 'winter', 'any'].includes(packSeason(k)))).toBe(true);
   });

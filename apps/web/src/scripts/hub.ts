@@ -1,8 +1,8 @@
 // Today page: Daily Set progress, streak with Snow Days, countdown, Trek, bonus games, badges, journal.
-import { activeSeason, addDays, BADGES, DAILY_SET, GAMES, SEASON_INFO, todaysPicks, type Season, JOURNAL, daysPlayed, earnedBadges, formatDate, formatTime, loadProgress, nextInSet, playedDay, setCount, streakInfo, trekStars, trekUnlocked, type GameKey } from '@wild-daily/core';
+import { activeSeason, addDays, BADGES, DAILY_SET, GAMES, SEASON_INFO, packSeason, todaysPicks, type Season, JOURNAL, daysPlayed, earnedBadges, formatDate, formatTime, loadProgress, nextInSet, playedDay, setCount, streakInfo, trekStars, trekUnlocked, type GameKey } from '@wild-daily/core';
 import { TREK_STAGE_COUNT } from '@wild-daily/game-fresh-snow/engine';
 import { paws, print } from '@wild-daily/ui';
-import { CATALOG, entryById } from '../data/catalog';
+import { LISTED, entryById } from '../data/catalog';
 import { tileHtml } from './tiles';
 import { markSolved } from './portal';
 import { startCountdowns, today } from './daily';
@@ -30,12 +30,15 @@ function renderSeason(season: Season): void {
   const info = SEASON_INFO[season];
   set('hub-season', info.name); // the headline stays on Fresh Snow; the season shows in its pill
   const s = info.name.toLowerCase();
-  set('hub-picks-note', `Three games from the pack, chosen fresh every day, led by ${/^[aeiou]/.test(s) ? 'an' : 'a'} ${s} game. Solve all three for a badge.`);
+  const picks = todaysPicks(today, 3, season);
+  // Only promise an in-season lead when the first pick really is in season (the launch line-up has none for some seasons).
+  const lead = packSeason(picks[0]!) === season ? `, led by ${/^[aeiou]/.test(s) ? 'an' : 'a'} ${s} game` : '';
+  set('hub-picks-note', `Three games from the pack, chosen fresh every day${lead}. Solve all three for a badge.`);
   const picksEl = $('hub-picks');
-  if (picksEl) { picksEl.innerHTML = todaysPicks(today, 3, season).map((g) => { const e = entryById(g); return e ? tileHtml(e) : ''; }).join(''); markSolved(picksEl); }
+  if (picksEl) { picksEl.innerHTML = picks.map((g) => { const e = entryById(g); return e ? tileHtml(e) : ''; }).join(''); markSolved(picksEl); }
   const seasonEl = $('hub-inseason');
   set('hub-season-title', `In season: ${info.name.toLowerCase()}`);
-  if (seasonEl) { seasonEl.innerHTML = CATALOG.filter((e) => e.season === season).sort((a, b) => a.featured - b.featured).map((e) => tileHtml(e)).join(''); markSolved(seasonEl); }
+  if (seasonEl) { seasonEl.innerHTML = LISTED.filter((e) => e.season === season).sort((a, b) => a.featured - b.featured).map((e) => tileHtml(e)).join(''); markSolved(seasonEl); }
 }
 renderSeason(activeSeason(p, today, tz()));
 document.addEventListener('wd:season', (e) => renderSeason((e as CustomEvent<Season>).detail));
@@ -44,7 +47,7 @@ DAILY_SET.forEach(row);
 {
   const seen = new Map<string, string>();
   Object.entries(p.days).sort(([a], [b]) => (a < b ? 1 : -1)).forEach(([date, day]) => Object.keys(day).forEach((k) => {
-    const e = CATALOG.find((x) => x.keys.includes(k as GameKey)); if (e && !seen.has(e.id) && date >= addDays(today, -14)) seen.set(e.id, date);
+    const e = LISTED.find((x) => x.keys.includes(k as GameKey)); if (e && !seen.has(e.id) && date >= addDays(today, -14)) seen.set(e.id, date);
   }));
   const wrap = $('hub-continue-wrap'), el = $('hub-continue');
   if (wrap && el && seen.size) { el.innerHTML = [...seen.keys()].slice(0, 8).map((id) => tileHtml(entryById(id)!)).join(''); markSolved(el); wrap.hidden = false; }
