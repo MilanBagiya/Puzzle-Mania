@@ -1417,3 +1417,6 @@ html::before{content:""; position:fixed; left:0; right:0; bottom:0; height:min(4
 :root[data-theme="dark"][data-season="spring"]{--backdrop:url("/bg/spring-dark.svg")}
 :root[data-theme="dark"][data-season="summer"]{--backdrop:url("/bg/summer-dark.svg")}
 :root[data-theme="dark"][data-season="autumn"]{--backdrop:url("/bg/autumn-dark.svg")}
+/* Disabled buttons are solid (not see-through), so the seasonal backdrop never shows through them. */
+.btn[disabled], .btn[aria-disabled="true"]{opacity:1; filter:none; background:var(--soft); color:var(--ink-mute); box-shadow:0 0 0 1px var(--soft-e)}
+.inn-queue > p{grid-column:1 / -1}
