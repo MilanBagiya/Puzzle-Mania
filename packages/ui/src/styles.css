@@ -1370,3 +1370,7 @@ body > .scene + main.body > :first-child{margin-top:0} /* the gap above comes fr
 .streak-num b{font-size:44px; line-height:1}
 .streak-num span{font-size:13px; font-weight:800}
 @media (max-width:520px){ .streak-card{flex-direction:column; text-align:center} }
+/* Journal: locked cards show the animal as a shadow, so players wonder who comes next. */
+.jr-shadow{display:flex; filter:brightness(0); opacity:.18}
+:root[data-theme="dark"] .jr-shadow{filter:brightness(0) invert(1)}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .jr-shadow{filter:brightness(0) invert(1)} }

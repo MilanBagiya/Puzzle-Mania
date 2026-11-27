@@ -89,6 +89,7 @@ export function showResult(v: ResultView): void {
 <div class="streak-num"><b class="display">${st.current}</b><span>day${st.current === 1 ? '' : 's'} in a row</span></div>
 <div class="grow stack" style="gap:6px"><h2 class="h-s">${st.current >= st.best && st.current > 1 ? 'Your best streak yet!' : st.current === 1 ? 'Day one of a new streak' : `Best streak: ${st.best} days`}</h2>
 <p class="muted" style="margin:0">Come back tomorrow to make it <b>${st.current + 1}</b>. New puzzles in <b class="countdown" data-countdown>${formatCountdown(msUntilMidnight())}</b>.${st.snowDays.length ? ' A Snow Day covered a missed day this week.' : ''}</p>
+${daysPlayed(p) < JOURNAL.length ? `<p style="margin:0"><b>Tomorrow’s Journal card:</b> a new animal (${daysPlayed(p) + 1} of ${JOURNAL.length}). <a href="/journal">See who’s hiding</a></p>` : ''}
 <p style="margin:0"><b>Tomorrow’s picks:</b> ${tomorrow.join(' · ')}</p></div></section>` : '';
   const setNote = playedNow && setCount(p, now) > 0 ? ` Daily Set ${setCount(p, now)}/${DAILY_SET.length}.` : '';
   const shareText = `${v.share}${playedNow && st.current > 1 ? ` 🔥 ${st.current}-day streak.` : ''}${setNote}`;
