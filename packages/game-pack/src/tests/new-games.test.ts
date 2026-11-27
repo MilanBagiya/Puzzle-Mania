@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import nutSort, { CAP, KINDS, canMove, isSorted, solveSort } from '../games/nut-sort.js';
-import vineLinks, { solveVines } from '../games/vine-links.js';
+import vineLinks, { solveVines, vineHint } from '../games/vine-links.js';
 import spot, { THINGS, changesOf, same } from '../games/spot-the-change.js';
 import burrow, { HINT_CAP, movesOf as burrowMoves, solveBurrow } from '../games/burrow-escape.js';
 import { coach, nb4, rngFrom } from '../shared.js';
@@ -45,6 +45,20 @@ describe('Nut Sort', () => {
 });
 
 describe('Vine Links', () => {
+  it('a hint extends a vine by one square and cuts any other vine on those squares', () => {
+    // 3×3 board; solution vine 0 runs along the top row, vine 1 down the right column and so on.
+    const sol = [[0, 1, 2], [5, 8], [3, 4], [6, 7]];
+    const h = vineHint(sol, [[0], [5, 4, 1], [], []])!;
+    expect(h.vine).toBe(0);
+    expect(h.paths[0]).toEqual([0, 1]);
+    expect(h.paths[1]).toEqual([5, 4]); // cut where it crossed square 1
+    expect(h.paths[1]!.some((i) => h.paths[0]!.includes(i))).toBe(false);
+  });
+  it('a hint starts from whichever end the player began at, and is null when all vines are right', () => {
+    const sol = [[0, 1, 2], [3, 4, 5]];
+    expect(vineHint(sol, [[2], []])!.paths[0]).toEqual([2, 1]);
+    expect(vineHint(sol, [[0, 1, 2], [5, 4, 3]])).toBeNull();
+  });
   it('generates 40 days of puzzles, each with exactly one solution that covers every square', () => {
     for (const d of dates(40)) {
       const p = vineLinks.generate(d);

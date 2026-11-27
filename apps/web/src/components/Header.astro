@@ -18,7 +18,7 @@ const cur = (k: string): 'page' | undefined => (k === active ? 'page' : undefine
   <button class="tb-icon" data-act="nav" aria-label="Menu" aria-expanded="false" aria-controls="sidenav" set:html={ic('menu', 24)} />
   <a class="logo" href="/"><Fragment set:html={character('fox', 'happy', 40)} /><span>Wild Daily</span></a>
   <form class="tb-search" role="search" action="/games" method="get" autocomplete="off">
-    <input type="search" name="q" id="tb-q" placeholder="Search games" aria-label="Search games" aria-controls="tb-results" aria-autocomplete="list" />
+    <input type="search" name="q" id="tb-q" placeholder="Search games" aria-label="Search games" role="combobox" aria-expanded="false" aria-controls="tb-results" aria-autocomplete="list" />
     <span class="tb-search-ic" set:html={ic('search', 20)} />
     <div class="tb-results" id="tb-results" role="listbox" hidden></div>
   </form>

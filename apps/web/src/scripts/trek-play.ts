@@ -33,7 +33,7 @@ loadPuzzle<Puzzle>(`/puzzles/trek/${stage}.json`).then((puzzle) => {
 <div class="row" style="justify-content:center"><button class="btn btn-w big" data-share>Share</button>${next ? `<a class="btn btn-c big" href="/trek/play?stage=${next}">Next: stage ${next}</a>` : '<a class="btn btn-c big" href="/trek">Back to the map</a>'}</div>
 <a href="/trek" style="font-weight:800">Trail Trek map</a></section>
 ${badges.map((b) => `<section class="card banner" style="margin-top:20px; background:var(--note)"><span class="badge-tile" style="padding:0; box-shadow:none; background:transparent"><span class="medal" style="font-size:28px">${b.icon}</span></span><div class="grow"><span class="pill p-y">New badge!</span><h2 class="h-s" style="margin-top:6px">${b.name}</h2><p class="muted" style="margin:2px 0 0">${b.desc}</p></div></section>`).join('')}`;
-        resEl.hidden = false; resEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        resEl.hidden = false; resEl.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
         resEl.querySelector('[data-share]')?.addEventListener('click', () => share(`Trail Trek stage ${stage}: ${'🐾'.repeat(r.stars)} in ${formatTime(time)}.`));
         if (badges.length) toast(`Badge earned: ${badges[0]!.name}!`);
       }, 800);

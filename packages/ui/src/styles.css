@@ -1374,3 +1374,7 @@ body > .scene + main.body > :first-child{margin-top:0} /* the gap above comes fr
 .jr-shadow{display:flex; filter:brightness(0); opacity:.18}
 :root[data-theme="dark"] .jr-shadow{filter:brightness(0) invert(1)}
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .jr-shadow{filter:brightness(0) invert(1)} }
+/* Result screen: all new badges in one card. */
+.new-badges .new-badge{gap:16px; flex-wrap:nowrap; align-items:center}
+.new-badges .new-badge + .new-badge{padding-top:10px; border-top:1px solid var(--paper-line)}
+.new-badges .medal{flex:none; width:56px; height:56px; border-radius:50%; display:grid; place-items:center; background:var(--mustard); box-shadow:0 3px 0 var(--mustard-e1),inset 0 -4px 0 rgba(0,0,0,.08)}

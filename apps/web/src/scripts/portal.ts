@@ -20,9 +20,20 @@ function toggleNav(force?: boolean): void {
   if (scrim) scrim.hidden = !open;
   btn?.setAttribute('aria-expanded', String(open));
   if (open) document.querySelector<HTMLElement>('#sidenav a')?.focus();
+  else if (force === false || document.activeElement?.closest('#sidenav')) btn?.focus(); // closing: focus goes back to the menu button
 }
 document.addEventListener('click', (e) => { const t = (e.target as HTMLElement).closest('[data-act="nav"]'); if (t) { e.preventDefault(); toggleNav(); } });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && root.hasAttribute('data-drawer')) toggleNav(false); });
+document.addEventListener('keydown', (e) => {
+  if (!root.hasAttribute('data-drawer')) return;
+  if (e.key === 'Escape') { toggleNav(false); return; }
+  if (e.key !== 'Tab') return;
+  // The open drawer is modal: Tab cycles through its links and the menu button, never the page behind it.
+  const items = [document.querySelector<HTMLElement>('.topbar [data-act="nav"]'), ...document.querySelectorAll<HTMLElement>('#sidenav a, #sidenav button')].filter((x): x is HTMLElement => !!x && x.offsetParent !== null);
+  if (!items.length) return;
+  const i = items.indexOf(document.activeElement as HTMLElement), n = items.length;
+  e.preventDefault();
+  items[i < 0 ? 0 : (i + (e.shiftKey ? -1 : 1) + n) % n]!.focus();
+});
 
 // ---- streak chip ----
 const p = loadProgress(), today = todayIso();
@@ -54,12 +65,13 @@ let sel = -1;
 function renderResults(): void {
   if (!q || !box) return;
   const hits = searchGames(q.value).slice(0, 7);
-  if (!q.value.trim()) { box.hidden = true; return; }
+  if (!q.value.trim()) { closeResults(); return; }
   box.innerHTML = hits.length
     ? hits.map((h, i) => `<a role="option" id="tbr-${i}" class="tb-hit${i === sel ? ' on' : ''}" href="${h.h}" aria-selected="${i === sel}"><b>${h.n}</b><small>${h.c}</small></a>`).join('') + `<a class="tb-all" href="/games?q=${encodeURIComponent(q.value.trim())}">See all results</a>`
     : `<p class="tb-none">No games match “${q.value.trim().replace(/[<>&"]/g, '')}”.</p>`;
   box.hidden = false;
-  q.setAttribute('aria-activedescendant', sel >= 0 ? `tbr-${sel}` : '');
+  if (sel >= 0) q.setAttribute('aria-activedescendant', `tbr-${sel}`); else q.removeAttribute('aria-activedescendant');
+  q.setAttribute('aria-expanded', 'true');
 }
 q?.addEventListener('input', () => { sel = -1; renderResults(); });
 q?.addEventListener('focus', renderResults);
@@ -68,9 +80,12 @@ q?.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown') { e.preventDefault(); sel = Math.min(n - 1, sel + 1); renderResults(); }
   else if (e.key === 'ArrowUp') { e.preventDefault(); sel = Math.max(-1, sel - 1); renderResults(); }
   else if (e.key === 'Enter' && sel >= 0) { e.preventDefault(); (box?.querySelectorAll<HTMLAnchorElement>('.tb-hit')[sel])?.click(); }
-  else if (e.key === 'Escape') { if (box) box.hidden = true; }
+  else if (e.key === 'Escape') closeResults();
 });
-document.addEventListener('click', (e) => { if (box && q && !(e.target as HTMLElement).closest('.tb-search')) box.hidden = true; });
+const closeResults = (): void => { if (box) box.hidden = true; q?.setAttribute('aria-expanded', 'false'); q?.removeAttribute('aria-activedescendant'); sel = -1; };
+document.addEventListener('click', (e) => { if (box && q && !(e.target as HTMLElement).closest('.tb-search')) closeResults(); });
+// Tabbing out of the search box (or its results) closes the list, so it never covers the page.
+document.querySelector('.tb-search')?.addEventListener('focusout', (e) => { const to = (e as FocusEvent).relatedTarget as HTMLElement | null; if (!to?.closest('.tb-search')) closeResults(); });
 
 // ---- game grids: sort, filter by category chips, search query ----
 const grid = document.querySelector<HTMLElement>('[data-grid]');

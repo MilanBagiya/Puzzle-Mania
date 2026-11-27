@@ -18,6 +18,21 @@ export interface VinePuzzle { seed: string; n: number; pairs: [number, number][]
  * Count solutions (up to `limit`) that join every pair and cover every square. Vines grow from the first
  * flower of each pair; the most constrained vine moves first; dead squares and cut-off vines are pruned.
  */
+/**
+ * One hint step: extend the first vine that is wrong or unfinished by one correct square (from the end the player
+ * started at), cutting any other vine that crosses the squares it lays. Returns null when every vine is right.
+ */
+export function vineHint(sol: number[][], paths: number[][]): { paths: number[][]; vine: number } | null {
+  for (let c = 0; c < sol.length; c++) {
+    const s = sol[c]!, mine = paths[c] ?? [], fromA = mine[0] === s[0] ? s : mine[0] === s[s.length - 1] ? [...s].reverse() : s;
+    let k = 0; while (k < mine.length && mine[k] === fromA[k]) k++;
+    if (k === fromA.length && mine.length === fromA.length) continue;
+    const laid = fromA.slice(0, Math.min(fromA.length, Math.max(k, 1) + 1));
+    const next = paths.map((q, o) => { if (o === c) return laid; const cut = q.findIndex((i) => laid.includes(i)); return cut >= 0 ? q.slice(0, cut) : q; });
+    return { paths: next, vine: c };
+  }
+  return null;
+}
 export function solveVines(p: VinePuzzle, limit = 2): number[][][] {
   const { n, pairs } = p, N = n * n, K = pairs.length;
   const grid = new Int8Array(N).fill(-1), head = pairs.map(([a]) => a), done = new Array<boolean>(K).fill(false);
@@ -146,17 +161,8 @@ const def: GameDef<VinePuzzle> = {
       else if (act === 'hint') {
         // Hints come from solving the visible puzzle: fix the first vine that is wrong or unfinished by one square.
         const sol = solveVines(p, 1)[0];
-        if (sol) {
-          for (let c = 0; c < K; c++) {
-            const s = sol[c]!, mine = paths[c]!, fromA = mine[0] === s[0] ? s : [...s].reverse();
-            let k = 0; while (k < mine.length && mine[k] === fromA[k]) k++;
-            if (k === fromA.length) continue;
-            const laid = fromA.slice(0, Math.max(k, 1) + 1); // clear other vines off every square the hint lays
-            for (let o = 0; o < K; o++) if (o !== c) { const cut = paths[o]!.findIndex((i) => laid.includes(i)); if (cut >= 0) paths[o] = paths[o]!.slice(0, cut); }
-            paths[c] = laid; sel = c; hints++; msg = `Hint: the ${FLOWERS[c]!.name} vine goes this way.`; kind = ''; break;
-          }
-          check();
-        }
+        const h = sol ? vineHint(sol, paths) : null;
+        if (h) { paths = h.paths; sel = h.vine; hints++; msg = `Hint: the ${FLOWERS[h.vine]!.name} vine goes this way.`; kind = ''; check(); }
       }
       if (!done) render();
     });
