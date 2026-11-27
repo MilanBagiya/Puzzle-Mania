@@ -111,6 +111,9 @@ ${streakCard ? `<div style="margin-top:20px">${streakCard}</div>` : ''}
 ${v.rec.badges.length ? `<section class="card stack new-badges" style="margin-top:20px; background:var(--note)"><span class="pill p-y" style="align-self:flex-start">${v.rec.badges.length === 1 ? 'New badge!' : `${v.rec.badges.length} new badges!`}</span>${v.rec.badges.map((b) => `<div class="row new-badge"><span class="medal" style="font-size:28px">${b.icon}</span><div class="grow"><h2 class="h-s">${b.name}</h2><p class="muted" style="margin:2px 0 0">${b.desc}</p></div></div>`).join('')}<a class="btn btn-w" href="/stats" style="align-self:flex-start">See all badges</a></section>` : ''}
 ${v.rec.card ? `<section class="card stack tilt-l" style="background:var(--note); align-items:center; text-align:center; margin-top:20px"><span class="pill p-y" style="align-self:flex-start">New Journal card!</span><div style="min-height:110px; display:flex; align-items:flex-end">${cardArt(v.rec.card, 96)}</div><h2 class="h-m">${v.rec.card.name}</h2><p style="margin:0; max-width:40ch">${v.rec.card.fact}</p><a class="btn btn-w" href="/animals/${v.rec.card.guide}">Read the ${v.rec.card.name.toLowerCase()} guide</a></section>` : ''}
 ${setBanner ? `<div style="margin-top:20px">${setBanner}</div>` : ''}`;
+  // Keep the top bar's streak chip in step with this solve (it was drawn when the page loaded).
+  const chip = document.getElementById('tb-streak');
+  if (chip && st.current > 0) { chip.hidden = false; const n = chip.querySelector('b'); if (n) n.textContent = String(st.current); chip.title = `${st.current}-day streak`; }
   v.el.hidden = false;
   v.el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
   v.el.querySelector('[data-share]')?.addEventListener('click', () => share(shareText));
