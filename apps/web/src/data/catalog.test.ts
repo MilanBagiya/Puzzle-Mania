@@ -4,7 +4,7 @@ import { tileHtml } from '../scripts/tiles';
 
 describe('card hooks', () => {
   it('every game has a hook of at most 60 characters', () => {
-    expect(CATALOG).toHaveLength(31);
+    expect(CATALOG).toHaveLength(32);
     for (const e of CATALOG) {
       expect(e.hook, e.id).toBeTruthy();
       expect(e.hook!.length, `${e.id}: "${e.hook}"`).toBeLessThanOrEqual(60);

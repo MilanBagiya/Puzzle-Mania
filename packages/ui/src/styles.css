@@ -1378,3 +1378,42 @@ body > .scene + main.body > :first-child{margin-top:0} /* the gap above comes fr
 .new-badges .new-badge{gap:16px; flex-wrap:nowrap; align-items:center}
 .new-badges .new-badge + .new-badge{padding-top:10px; border-top:1px solid var(--paper-line)}
 .new-badges .medal{flex:none; width:56px; height:56px; border-radius:50%; display:grid; place-items:center; background:var(--mustard); box-shadow:0 3px 0 var(--mustard-e1),inset 0 -4px 0 rgba(0,0,0,.08)}
+
+/* Hollow Tree Inn: a tree with two floors of three round rooms, the guest queue and the wish list beside it. */
+.inn{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,6fr); gap:24px; align-items:start}
+.inn-tree{position:relative; display:grid; grid-template-columns:repeat(3,1fr); gap:14px; padding:64px 22px 28px; border-radius:46% 46% 18px 18px / 30% 30% 18px 18px;
+  background:radial-gradient(ellipse 60% 22% at 50% 0, #E07B39 0 70%, transparent 71%), linear-gradient(90deg,#7A4D32,#8A5A3B 30%,#93633F 60%,#7A4D32); box-shadow:inset 0 -6px 0 rgba(0,0,0,.12)}
+.inn-room{aspect-ratio:1; display:grid; place-items:center; padding:6px; border:0; border-radius:50% 50% 14px 14px; background:#3A2416; box-shadow:inset 0 4px 0 rgba(0,0,0,.35), 0 0 0 3px #5E3A24; cursor:pointer; font:inherit; color:#fff}
+.inn-room svg{width:100%; height:100%}
+.inn-room.full{background:#F6E7C8; box-shadow:inset 0 4px 0 rgba(0,0,0,.08), 0 0 0 3px #5E3A24}
+.inn-room.sel{box-shadow:0 0 0 4px var(--mustard), inset 0 4px 0 rgba(0,0,0,.08)}
+.inn-empty{width:30%; aspect-ratio:1; border-radius:50%; background:rgba(255,255,255,.12)}
+.inn-room:focus-visible, .inn-guest:focus-visible{outline:3px solid var(--focus); outline-offset:3px}
+.inn-room:disabled{cursor:default}
+.inn-side{display:flex; flex-direction:column; gap:16px; min-width:0}
+.inn-queue{display:grid; grid-template-columns:repeat(auto-fill,minmax(84px,1fr)); gap:10px; min-height:112px; align-content:start}
+.inn-guest{display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 4px; border:0; border-radius:14px; background:var(--paper); color:var(--ink);
+  box-shadow:0 0 0 1px var(--edge1), 0 3px 0 var(--edge2); cursor:pointer; font:inherit; font-weight:800; font-size:14px}
+.inn-guest .inn-art{width:56px; height:56px} .inn-guest .inn-art svg{width:100%; height:100%}
+.inn-guest[aria-pressed="true"]{box-shadow:0 0 0 3px var(--pine), 0 3px 0 var(--edge2); background:color-mix(in srgb, var(--pine) 8%, var(--paper))}
+.inn-wishes{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px}
+.inn-wish{display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border-radius:12px; background:var(--soft); font-weight:600; line-height:1.4}
+.inn-mark{flex:none; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; font-weight:900; font-size:14px; background:var(--paper); box-shadow:0 0 0 1px var(--edge1)}
+.inn-wish.ok{background:var(--good)} .inn-wish.ok .inn-mark{background:#2F7D5B; color:#fff; box-shadow:none}
+.inn-wish.bad{background:color-mix(in srgb, #C9412A 12%, var(--paper))} .inn-wish.bad .inn-mark{background:#C9412A; color:#fff; box-shadow:none}
+@media (hover:hover) and (pointer:fine){ .inn-room:not(:disabled):hover, .inn-guest:hover{filter:brightness(.96)} }
+@media (max-width:820px){ .inn{grid-template-columns:1fr} .inn-tree{max-width:300px; width:100%; justify-self:center; padding:52px 16px 20px; gap:10px} }
+
+/* Seasonal backdrop (our own SVG art, /bg/<season>-<theme>.svg): a soft landscape along the bottom of every page,
+   behind the weather, cards and boards. Decoration only. */
+html::before{content:""; position:fixed; left:0; right:0; bottom:0; height:min(42vh,440px); z-index:-2; pointer-events:none;
+  background:var(--backdrop, none) center bottom / cover no-repeat}
+:root[data-season="winter"]{--backdrop:url("/bg/winter-light.svg")}
+:root[data-season="spring"]{--backdrop:url("/bg/spring-light.svg")}
+:root[data-season="summer"]{--backdrop:url("/bg/summer-light.svg")}
+:root[data-season="autumn"]{--backdrop:url("/bg/autumn-light.svg")}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"])[data-season="winter"]{--backdrop:url("/bg/winter-dark.svg")} :root:not([data-theme="light"])[data-season="spring"]{--backdrop:url("/bg/spring-dark.svg")} :root:not([data-theme="light"])[data-season="summer"]{--backdrop:url("/bg/summer-dark.svg")} :root:not([data-theme="light"])[data-season="autumn"]{--backdrop:url("/bg/autumn-dark.svg")} }
+:root[data-theme="dark"][data-season="winter"]{--backdrop:url("/bg/winter-dark.svg")}
+:root[data-theme="dark"][data-season="spring"]{--backdrop:url("/bg/spring-dark.svg")}
+:root[data-theme="dark"][data-season="summer"]{--backdrop:url("/bg/summer-dark.svg")}
+:root[data-theme="dark"][data-season="autumn"]{--backdrop:url("/bg/autumn-dark.svg")}

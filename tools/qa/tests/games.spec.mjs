@@ -82,3 +82,20 @@ test('Acorn Thief: if you cross off the thief, Hint puts them back', async ({ pa
   await expect(page.locator('#pk-game .coach')).toContainText('could still be the thief');
   await expect(pill(page, 0)).toContainText('1 left');
 });
+
+test('Hollow Tree Inn: place, send back, and finish with hints', async ({ page }, info) => {
+  info.annotations.push({ type: 'qa-ran', description: 'game-controls' });
+  await page.goto('/play/hollow-tree-inn', { waitUntil: 'networkidle' });
+  await expect(pill(page, 0)).toContainText('0 of 6');
+  await page.locator('#pk-game [data-g="room:0"]').click(); // first guest is selected: they move in
+  await expect(pill(page, 0)).toContainText('1 of 6');
+  await page.locator('#pk-game [data-g="room:0"]').click(); // pick them up again
+  await page.locator('#pk-game [data-g="room:0"]').click(); // same room: back to the queue
+  await expect(pill(page, 0)).toContainText('0 of 6');
+  for (let k = 0; k < 12; k++) {
+    if (await page.locator('#pk-game [data-g="hint"]:disabled').count()) break;
+    await page.locator('#pk-game [data-g="hint"]').click();
+  }
+  await expect(page.locator('#pk-game .coach')).toContainText('Every guest is happy');
+  await expect(page.locator('#pk-game .inn-wish.bad')).toHaveCount(0);
+});

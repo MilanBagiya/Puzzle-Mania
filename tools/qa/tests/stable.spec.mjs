@@ -2,7 +2,7 @@
 import { test, expect } from '@playwright/test';
 import { pages } from '../lib/site.mjs';
 
-const PACK = ['frog-pond', 'firefly-night', 'owl-watch', 'acorn-stash', 'beehive', 'beaver-lodges', 'snow-picture', 'otter-slide', 'moose-crossing', 'burrow-escape', 'salmon-run', 'bears-last-snack', 'who-ate', 'freshest-track', 'egg-match', 'track-word', 'whose-print', 'feather-pairs', 'leaf-pile', 'who-was-here', 'nut-sort', 'vine-links', 'spot-the-change', 'berry-match'];
+const PACK = ['frog-pond', 'firefly-night', 'owl-watch', 'acorn-stash', 'beehive', 'beaver-lodges', 'snow-picture', 'otter-slide', 'moose-crossing', 'burrow-escape', 'salmon-run', 'bears-last-snack', 'who-ate', 'freshest-track', 'egg-match', 'track-word', 'whose-print', 'feather-pairs', 'leaf-pile', 'who-was-here', 'nut-sort', 'vine-links', 'spot-the-change', 'berry-match', 'hollow-tree-inn'];
 const PAGES = ['/fresh-snow', '/nests', '/dawn-chorus', '/stepping-stones', '/mushroom-rings', ...PACK.map((g) => `/play/${g}`)];
 // What the player looks at: the board, or for games without one, the first block right after the message.
 const BOARD = 'main .boardwrap, main .pond, main [role="grid"], main .spot-scenes, main .coach + *';

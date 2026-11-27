@@ -5,7 +5,7 @@ describe('registry', () => {
   it('every listed game has a module and vice versa', () => {
     const files = readdirSync(new URL('../games/', import.meta.url)).filter((f) => f.endsWith('.ts')).map((f) => f.replace('.ts', '')).sort();
     expect(PACK.map((g) => g.id).sort()).toEqual(files);
-    expect(PACK).toHaveLength(25);
+    expect(PACK).toHaveLength(26);
   });
   it('every game has a card hook of at most 60 characters', () => {
     for (const g of PACK) {

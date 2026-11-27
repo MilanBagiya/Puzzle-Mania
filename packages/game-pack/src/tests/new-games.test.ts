@@ -6,6 +6,7 @@ import burrow, { HINT_CAP, movesOf as burrowMoves, solveBurrow } from '../games/
 import { coach, nb4, rngFrom } from '../shared.js';
 import moose, { bestRoute, mooseHint, slide as mooseSlide } from '../games/moose-crossing.js';
 import bear, { bearHint, checkRoute, solveBear } from '../games/bears-last-snack.js';
+import inn, { GUESTS, ROOMS, solveInn, wishHolds, wishText, type Wish } from '../games/hollow-tree-inn.js';
 import berry, { BERRIES, N as BN, adjacent, canSwap, greedy, matchesOf, play, search, startState, swapsOf } from '../games/berry-match.js';
 
 // Real seeds are 'YYYY-MM-DD' dates.
@@ -261,5 +262,48 @@ describe('review fixes', () => {
         if (b) expect(b.t !== a.t || b.w !== a.w, `${d} #${i}`).toBe(true);
       }
     }
+  });
+});
+
+describe('Hollow Tree Inn', () => {
+  // Rooms: 0 1 2 upstairs, 3 4 5 downstairs. room[k] is guest k's room.
+  const room = [0, 4, 3, 1, 5, 2];
+  it('reads each kind of wish correctly', () => {
+    const t = (w: Wish): boolean => wishHolds(w, room);
+    expect(t({ t: 'floor', a: 0, f: 0 })).toBe(true);
+    expect(t({ t: 'floor', a: 1, f: 0 })).toBe(false);
+    expect(t({ t: 'col', a: 1, c: 1 })).toBe(true);
+    expect(t({ t: 'corner', a: 2 })).toBe(true);
+    expect(t({ t: 'corner', a: 3 })).toBe(false);
+    expect(t({ t: 'above', a: 0, b: 2 })).toBe(true); // room 0 is right above room 3
+    expect(t({ t: 'above', a: 2, b: 0 })).toBe(false);
+    expect(t({ t: 'next', a: 0, b: 3 })).toBe(true);
+    expect(t({ t: 'next', a: 0, b: 5 })).toBe(false); // rooms 0 and 2 have a room between them
+    expect(t({ t: 'apart', a: 0, b: 5 })).toBe(true);
+    expect(t({ t: 'left', a: 2, b: 1 })).toBe(true);
+    expect(t({ t: 'left', a: 1, b: 2 })).toBe(false);
+  });
+  it('every generated puzzle has exactly one room plan, 5 to 8 wishes, and six different guests', () => {
+    for (const d of dates(60, Date.UTC(2027, 0, 1))) {
+      const p = inn.generate(d);
+      expect(solveInn(p, 3), d).toHaveLength(1);
+      expect(p.wishes.length).toBeGreaterThanOrEqual(5);
+      expect(p.wishes.length).toBeLessThanOrEqual(8);
+      expect(new Set(p.guests).size).toBe(ROOMS);
+      expect(p.guests.every((g) => GUESTS.includes(g))).toBe(true);
+    }
+  });
+  it('no wish is spare: dropping any one leaves more than one room plan', () => {
+    for (const d of dates(20, Date.UTC(2027, 2, 1))) {
+      const p = inn.generate(d);
+      p.wishes.forEach((_, i) => expect(solveInn({ wishes: p.wishes.filter((__, j) => j !== i) }).length, `${d} wish ${i}`).toBeGreaterThan(1));
+    }
+  });
+  it('the puzzle file holds only the guests and wishes (no room plan)', () => {
+    expect(Object.keys(inn.generate('2027-01-18')).sort()).toEqual(['guests', 'seed', 'wishes']);
+  });
+  it('wishes read as plain sentences with guest names', () => {
+    const p = inn.generate('2027-01-18');
+    for (const w of p.wishes) { const s = wishText(p, w); expect(s).toMatch(/^[A-Z].*[.!]$/); expect(s).toContain(p.guests[w.a]![0]!.toUpperCase()); }
   });
 });

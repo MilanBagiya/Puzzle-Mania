@@ -10,6 +10,8 @@ import lodge, { solveLodges } from '../games/beaver-lodges.js';
 import picture, { lineSolve } from '../games/snow-picture.js';
 import { PACK } from '../index.js';
 import vine, { solveVines } from '../games/vine-links.js';
+import thief, { solveThief } from '../games/acorn-thief.js';
+import inn, { solveInn } from '../games/hollow-tree-inn.js';
 
 // Seeds are the generator's real seeds: 'YYYY-MM-DD' dates (plus some arbitrary strings).
 const isoDate = fc.integer({ min: 0, max: 365 * 30 }).map((d) => new Date(Date.UTC(2025, 0, 1 + d)).toISOString().slice(0, 10));
@@ -18,7 +20,7 @@ const opts = (numRuns: number) => ({ numRuns, seed: 20261125 });
 
 describe('pack logic games: exactly one solution (property)', () => {
   it('covers every logic game in the pack', () => {
-    expect(PACK.filter((g) => g.kind === 'logic').map((g) => g.id).sort()).toEqual(['acorn-stash', 'beaver-lodges', 'beehive', 'firefly-night', 'frog-pond', 'owl-watch', 'snow-picture', 'vine-links']);
+    expect(PACK.filter((g) => g.kind === 'logic').map((g) => g.id).sort()).toEqual(['acorn-stash', 'beaver-lodges', 'beehive', 'firefly-night', 'frog-pond', 'hollow-tree-inn', 'owl-watch', 'snow-picture', 'vine-links']);
   });
   it('owl-watch generates a unique puzzle on dates that used to fail', () => {
     for (const d of ['2025-01-30', '2025-05-22', '2025-06-21', '2025-09-27', '2026-01-08', '2028-11-17']) expect(solveCount(owl.generate(d), 2), d).toHaveLength(1);
@@ -30,6 +32,9 @@ describe('pack logic games: exactly one solution (property)', () => {
   it('firefly-night', () => { fc.assert(fc.property(seed, (s) => { expect(solveFireflies(fire.generate(s), 2), s).toHaveLength(1); }), opts(100)); });
   it('beaver-lodges', () => { fc.assert(fc.property(seed, (s) => { expect(solveLodges(lodge.generate(s), 2), s).toHaveLength(1); }), opts(100)); });
   it('vine-links', () => { fc.assert(fc.property(seed, (s) => { expect(solveVines(vine.generate(s), 2), s).toHaveLength(1); }), opts(60)); });
+  // Acorn Thief is a clue game (kind 'order'), but it too has exactly one answer.
+  it('acorn-thief', () => { fc.assert(fc.property(seed, (s) => { expect(solveThief(thief.generate(s)), s).toHaveLength(1); }), opts(200)); });
+  it('hollow-tree-inn', () => { fc.assert(fc.property(seed, (s) => { expect(solveInn(inn.generate(s), 3), s).toHaveLength(1); }), opts(200)); });
   // Snow Picture is line-solvable: solving line by line with no guessing proves the picture is the only one.
   it('snow-picture', () => { fc.assert(fc.property(seed, (s) => { const p = picture.generate(s); expect(lineSolve(p.rows, p.cols, p.n), s).not.toBeNull(); }), opts(100)); });
 });

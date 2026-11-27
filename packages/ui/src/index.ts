@@ -60,3 +60,4 @@ export function paws(stars: number, w = 20): string {
 export { Mover, type Gait, type TokenSpec } from './mover.js';
 export { cover, COVER_IDS } from './cover.js';
 export { arrowNav, keepFocus, nearestInDirection } from './focus.js';
+export { BACKDROP_SEASONS, backdropSvg, type BackdropSeason, type BackdropTheme } from './backdrop.js';

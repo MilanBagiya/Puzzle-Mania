@@ -23,6 +23,7 @@ export const PACK_META = [
   ['spot-the-change', 'Spot the Change', 120, 'any'],
   ['berry-match', 'Berry Match', 180, 'summer'],
   ['acorn-thief', 'Acorn Thief', 150, 'any'],
+  ['hollow-tree-inn', 'Hollow Tree Inn', 240, 'any'],
 ] as const;
 export type PackKey = (typeof PACK_META)[number][0];
 export const PACK_KEYS: readonly PackKey[] = PACK_META.map((m) => m[0]);
