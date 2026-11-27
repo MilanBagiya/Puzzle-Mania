@@ -1363,3 +1363,10 @@ body > .scene + main.body > :first-child{margin-top:0} /* the gap above comes fr
 @keyframes wx-leaf{from{transform:translate(0,0) rotate(0deg)} to{transform:translate(var(--x),105vh) rotate(320deg)}}
 @keyframes wx-rise{0%{transform:translate(0,0); opacity:0} 15%{opacity:.9} 85%{opacity:.9} 100%{transform:translate(var(--x),-80vh); opacity:0}}
 @media (prefers-reduced-motion: reduce){ .weather{display:none} }
+
+/* Result screen: the streak card (keep players coming back daily). */
+.streak-card{display:flex; align-items:center; gap:16px; background:var(--note)}
+.streak-num{display:flex; flex-direction:column; align-items:center; min-width:96px; padding:10px; border-radius:14px; background:var(--paper); text-align:center}
+.streak-num b{font-size:44px; line-height:1}
+.streak-num span{font-size:13px; font-weight:800}
+@media (max-width:520px){ .streak-card{flex-direction:column; text-align:center} }

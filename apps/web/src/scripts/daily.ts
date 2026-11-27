@@ -2,7 +2,7 @@
 // paws, badges, Journal cards, streak, countdown and the "next in your Daily Set" step.
 import {
   addDays, DAILY_SET, GAMES, JOURNAL, daysPlayed, formatCountdown, formatDate, formatTime, isIsoDate, loadProgress, msUntilMidnight,
-  nextInSet, recordGame, saveProgress, setCount, streakInfo, takeNewBadges, todayIso, type Badge, type GameKey, type GameResult, type JournalCard,
+  nextInSet, recordGame, saveProgress, setCount, streakInfo, takeNewBadges, todayIso, todaysPicks, type Season, type Badge, type GameKey, type GameResult, type JournalCard,
 } from '@wild-daily/core';
 import { bird, character, paws, print } from '@wild-daily/ui';
 import { toast } from './toast';
@@ -81,6 +81,17 @@ export function showResult(v: ResultView): void {
     : `<a class="btn btn-c big" href="/">Back to today</a>`;
   const setBanner = v.rec.setDone && v.date === now
     ? `<section class="card banner" style="background:var(--good)">${character('deer', 'happy', 80, 'cheer')}<div class="grow"><h2 class="h-s">Daily Set complete!</h2><p style="margin:4px 0 0" class="muted">Fresh snow falls in <b class="countdown" data-countdown>${formatCountdown(msUntilMidnight())}</b>. Try a bonus game or the Trail Trek while you wait.</p></div><a class="btn btn-w" href="/trek">Trail Trek</a></section>` : '';
+  // Coming back tomorrow: the streak, big, with what it becomes tomorrow and tomorrow's picks (names only, no spoilers).
+  const st = streakInfo(p, now), playedNow = v.date === now;
+  const season = (document.documentElement.getAttribute('data-season') ?? undefined) as Season | undefined;
+  const tomorrow = todaysPicks(addDays(now, 1), 3, season).map((g) => GAMES[g].name);
+  const streakCard = playedNow && st.current > 0 ? `<section class="card streak-card" aria-label="Your streak">
+<div class="streak-num"><b class="display">${st.current}</b><span>day${st.current === 1 ? '' : 's'} in a row</span></div>
+<div class="grow stack" style="gap:6px"><h2 class="h-s">${st.current >= st.best && st.current > 1 ? 'Your best streak yet!' : st.current === 1 ? 'Day one of a new streak' : `Best streak: ${st.best} days`}</h2>
+<p class="muted" style="margin:0">Come back tomorrow to make it <b>${st.current + 1}</b>. New puzzles in <b class="countdown" data-countdown>${formatCountdown(msUntilMidnight())}</b>.${st.snowDays.length ? ' A Snow Day covered a missed day this week.' : ''}</p>
+<p style="margin:0"><b>Tomorrow’s picks:</b> ${tomorrow.join(' · ')}</p></div></section>` : '';
+  const setNote = playedNow && setCount(p, now) > 0 ? ` Daily Set ${setCount(p, now)}/${DAILY_SET.length}.` : '';
+  const shareText = `${v.share}${playedNow && st.current > 1 ? ` 🔥 ${st.current}-day streak.` : ''}${setNote}`;
   v.el.innerHTML = `<section class="card stack" style="align-items:center; text-align:center; padding:26px">
 <div class="row" style="justify-content:center; gap:4px">${v.art}</div>
 <h2 class="h-l">${v.title}</h2>
@@ -89,12 +100,13 @@ ${paws(v.rec.result.stars, 30)}
 <div class="stats">${v.stats.map((s) => `<div class="sheet" style="padding:10px; background:${s.tint}"><b class="display" style="font-size:26px">${s.value}</b><div style="font-size:13px; font-weight:800">${s.label}</div></div>`).join('')}</div>
 <div class="row" style="justify-content:center"><button class="btn btn-p big" data-share>Share result</button>${primary}</div>
 ${next ? '<a href="/" style="font-weight:800">Back to today</a>' : ''}</section>
+${streakCard ? `<div style="margin-top:20px">${streakCard}</div>` : ''}
 ${v.rec.badges.map((b) => `<section class="card banner tilt-r" style="margin-top:20px; background:var(--note)"><span class="badge-tile" style="padding:0; box-shadow:none; background:transparent"><span class="medal" style="font-size:28px">${b.icon}</span></span><div class="grow"><span class="pill p-y">New badge!</span><h2 class="h-s" style="margin-top:6px">${b.name}</h2><p class="muted" style="margin:2px 0 0">${b.desc}</p></div><a class="btn btn-w" href="/stats">See all badges</a></section>`).join('')}
 ${v.rec.card ? `<section class="card stack tilt-l" style="background:var(--note); align-items:center; text-align:center; margin-top:20px"><span class="pill p-y" style="align-self:flex-start">New Journal card!</span><div style="min-height:110px; display:flex; align-items:flex-end">${cardArt(v.rec.card, 96)}</div><h2 class="h-m">${v.rec.card.name}</h2><p style="margin:0; max-width:40ch">${v.rec.card.fact}</p><a class="btn btn-w" href="/animals/${v.rec.card.guide}">Read the ${v.rec.card.name.toLowerCase()} guide</a></section>` : ''}
 ${setBanner ? `<div style="margin-top:20px">${setBanner}</div>` : ''}`;
   v.el.hidden = false;
   v.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  v.el.querySelector('[data-share]')?.addEventListener('click', () => share(v.share));
+  v.el.querySelector('[data-share]')?.addEventListener('click', () => share(shareText));
   if (v.rec.badges.length) toast(`Badge earned: ${v.rec.badges[0]!.name}!`);
   startCountdowns();
 }
