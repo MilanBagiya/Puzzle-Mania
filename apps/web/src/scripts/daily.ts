@@ -1,7 +1,7 @@
 // Shared logic for every daily game page: which date, loading the puzzle file, recording the result,
 // paws, badges, Journal cards, streak, countdown and the "next in your Daily Set" step.
 import {
-  addDays, DAILY_SET, GAMES, JOURNAL, daysPlayed, formatCountdown, formatDate, formatTime, isIsoDate, loadProgress, msUntilMidnight,
+  addDays, compareChallenge, decodeChallenge, encodeChallenge, unitFromLabel, unitText, type Challenge, DAILY_SET, GAMES, JOURNAL, daysPlayed, formatCountdown, formatDate, formatTime, isIsoDate, loadProgress, msUntilMidnight,
   nextInSet, recordGame, saveProgress, setCount, streakInfo, takeNewBadges, todayIso, todaysPicks, type Season, type Badge, type GameKey, type GameResult, type JournalCard,
 } from '@wild-daily/core';
 import { arrowNav, bird, character, paws, print } from '@wild-daily/ui';
@@ -70,6 +70,17 @@ function watchMidnight(): void {
 }
 watchMidnight();
 
+// ---- Challenge a friend: ?vs=<result> in the link (packages/core/src/challenge.ts) ----
+const vs = decodeChallenge(params().get('vs'));
+const pawsText = (n: number): string => `${n} ${n === 1 ? 'paw' : 'paws'}`;
+const challengeLine = (c: Challenge): string => `${pawsText(c.stars)} in ${formatTime(c.time)}${c.n !== undefined && c.unit ? ` (${unitText(c.n, c.unit)})` : ''}`;
+function showChallengeBanner(): void {
+  const line = document.getElementById('challenge-line');
+  if (!vs || !line) { document.documentElement.removeAttribute('data-vs'); return; } // no valid challenge: keep the slot hidden
+  line.textContent = challengeLine(vs);
+}
+showChallengeBanner();
+
 export interface ResultView {
   el: HTMLElement; title: string; subtitle: string; art: string;
   stats: { value: string; label: string; tint: string }[];
@@ -99,6 +110,17 @@ ${daysPlayed(p) < JOURNAL.length ? `<p style="margin:0"><b>Tomorrow’s Journal 
   // The streak card shows the streak, so its stat tile shows Daily Set progress instead (no number twice).
   const stats = streakCard ? v.stats.map((x) => (x.label === 'day streak' ? { ...x, value: `${setCount(p, now)}/${DAILY_SET.length}`, label: 'Daily Set' } : x)) : v.stats;
   const shareText = `${v.share}${playedNow && st.current > 1 ? ` 🔥 ${st.current}-day streak.` : ''}${setNote}`;
+  // My result as a challenge, and the link that lets a friend try to beat it.
+  const counted = v.stats.map((x) => ({ x, unit: unitFromLabel(x.label) })).find((y) => y.unit && /^\d+$/.test(y.x.value));
+  const mine: Challenge = { stars: v.rec.result.stars, time: v.rec.result.time, ...(counted ? { n: Number(counted.x.value), unit: counted.unit! } : {}) };
+  const link = new URL(location.pathname, location.origin);
+  params().forEach((val, key) => { if (key !== 'vs' && key !== 'date') link.searchParams.set(key, val); });
+  link.searchParams.set('date', v.date); link.searchParams.set('vs', encodeChallenge(mine));
+  const challengeText = `I got ${challengeLine(mine)} on ${GAMES[v.game].name} (${formatDate(v.date, { month: 'short', day: 'numeric' })}). Can you beat me?`;
+  const verdict = vs ? compareChallenge(mine, vs) : null;
+  const versus = vs ? `<section class="card stack versus" aria-label="You against your friend"><h2 class="h-m" style="text-align:center">${verdict === 'win' ? 'You win!' : verdict === 'lose' ? 'Your friend wins this time' : 'A perfect tie!'}</h2>
+<div class="versus-row"><div class="versus-side${verdict === 'win' ? ' best' : ''}"><b>You</b><span>${challengeLine(mine)}</span></div><span class="versus-vs" aria-hidden="true">vs</span><div class="versus-side${verdict === 'lose' ? ' best' : ''}"><b>Your friend</b><span>${challengeLine(vs)}</span></div></div>
+<button class="btn btn-p" data-challenge style="align-self:center">${verdict === 'win' ? 'Send it back to them' : 'Challenge them back'}</button></section>` : '';
   v.el.innerHTML = `<section class="card stack" style="align-items:center; text-align:center; padding:26px">
 <div class="row" style="justify-content:center; gap:4px">${v.art}</div>
 <h2 class="h-l">${v.title}</h2>
@@ -106,7 +128,9 @@ ${daysPlayed(p) < JOURNAL.length ? `<p style="margin:0"><b>Tomorrow’s Journal 
 ${paws(v.rec.result.stars, 30)}
 <div class="stats">${stats.map((s) => `<div class="sheet" style="padding:10px; background:${s.tint}"><b class="display" style="font-size:26px">${s.value}</b><div style="font-size:13px; font-weight:800">${s.label}</div></div>`).join('')}</div>
 <div class="row" style="justify-content:center"><button class="btn btn-p big" data-share>Share result</button>${primary}</div>
+${vs ? '' : '<button class="btn btn-w" data-challenge>Challenge a friend</button>'}
 ${next ? '<a href="/" style="font-weight:800">Back to today</a>' : ''}</section>
+${versus ? `<div style="margin-top:20px">${versus}</div>` : ''}
 ${streakCard ? `<div style="margin-top:20px">${streakCard}</div>` : ''}
 ${v.rec.badges.length ? `<section class="card stack new-badges" style="margin-top:20px; background:var(--note)"><span class="pill p-y" style="align-self:flex-start">${v.rec.badges.length === 1 ? 'New badge!' : `${v.rec.badges.length} new badges!`}</span>${v.rec.badges.map((b) => `<div class="row new-badge"><span class="medal" style="font-size:28px">${b.icon}</span><div class="grow"><h2 class="h-s">${b.name}</h2><p class="muted" style="margin:2px 0 0">${b.desc}</p></div></div>`).join('')}<a class="btn btn-w" href="/stats" style="align-self:flex-start">See all badges</a></section>` : ''}
 ${v.rec.card ? `<section class="card stack tilt-l" style="background:var(--note); align-items:center; text-align:center; margin-top:20px"><span class="pill p-y" style="align-self:flex-start">New Journal card!</span><div style="min-height:110px; display:flex; align-items:flex-end">${cardArt(v.rec.card, 96)}</div><h2 class="h-m">${v.rec.card.name}</h2><p style="margin:0; max-width:40ch">${v.rec.card.fact}</p><a class="btn btn-w" href="/animals/${v.rec.card.guide}">Read the ${v.rec.card.name.toLowerCase()} guide</a></section>` : ''}
@@ -117,13 +141,14 @@ ${setBanner ? `<div style="margin-top:20px">${setBanner}</div>` : ''}`;
   v.el.hidden = false;
   v.el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
   v.el.querySelector('[data-share]')?.addEventListener('click', () => share(shareText));
+  v.el.querySelectorAll('[data-challenge]').forEach((b) => b.addEventListener('click', () => share(challengeText, link.href, 'Challenge link copied. Send it to a friend!')));
   if (v.rec.badges.length) toast(`Badge earned: ${v.rec.badges[0]!.name}!`);
   startCountdowns();
 }
-export function share(text: string): void {
-  const full = `${text} ${location.origin}`;
+export function share(text: string, url = location.origin, copied = 'Result copied. Paste it anywhere to share.'): void {
+  const full = `${text} ${url}`;
   if (navigator.share) { navigator.share({ text: full }).catch(() => undefined); return; }
-  navigator.clipboard?.writeText(full).then(() => toast('Result copied. Paste it anywhere to share.'), () => toast(full));
+  navigator.clipboard?.writeText(full).then(() => toast(copied), () => toast(full));
 }
 export const shareLine = (name: string, date: string, r: GameResult, extra = ''): string =>
   `${name}, ${formatDate(date, { month: 'short', day: 'numeric' })}: ${'🐾'.repeat(r.stars)}${'·'.repeat(3 - r.stars)} in ${formatTime(r.time)}${extra}.`;

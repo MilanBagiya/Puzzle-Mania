@@ -1452,3 +1452,17 @@ html::before{content:""; position:fixed; left:0; right:0; bottom:0; height:min(4
   .fy-raft{min-height:96px; width:100%} .fy-raft.at-near{margin:0 0 22px} .fy-raft.at-far{margin:22px 0 0}
   .fy-animal{width:80px}
 }
+
+/* Challenge a friend: the banner beside the board, and "you vs your friend" on the result screen. */
+.challenge-card{display:none; align-items:center; gap:16px; margin-top:16px; background:var(--note); box-shadow:0 0 0 2px var(--mustard), 0 3px 0 var(--edge2)}
+:root[data-vs] .challenge-card{display:flex}
+@media (max-width:520px){ .challenge-card{flex-direction:column; align-items:flex-start; gap:8px} }
+.versus{align-items:stretch}
+.versus-row{display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); gap:10px; align-items:center}
+.versus-side{display:flex; flex-direction:column; align-items:center; gap:4px; padding:12px; border-radius:14px; background:var(--soft); text-align:center; font-weight:700}
+.versus-side b{font-family:var(--font-display); font-size:18px}
+.versus-side.best{background:var(--good); box-shadow:0 0 0 2px var(--pine)}
+.versus-vs{font-weight:900; color:var(--ink-mute)}
+@media (max-width:520px){ .versus-row{grid-template-columns:1fr} .versus-vs{text-align:center} }
+.challenge-line{margin:2px 0; font-weight:800; min-height:1lh}
+@media (max-width:560px){ .challenge-line{min-height:2lh} }

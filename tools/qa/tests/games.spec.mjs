@@ -122,3 +122,30 @@ test('River Ferry: the raft needs a paddler, Undo works, and hints get everyone 
   }
   await expect(page.locator('#pk-game .coach')).toContainText('best possible');
 });
+
+test('Challenge a friend: the link shows the challenge without moving the page, and the result compares both', async ({ page }, info) => {
+  info.annotations.push({ type: 'qa-ran', description: 'game-controls' });
+  await page.addInitScript(() => { window.__cls = 0; new window.PerformanceObserver((l) => { for (const e of l.getEntries()) if (!e.hadRecentInput) window.__cls += e.value; }).observe({ type: 'layout-shift', buffered: true }); });
+  await page.goto('/play/river-ferry?vs=s3.t5000.n99.u1', { waitUntil: 'networkidle' });
+  await expect(page.locator('#challenge')).toBeVisible();
+  await expect(page.locator('#challenge-line')).toHaveText('3 paws in 83:20 (99 crossings)');
+  expect(await page.evaluate(() => window.__cls), 'the challenge banner must not move the page').toBeLessThanOrEqual(0.02);
+  for (let k = 0; k < 14; k++) {
+    if (await page.locator('#pk-game [data-g="hint"]:disabled').count()) break;
+    await page.locator('#pk-game [data-g="hint"]').click();
+    await page.locator('#pk-game [data-g="go"]').click();
+  }
+  // Hints cost paws, so the friend's 3 paws win.
+  await expect(page.locator('#pk-result .versus h2')).toHaveText('Your friend wins this time');
+  await expect(page.locator('#pk-result .versus')).toContainText('99 crossings');
+});
+
+test('Challenge a friend: a broken or edited link shows nothing', async ({ page }, info) => {
+  info.annotations.push({ type: 'qa-ran', description: 'game-controls' });
+  for (const bad of ['s9.t10', 's3.t10%3Cb%3E', 'hello']) {
+    await page.goto(`/play/river-ferry?vs=${bad}`, { waitUntil: 'networkidle' });
+    await expect(page.locator('#challenge'), bad).toBeHidden();
+  }
+  await page.goto('/play/river-ferry', { waitUntil: 'networkidle' });
+  await expect(page.locator('#challenge')).toBeHidden();
+});

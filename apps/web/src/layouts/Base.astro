@@ -38,6 +38,8 @@ const { title, description, active = '', noindex = false, jsonLd } = Astro.props
           s = h === 'south' ? { spring: 'autumn', summer: 'winter', autumn: 'spring', winter: 'summer' }[n] : n;
         }
         document.documentElement.setAttribute('data-season', s);
+        // A friend's challenge in the link: show its slot from the first paint (scripts/daily.ts fills it in).
+        if (/[?&]vs=s[0-3]\.t\d/.test(location.search)) document.documentElement.setAttribute('data-vs', '');
       })();
     </script>
   </head>

@@ -1,6 +1,7 @@
 ---
 // Title row for every game page: back button, title, date label, timer and help button.
 import { chevron } from '@wild-daily/ui';
+import ChallengeSlot from './ChallengeSlot.astro';
 interface Props { title: string; prefix: string; back?: string; sub?: string }
 const { title, prefix, back = '/', sub = 'Today’s puzzle' } = Astro.props;
 ---
@@ -11,3 +12,4 @@ const { title, prefix, back = '/', sub = 'Today’s puzzle' } = Astro.props;
   </div>
   <div class="row" style="gap:8px"><span class="pill p-w timer" id={`${prefix}-timer`} aria-label="Time">0:00</span><button class="btn btn-w iconbtn" data-act="help" aria-label="How to play"><b class="display" style="font-size:22px">?</b></button></div>
 </div>
+<ChallengeSlot />
