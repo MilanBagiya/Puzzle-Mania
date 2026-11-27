@@ -6,6 +6,7 @@ import burrow, { HINT_CAP, movesOf as burrowMoves, solveBurrow } from '../games/
 import { coach, nb4, rngFrom } from '../shared.js';
 import moose, { bestRoute, mooseHint, slide as mooseSlide } from '../games/moose-crossing.js';
 import bear, { bearHint, checkRoute, solveBear } from '../games/bears-last-snack.js';
+import ferry, { CAPACITY, bankOk, canCross, cross, solveFerry, squabbleText } from '../games/river-ferry.js';
 import inn, { GUESTS, ROOMS, solveInn, wishHolds, wishText, type Wish } from '../games/hollow-tree-inn.js';
 import berry, { BERRIES, N as BN, adjacent, canSwap, greedy, matchesOf, play, search, startState, swapsOf } from '../games/berry-match.js';
 
@@ -305,5 +306,48 @@ describe('Hollow Tree Inn', () => {
   it('wishes read as plain sentences with guest names', () => {
     const p = inn.generate('2027-01-18');
     for (const w of p.wishes) { const s = wishText(p, w); expect(s).toMatch(/^[A-Z].*[.!]$/); expect(s).toContain(p.guests[w.a]![0]!.toUpperCase()); }
+  });
+});
+
+describe('River Ferry', () => {
+  // Classic set-up: one paddler (0) and three riders; 1 and 2 squabble, 2 and 3 squabble.
+  const p = { animals: ['beaver', 'fox', 'rabbit', 'mouse'] as never[], paddlers: [0], pairs: [[1, 2, 0], [2, 3, 1]] as [number, number, number][] };
+  it('a bank is peaceful with the paddler on it, or with no squabbling pair', () => {
+    expect(bankOk(p, 0b0110)).toBe(false); // fox and rabbit alone
+    expect(bankOk(p, 0b0111)).toBe(true); // paddler there
+    expect(bankOk(p, 0b1010)).toBe(true); // fox and mouse get on fine
+  });
+  it('the raft needs a paddler, holds at most two, and must leave a peaceful bank', () => {
+    const s = { far: 0, raft: 0 as const };
+    expect(canCross(p, s, [1])).toBe(false); // nobody paddles
+    expect(canCross(p, s, [0, 1])).toBe(false); // leaves rabbit and mouse together
+    expect(canCross(p, s, [0, 2])).toBe(true);
+    expect(canCross(p, s, [0, 1, 3])).toBe(false); // too many
+    expect(CAPACITY).toBe(2);
+    expect(cross(s, [0, 2])).toEqual({ far: 0b0101, raft: 1 });
+  });
+  it('the solver finds the classic seven-crossing route, and every step on it is allowed', () => {
+    const route = solveFerry(p)!;
+    expect(route).toHaveLength(7);
+    let s = { far: 0, raft: 0 as 0 | 1 };
+    for (const g of route) { expect(canCross(p, s, g)).toBe(true); s = cross(s, g); }
+    expect(s.far).toBe(0b1111);
+  });
+  it('every generated puzzle is solvable in exactly its best count, and the squabbles make it longer', () => {
+    for (const d of dates(60, Date.UTC(2027, 0, 1))) {
+      const q = ferry.generate(d), route = solveFerry(q)!;
+      expect(route, d).not.toBeNull();
+      expect(route.length).toBe(q.best);
+      expect(solveFerry({ ...q, pairs: [] })!.length).toBeLessThan(q.best);
+      expect(new Set(q.animals).size).toBe(q.animals.length);
+    }
+  });
+  it('the puzzle file holds no route', () => {
+    expect(Object.keys(ferry.generate('2027-01-18')).sort()).toEqual(['animals', 'best', 'paddlers', 'pairs', 'seed']);
+  });
+  it('squabbles read as sentences with both names, with every placeholder filled', () => {
+    const q = ferry.generate('2027-01-18');
+    for (const w of [0, 1, 2, 3, 4, 5]) { const t = squabbleText(q, [0, 1, w]); expect(t).not.toMatch(/\b[AB]\b/); }
+    for (const pr of q.pairs) { const t = squabbleText(q, pr); expect(t).toContain(q.animals[pr[0]]![0]!.toUpperCase()); expect(t).toMatch(/\.$/); expect(t).not.toMatch(/\b[AB]\b/); }
   });
 });

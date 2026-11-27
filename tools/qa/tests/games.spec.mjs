@@ -99,3 +99,26 @@ test('Hollow Tree Inn: place, send back, and finish with hints', async ({ page }
   await expect(page.locator('#pk-game .coach')).toContainText('Every guest is happy');
   await expect(page.locator('#pk-game .inn-wish.bad')).toHaveCount(0);
 });
+
+test('River Ferry: the raft needs a paddler, Undo works, and hints get everyone across', async ({ page }, info) => {
+  info.annotations.push({ type: 'qa-ran', description: 'game-controls' });
+  await page.goto('/play/river-ferry', { waitUntil: 'networkidle' });
+  // Board a rider who can't paddle (no "paddles" label) and try to cross.
+  await page.locator('#pk-game .fy-bank.near .fy-animal:not(.pad)').first().click();
+  await page.locator('#pk-game [data-g="go"]').click();
+  await expect(page.locator('#pk-game .coach')).toContainText('can paddle');
+  await expect(pill(page, 0)).toContainText('Crossings: 0');
+  // One hinted crossing, then Undo brings everyone back.
+  await page.locator('#pk-game [data-g="hint"]').click();
+  await page.locator('#pk-game [data-g="go"]').click();
+  await expect(pill(page, 0)).toContainText('Crossings: 1');
+  await page.locator('#pk-game [data-g="undo"]').click();
+  await expect(pill(page, 0)).toContainText('Crossings: 0');
+  // Hint, Cross, repeat: the hinted route reaches the far bank in the best number of crossings.
+  for (let k = 0; k < 14; k++) {
+    if (await page.locator('#pk-game [data-g="hint"]:disabled').count()) break;
+    await page.locator('#pk-game [data-g="hint"]').click();
+    await page.locator('#pk-game [data-g="go"]').click();
+  }
+  await expect(page.locator('#pk-game .coach')).toContainText('best possible');
+});

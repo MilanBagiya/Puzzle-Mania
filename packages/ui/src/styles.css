@@ -1422,3 +1422,33 @@ html::before{content:""; position:fixed; left:0; right:0; bottom:0; height:min(4
 /* Disabled buttons are solid (not see-through), so the seasonal backdrop never shows through them. */
 .btn[disabled], .btn[aria-disabled="true"]{opacity:1; filter:none; background:var(--soft); color:var(--ink-mute); box-shadow:0 0 0 1px var(--soft-e)}
 .inn-queue > p{grid-column:1 / -1}
+
+/* River Ferry: near bank, the river with the raft, far bank. Side by side on wide screens, stacked on phones. */
+.fy-river{display:grid; grid-template-columns:minmax(0,1fr) minmax(150px,.8fr) minmax(0,1fr); border-radius:18px; overflow:hidden; min-height:300px; box-shadow:0 0 0 1px var(--edge1)}
+.fy-bank{display:flex; flex-wrap:wrap; align-content:center; justify-content:center; gap:10px; padding:16px; background:#A8DC8C}
+.fy-water{display:flex; align-items:center; padding:12px; background:repeating-linear-gradient(170deg,#5FB8E0 0 18px,#6CC1E6 18px 36px)}
+.fy-raft{display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:8px; width:100%; min-height:118px; padding:10px; border-radius:12px;
+  background:repeating-linear-gradient(90deg,#A0693F 0 22px,#8A5A3B 22px 24px); box-shadow:0 4px 0 #6E4630}
+.fy-raft{width:78%} .fy-raft.at-near{margin-right:auto} .fy-raft.at-far{margin-left:auto}
+.fy-label{flex-basis:100%; text-align:center; font-weight:800; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:#1F4A2E}
+:root[data-theme="dark"] .fy-label{color:#DDF2E5} @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .fy-label{color:#DDF2E5} }
+.fy-animal{display:flex; flex-direction:column; align-items:center; gap:1px; width:88px; padding:6px 4px 8px; border:0; border-radius:14px; background:var(--paper); color:var(--ink);
+  box-shadow:0 0 0 1px var(--edge1), 0 3px 0 var(--edge2); cursor:pointer; font:inherit; font-weight:800; font-size:14px}
+.fy-animal svg{width:56px; height:56px}
+.fy-animal small{font-size:12px; font-weight:800; color:var(--ink-soft)}
+.fy-animal.on{box-shadow:0 0 0 3px var(--mustard), 0 3px 0 var(--edge2)}
+.fy-animal:disabled{cursor:default; opacity:1}
+.fy-animal:focus-visible{outline:3px solid var(--focus); outline-offset:3px}
+.fy-none{font-weight:800; font-size:14px; color:#233142; opacity:.75}
+.fy-raft .fy-none{color:#FFF4E6; opacity:1}
+.fy-rules{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:10px}
+.fy-rules li{padding:10px 12px; border-radius:12px; background:var(--soft); line-height:1.45}
+:root[data-theme="dark"] .fy-bank{background:#2E5A3E} :root[data-theme="dark"] .fy-none{color:#EAF0FF}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .fy-bank{background:#2E5A3E} :root:not([data-theme="light"]) .fy-none{color:#EAF0FF} }
+@media (hover:hover) and (pointer:fine){ .fy-animal:not(:disabled):hover{filter:brightness(.96)} }
+@media (max-width:720px){
+  .fy-river{grid-template-columns:1fr; min-height:0}
+  .fy-water{flex-direction:column; padding:10px}
+  .fy-raft{min-height:96px; width:100%} .fy-raft.at-near{margin:0 0 22px} .fy-raft.at-far{margin:22px 0 0}
+  .fy-animal{width:80px}
+}
