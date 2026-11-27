@@ -77,7 +77,7 @@ for (const url of PAGES) {
     // Tap around the board (some taps are wrong on purpose), then Hint.
     const cells = page.locator(`${BOARD} button:not([disabled])`);
     const n = await cells.count();
-    for (const k of [0, 2, 5, 9, 14].filter((x) => x < n)) { await cells.nth(k).click({ force: true }).catch(() => {}); await page.waitForTimeout(80); }
+    for (const k of [0, 2, 5, 9, 14].filter((x) => x < n)) { await cells.nth(k).click({ force: true, timeout: 2000 }).catch(() => {}); await page.waitForTimeout(80); }
     const hint = page.locator('main button[data-g="hint"]:not([disabled]), main button[data-fs="hint"]:not([disabled]), main button[data-nb="hint"]:not([disabled]), main button[data-mr-act="hint"]:not([disabled])').first();
     if (await hint.count()) {
       // Hover and press must not move the button.

@@ -136,8 +136,9 @@ ${tools(btn('clear', 'Clear', 'btn-w', done || placed === 0), btn('hint', 'Hint'
       if (act === 'guest') sel = sel === i ? -1 : i;
       else if (act === 'room') {
         const g = who(i);
-        if (sel < 0) { if (g >= 0) sel = g; } // pick up the guest in this room
-        else if (g === sel) { room[sel] = null; } // same room again: back to the queue
+        if (g >= 0 && g === sel) { room[sel] = null; } // the selected guest's own room: back to the queue
+        else if (g >= 0 && (sel < 0 || room[sel] === null)) sel = g; // a guest in a room: pick them up to move them
+        else if (sel < 0) { /* empty room, nobody selected: nothing to do */ }
         else {
           const from = room[sel]!;
           if (g >= 0) room[g] = from; // swap: the guest already there moves to the room we came from (or the queue)
