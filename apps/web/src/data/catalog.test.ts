@@ -28,7 +28,7 @@ describe('card hooks', () => {
 
 describe('launch line-up', () => {
   it('lists the six main games plus the nine launch pack games, everywhere', () => {
-    expect(LISTED.map((e) => e.id).sort()).toEqual(['acorn-thief', 'bears-last-snack', 'dawn', 'fresh-snow', 'frog-pond', 'moose-crossing', 'nests', 'nut-sort', 'otter-slide', 'rings', 'spot-the-change', 'stones', 'track-word', 'trek', 'vine-links']);
+    expect(LISTED.map((e) => e.id).sort()).toEqual(['acorn-thief', 'bears-last-snack', 'dawn', 'fresh-snow', 'frog-pond', 'moose-crossing', 'nests', 'nut-sort', 'otter-slide', 'rings', 'spot-the-change', 'stones', 'track-word', 'trek', 'vine-links', 'hollow-tree-inn', 'river-ferry'].sort());
     expect(SEARCH_INDEX.map((e) => e.id).sort()).toEqual(LISTED.map((e) => e.id).sort());
     expect(CATS.flatMap((c) => byCat(c.id)).length).toBe(LISTED.length);
   });
