@@ -29,11 +29,13 @@ test('Fresh Snow: Undo after tapping back along a trail restores the removed ste
   await page.goto('/fresh-snow?level=morning', { waitUntil: 'networkidle' });
   const steps = () => page.locator('#fs-game .badge').count();
   for (let k = 0; k < 3; k++) { await page.locator('[data-fs="hint"]').click(); await page.waitForTimeout(80); }
-  expect(await steps()).toBe(3);
+  // Usually 3 numbered steps; 2 when the trail is short and the third hint lands in the burrow (homes carry no number).
+  const before = await steps();
+  expect(before).toBeGreaterThanOrEqual(2);
   await page.locator('[data-fs="cell"][aria-label*="step 1"]').first().click(); // tap back: keeps step 1 only
   expect(await steps()).toBe(1);
   await page.locator('[data-fs="undo"]').click();
-  expect(await steps(), 'Undo brings back the steps the tap removed').toBe(3);
+  expect(await steps(), 'Undo brings back the steps the tap removed').toBe(before);
 });
 
 test('Mushroom Rings: the clock stops after the last wrong guess', async ({ page }, info) => {

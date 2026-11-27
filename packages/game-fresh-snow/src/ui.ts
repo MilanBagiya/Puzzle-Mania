@@ -174,7 +174,8 @@ export function createFreshSnowGame(root: HTMLElement, opts: GameOptions): GameH
       while (k < cur.length && cur[k] === sol[k]) k++;
       if (k === sol.length && cur.length === sol.length) continue;
       snapshot(); S.paths[a] = sol.slice(0, k + 1); S.sel = a; S.hints++;
-      S.msg = k < cur.length ? `Hint: part of the ${a}’s trail was off track. Here’s the next correct step.` : `Hint: here’s the ${a}’s next step.`;
+      S.msg = k < cur.length ? `Hint: part of the ${a}’s trail was off track. Here’s the next correct step.`
+        : k + 1 === sol.length ? `Hint: the ${a}’s trail ends at this burrow.` : `Hint: here’s the ${a}’s next step.`;
       S.kind = '';
       render(sol[k]); return;
     }
